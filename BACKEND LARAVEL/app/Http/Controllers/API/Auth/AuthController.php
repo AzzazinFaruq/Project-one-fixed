@@ -10,6 +10,15 @@ use Validator;
 
 class AuthController extends Controller
 {
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Sekarang telah logout',
+        ], 200);
+    }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
