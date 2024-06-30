@@ -11,33 +11,7 @@
               v-model="form.password" outlined color></v-text-field>
             <v-btn type="submit" elevation="2" color="green" align-center>Login</v-btn>
           </v-form>
-          <!-- <v-form @submit.prevent="login">
-            <v-text-field
-              ma-3
-              pa-3
-              type="text"
-              placeholder="Inset Your Email"
-              label="Email"
-              append-icon=""
-              v-model="form.email"
-              outlined
-              color
-            ></v-text-field>
-            <v-text-field
-              ma-3
-              pa-3
-              type="password"
-              placeholder="Inset Your Password"
-              label="Password"
-              append-icon=""
-              v-model="form.password"
-              outlined
-              color
-            ></v-text-field>
-            <v-btn align="center" flat small color="green"
-              >text</v-btn
-            >
-          </v-form> -->
+
         </v-sheet>
       </v-col>
       <v-col sm="3"></v-col>
@@ -58,7 +32,7 @@ const getToken = async () => {
 };
 const login = async () => {
   await getToken();
-  await axios.post("/login", {
+  await axios.post("/auth/login", {
     email: form.value.email,
     password: form.value.password,
   });
