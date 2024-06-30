@@ -5,29 +5,11 @@
       <v-col sm="6">
         <v-sheet color="grey">
           <v-form @submit.prevent="login">
-            <v-text-field
-              type="text"
-              error-count=""
-              placeholder="Insert Your Email"
-              label=""
-              append-icon=""
-              v-model="form.email"
-              outlined
-              color
-            ></v-text-field>
-            <v-text-field
-              type="password"
-              error-count=""
-              placeholder="Insert Your Password"
-              label=""
-              append-icon=""
-              v-model="form.password"
-              outlined
-              color
-            ></v-text-field>
-            <v-btn type="submit" elevation="2" color="green" align-center
-              >Login</v-btn
-            >
+            <v-text-field type="text" error-count="" placeholder="Insert Your Email" label="" append-icon=""
+              v-model="form.email" outlined color></v-text-field>
+            <v-text-field type="password" error-count="" placeholder="Insert Your Password" label="" append-icon=""
+              v-model="form.password" outlined color></v-text-field>
+            <v-btn type="submit" elevation="2" color="green" align-center>Login</v-btn>
           </v-form>
           <!-- <v-form @submit.prevent="login">
             <v-text-field
