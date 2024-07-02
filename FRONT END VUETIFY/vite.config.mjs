@@ -11,15 +11,6 @@ import { fileURLToPath, URL } from "node:url";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  server: {
-    // proxy: {
-    //   "/api": {
-    //     target: "http://localhost:8000",
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/api/, ""),
-    //   },
-    // },
-  },
   plugins: [
     VueRouter(),
     Vue({
@@ -53,5 +44,9 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    proxy: "http://localhost:8000",
+  },
+  devServer: {
+    proxy: "http://localhost:8000",
   },
 });

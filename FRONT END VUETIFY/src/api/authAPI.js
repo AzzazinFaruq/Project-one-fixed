@@ -1,13 +1,15 @@
-import axios from "axios";
+// import axios from "axios";
 
-const auth = axios.create({
-  baseURL: `htttp://127.0.0.1:8000/api`,
-  headers: {
-    "X-Requested-with": "XMLHttpRequest",
-    accept: "application/json",
-  },
-  withCredentials: true,
-  withXSRFToken: true
-});
+// const auth = axios.create({
+//   // baseURL: "http://localhost:8000/api",
+//   headers: {
+//     accept: "application/json",
+//     // origin: "http://localhost:8000",
+//   },
+//   withCredentials: true,
+//   withXSRFToken: true,
+//   xsrfCookieName: "XSRF-TOKEN",
+//   xsrfHeaderName: "X-XSRF-TOKEN",
+// });
 
-export default auth;
+// export default auth;

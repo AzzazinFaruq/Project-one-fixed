@@ -1,7 +1,6 @@
 <template>
-
-    <v-container class="">
-      <v-card>
+  <v-container class="">
+    <v-card>
       <v-table>
         <thead>
           <tr>
@@ -17,8 +16,7 @@
         </tbody>
       </v-table>
     </v-card>
-    </v-container>
-
+  </v-container>
 </template>
 <script setup>
 import HelloWorld from "@/components/HelloWorld.vue";
@@ -29,11 +27,11 @@ const getbuku = ref([]);
 onMounted(async () => {
   // get api from laravel backend
   await axios
-    .get("/getBuku")
+    .get("/api/penduduks")
     .then((response) => {
       // assign state users with response data
-      console.log(response)
-      getbuku.value=response.data;
+      console.log(response);
+      getbuku.value = response.data;
     })
     .catch((error) => {
       console.log(response);
