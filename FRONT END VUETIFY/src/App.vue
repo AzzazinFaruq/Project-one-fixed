@@ -1,12 +1,21 @@
 <template>
   <v-app>
-  <navbar></navbar>
+    <navbar :key="$route.fullPath"></navbar>
     <v-main>
-      <router-view />
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
     </v-main>
+
+    <v-footer app> </v-footer>
   </v-app>
 </template>
 
-<script setup>
-  import navbar from './components/navbar.vue'
+<script>
+import navbar from "./components/navbar.vue";
+export default {
+  components: {
+    navbar,
+  },
+};
 </script>

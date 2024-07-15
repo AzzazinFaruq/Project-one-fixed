@@ -1,10 +1,12 @@
 <template>
-  <v-container class="">
-    <v-row cols="12" justify-center>
-      <v-col sm="3"></v-col>
-      <v-col sm="6">
-        <v-sheet color="grey">
-          <v-form @submit.prevent="login">
+  <v-container fluid class="">
+    <v-row justify="center">
+      <v-col>
+        <v-card class="mt-10" elevation="2" max-width="500" location="center">
+          <v-card-title>
+            <h3 class="">LOGIN</h3>
+          </v-card-title>
+          <v-form @submit.prevent="login" class="ma-4">
             <v-text-field
               type="text"
               error-count=""
@@ -12,7 +14,7 @@
               label=""
               append-icon=""
               v-model="form.email"
-              outlined
+              variant="outlined"
               color
             ></v-text-field>
             <v-text-field
@@ -22,44 +24,79 @@
               label=""
               append-icon=""
               v-model="form.password"
-              outlined
+              variant="outlined"
               color
             ></v-text-field>
-            <v-btn type="submit" elevation="2" color="green" align-center
+            <v-row class="mb-4">
+              <v-col>
+                <p class="font-weight-light text-center">
+                  <a class="no-underline" href="/register">Sign Up</a>
+                </p>
+              </v-col>
+            </v-row>
+            <v-btn
+              location="center"
+              class="mt-4"
+              type="submit"
+              elevation="2"
+              color="green"
+              align-center
               >Login</v-btn
             >
           </v-form>
-        </v-sheet>
-      </v-col>
-      <v-col sm="3"></v-col>
+        </v-card></v-col
+      >
     </v-row>
   </v-container>
 </template>
-<script setup>
+<script>
 import axios from "axios";
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const form = ref({
-  email: "",
-  password: "",
-});
-const getToken = async () => {
-  await axios
-    .get("http://localhost:8000/sanctum/csrf-cookie")
-    .then((response) => {
-      console.log(response);
-      // response.headers("Access-Control-Allow-Origin", "http://localhost:3000");
-    });
-};
-const login = async () => {
-  await getToken();
-  await axios
-    .post("http://localhost:8000/api/login", {
-      email: form.value.email,
-      password: form.value.password,
-    })
-    .then((res) => console.log(res.data), router.push("/"))
-    .catch((err) => console.error(err));
+export default {
+  setup() {
+    const router = useRouter();
+    return {
+      router,
+    };
+  },
+  data() {
+    return {
+      form: {
+        email: "",
+        password: "",
+      },
+    };
+  },
+  methods: {
+    getToken() {
+      axios
+        .get("http://localhost:8000/sanctum/csrf-cookie")
+        .then((response) => {
+          console.log(response);
+        });
+    },
+    login() {
+      const router = useRouter();
+      this.getToken();
+      try {
+        axios.post("http://localhost:8000/api/login", this.form).then((res) => {
+          console.log(res);
+          this.$router.push("/dashboard");
+        });
+      } catch (error) {
+        alert(error);
+      }
+    },
+  },
 };
 </script>
+<style scooped>
+.no-underline {
+  text-decoration: none !important;
+  color: grey;
+}
+.no-underline:hover {
+  color: black; /* Ganti dengan warna yang diinginkan */
+}
+</style>

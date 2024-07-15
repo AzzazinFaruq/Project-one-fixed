@@ -10,13 +10,36 @@ use Validator;
 
 class AuthController extends Controller
 {
+    // protected function loggedOut(Request $request)
+    // {
+    //     if ($request->wantsJson()) {
+    //         return response()->json([], 204);
+    //     }
+    // }
+    // public function logout(Request $request)
+    // {
+    //     if ($request->wantsJson()) {
+    //         return response()->json();
+
+    //     }
+    //     $request->user()->currentAccessToken()->delete();
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Sekarang telah logout',
+    //     ], 200);
+
+    // }
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Sekarang telah logout',
-        ], 200);
+        $guard = Auth::guard('web');
+        if ($guard->check()) {
+            $guard->logout();
+        }
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Logged out successfully']);
     }
 
     public function register(Request $request)

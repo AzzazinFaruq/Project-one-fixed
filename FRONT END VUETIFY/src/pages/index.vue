@@ -1,18 +1,14 @@
 <template>
-  <v-container class="">
-    <v-row>
-      <v-col>tes</v-col>
-      <v-icon icon="mdi-chart-histogram"></v-icon>
-    </v-row>
+  <v-container fluid class="">
+    <v-card class="" elevation="" max-width="">
+      <v-card-title>
+        <p class="">HomePage</p>
+        Anda Belum Login
+      </v-card-title>
+      <v-card-actions>
+        <v-btn text color="" href="/login">Login</v-btn>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
-
-<script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
-const user = ref();
-onMounted(async () => {
-  const data = await axios.get("http://localhost:8000/api/user");
-  console.log(data.body);
-});
-</script>
+<script></script>

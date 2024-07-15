@@ -31,5 +31,72 @@ class Penduduk extends Model
         'stat'
 
     ];
-    public $timestamps=true;
+    public $timestamps=false;
+    public static function stat($key = '')
+    {
+        $data = config('constants.stat');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function pekerjaan($key = '')
+    {
+        $data = config('constants.pekerjaan');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function pendidikan($key = '')
+    {
+        $data = config('constants.pendidikan');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function warga_neg($key = '')
+    {
+        $data = config('constants.warga_negara');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function agama($key = '')
+    {
+        $data = config('constants.agama');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function kelamin($key = '')
+    {
+        $data = config('constants.sex');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function stat_kawin($key = '')
+    {
+        $data = config('constants.status_kawin');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+    public static function hub_kel($key = '')
+    {
+        $data = config('constants.shdk');
+        if ( !isset($data[$key]) )
+            return $data;
+
+        return $data[$key];
+    }
+
+
+
 }
