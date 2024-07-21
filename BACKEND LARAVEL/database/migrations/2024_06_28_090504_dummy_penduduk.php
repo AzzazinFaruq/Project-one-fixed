@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string("nama");
             $table->string("tmp_lhr");
             $table->date("tgl_lhr")->default("2000-01-01");
-
             $table->tinyInteger('kelamin')->null();
             $table->tinyInteger('stat_kawin')->null();
             $table->tinyInteger('hub_kel')->null();

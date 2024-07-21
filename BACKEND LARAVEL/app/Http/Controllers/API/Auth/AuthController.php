@@ -80,6 +80,8 @@ class AuthController extends Controller
             $success['token'] = $auth->createToken('auth_token')->plainTextToken;
             $success['name'] = $auth->name;
             $success['email'] = $auth->email;
+            $success['role'] = $auth->level;
+
 
             return response()->json([
                 'success' => true,

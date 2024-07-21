@@ -62,6 +62,7 @@ export default {
   },
   data() {
     return {
+      role:"",
       form: {
         email: "",
         password: "",
@@ -82,11 +83,26 @@ export default {
       try {
         axios.post("http://localhost:8000/api/login", this.form).then((res) => {
           console.log(res);
-          this.$router.push("/dashboard");
+          this.role=res.data.data.role;
+          console.log(this.role)
+          switch(this.role){
+            case "superAdmin":
+              this.$router.push("/adminDash")
+              break;
+            case "enum":
+              this.$router.push("/dashboard")
+              break;
+            case "admin":
+              break;
+            default:
+              alert("tidak Valid")
+          }
+
         });
       } catch (error) {
         alert(error);
       }
+
     },
   },
 };

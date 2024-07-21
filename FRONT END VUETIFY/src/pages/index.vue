@@ -2,8 +2,7 @@
   <v-container fluid class="">
     <v-card class="" elevation="" max-width="">
       <v-card-title>
-        <p class="">HomePage</p>
-        Anda Belum Login
+       Anda Belum login
       </v-card-title>
       <v-card-actions>
         <v-btn text color="" href="/login">Login</v-btn>

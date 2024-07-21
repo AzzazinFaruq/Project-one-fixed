@@ -9,13 +9,17 @@
         :loading="!isLoad"
       >
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon class="mr-2" color="success" @click="edit(item.id)"
+
+            <v-icon  class="mr-2" color="success" @click="edit(item.id)"
             >mdi-pencil</v-icon
           >
-          <v-icon class="mr-2" color="red" @click="confirmDelete(item.id)"
+          <v-icon  class="mr-2" color="red" @click="confirmDelete(item.id)"
             >mdi-delete</v-icon
           >
-          <v-icon color="primary" @click="detail(item.id)">mdi-file</v-icon>
+          <v-icon  color="primary" @click="detail(item.id)">mdi-file</v-icon>
+
+
+
         </template>
         <!-- <template v-slot:item.tgl_lhr="{ value }">
             <v-chip>
@@ -58,24 +62,105 @@
       </v-dialog>
       <v-dialog v-model="dialDetail" max-width="400px">
         <v-card>
-          <v-card-title class="headline">Detail Penduduk</v-card-title>
+          <v-card-title class="headline mt-2">Detail Penduduk</v-card-title>
           <v-card-text>
-            <div v-for="item in itemDetail" :key="item.id">
-              {{ item.nomer_kk }}
-              <!-- <p>Nomer KK : {{ item.nomer_kk }}</p>
-              <p>Nomer NIK : {{ item.nik }}</p>
-              <p>Nama : {{ item.nama }}</p>
-              <p>Nama : {{ item.tmp_lhr }}</p>
-              <p>Nama : {{ item.tgl_lhr }}</p>
-              <p>Nama : {{ item.stat_kawin }}</p>
-              <p>Nama : {{ item.hub_kel }}</p>
-              <p>Nama : {{ item.nama }}</p> -->
+            <div v-for="data in itemDetail" :key="data.id">
+              <v-row>
+                <v-col>NIK</v-col>
+                <v-col>{{ data[0].nik }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Nomer KK</v-col>
+                <v-col>{{ data[0].nomer_kk }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Nama</v-col>
+                <v-col>{{ data[0].nama }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Tempat Lahir</v-col>
+                <v-col>{{ data[0].tmp_lhr }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Tanggal Lahir</v-col>
+                <v-col>{{ data[0].tgl_lhr }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Jenis Kelamin</v-col>
+                <v-col>{{ data[0].kelamin }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Status Kawin</v-col>
+                <v-col>{{ data[0].stat_kawin }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Hubungan Keluarga</v-col>
+                <v-col>{{ data[0].hub_kel }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Warga Negara</v-col>
+                <v-col>{{ data[0].warga_neg }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Agama</v-col>
+                <v-col>{{ data[0].agama }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Pendidikan</v-col>
+                <v-col>{{ data[0].pendidikan }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Pekerjaan</v-col>
+                <v-col>{{ data[0].pekerjaan }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Ayah</v-col>
+                <v-col>{{ data[0].ayah }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Ibu</v-col>
+                <v-col>{{ data[0].ibu }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Kepala Keluarga</v-col>
+                <v-col>{{ data[0].kepala_kel }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Nomer HP</v-col>
+                <v-col>{{ data[0].no_hp }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Domisili</v-col>
+                <v-col>{{ data[0].domisili }}</v-col>
+              </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>Status</v-col>
+                <v-col>{{ data[0].stat }}</v-col>
+              </v-row>
+
             </div>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="green darken-1" text @click="dialDetail = false"
-              >Batal</v-btn
+              >OKE</v-btn
             >
           </v-card-actions>
         </v-card>
@@ -85,17 +170,15 @@
 </template>
 <script>
 import axios from "axios";
+import { useRole } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router";
 
+
 export default {
-  setup() {
-    const router = useRouter();
-    return {
-      router,
-    };
-  },
+
   data() {
     return {
+
       isLoad: false,
       dialog: false,
       dialDetail: false,
@@ -105,26 +188,15 @@ export default {
         { title: "Nomer KK", value: "nomer_kk" },
         { title: "NIK", value: "nik" },
         { title: "Nama", value: "nama" },
-        // { title: "Tempat Lahir", value: "tmp_lhr" },
-        // { title: "Tanggal Lahir", value: "tgl_lhr" },
         { title: "Kelamin", value: "kelamin" },
-        // { title: "Status Kawin", value: "stat_kawin" },
-        // { title: "Hubungan Keluarga", value: "hub_kel" },
-        // { title: "Warga Negara", value: "warga_neg" },
         { title: "Agama", value: "agama" },
-        // { title: "Pendidikan", value: "pendidikan" },
-        // { title: "Pekerjaan", value: "pekerjaan" },
-        // { title: "Ayah", value: "ayah" },
-        // { title: "Ibu", value: "ibu" },
-        // { title: "Kepala Keluarga", value: "kepala_kel" },
-        // { title: "No Hp", value: "no_hp" },
-        // { title: "Domisili", value: "domisili" },
         { title: "Status", value: "stat" },
         { title: "Action", value: "actions" },
       ],
       name: "",
       getitem: [],
-      itemDetail: [],
+      itemDetail: {},
+      userRole:"",
     };
   },
   mounted() {
@@ -192,13 +264,31 @@ export default {
           this.itemDetail = res.data;
           console.log(this.itemDetail);
           this.dialDetail = true;
+          this.selectedId=id;
         });
       } catch {}
     },
+    check(){
+      const checking = useRole();
+      checking.check();
+      this.role=checking.role;
+      console.log(this.role)
+    },
+    switched(){
+
+
+    }
   },
   created() {
     this.load();
+    this.check();
+
+
   },
+  computed(){
+    const checking = useRole();
+      checking.check()
+  }
 };
 </script>
 <style>

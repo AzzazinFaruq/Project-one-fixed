@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar :elevation="10" color="green" dark app>
+  <v-app-bar v-if="success=true" :elevation="10" color="green" dark app>
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"> </v-app-bar-nav-icon>
     <v-toolbar-title class="text-uppercase">
       <span class="">PROJECT DATA</span>
@@ -8,13 +8,13 @@
 
     <v-menu>
       <template v-slot:activator="{ props }">
-        <v-btn v-if="(success = true)" v-bind="props">
+        <v-btn v-bind="props">
           {{ data.email }}
         </v-btn>
-        <v-btn v-else>Login</v-btn>
+        <v-btn v-if="success=false">Login</v-btn>
       </template>
-      <v-list>
-        <v-list-item>
+      <v-list >
+        <v-list-item >
           <div class="ma-2 mb-4">
             <h4>Anda Login Sebagai</h4>
             <p class="mb-5">{{ data.name }}</p>
@@ -108,11 +108,13 @@
 import axios from "axios";
 import { useRouter } from "vue-router";
 
+
 export default {
   setup() {
     const router = useRouter();
   },
   data: () => ({
+    role :"",
     logout: false,
     data: [],
     success: false,
@@ -135,11 +137,18 @@ export default {
   },
   methods: {
     navlist() {
-      if ((this.success = true)) {
-        this.links = this.links1;
-      } else if ((this.success = false)) {
-        this.links = this.links2;
-      }
+      switch(this.role){
+            case "superAdmin":
+              this.links=this.links1
+              break;
+            case "enum":
+              this.links=this.links2
+              break;
+            case "admin":
+              this.links=this.links2
+              break;
+
+          }
     },
     handleLogout() {
       try {
@@ -153,23 +162,26 @@ export default {
         });
       } catch (error) {
         error;
+
       }
     },
 
     status() {
       try {
         axios.get("http://localhost:8000/api/user").then((res) => {
-          console.log(res.data);
           this.data = res.data.data;
           this.success = res.data.success;
-          console.log(this.success);
+          this.role=res.data.data.level
           this.navlist();
         });
       } catch (error) {
         error;
+        this.success = false;
       }
     },
   },
-  created() {},
+  created() {
+    console.log(this.success)
+  },
 };
 </script>
