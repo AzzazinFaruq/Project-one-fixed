@@ -282,11 +282,11 @@ export default {
       try {
         const route = useRoute();
         axios
-          .get(`http://localhost:8000/api/penduduk/${route.params.id}`)
+          .get(`http://localhost:8000/api/byID/${route.params.id}`)
           .then((response) => {
-            console.log(response);
-            this.form = response.data[0];
-            this.form.tgl_lhr = new Date(response.data[0].tgl_lhr);
+            console.log(response.data);
+            this.form = response.data.data[0];
+            this.form.tgl_lhr = new Date(response.data.data[0].tgl_lhr);
             console.log(this.form);
             // this.form.value = response.data;
           });

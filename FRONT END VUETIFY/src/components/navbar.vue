@@ -124,6 +124,7 @@ export default {
     links1: [
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/dashboard" },
       { icon: "mdi-folder", text: "Data Penduduk", route: "penduduk" },
+      { icon: "mdi-folder-home", text: "Data Keluarga", route: "keluarga" },
       { icon: "mdi-information", text: "About", route: "about" },
     ],
     links2: [

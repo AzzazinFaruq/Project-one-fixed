@@ -31,7 +31,7 @@ class Penduduk extends Model
         'stat'
 
     ];
-    public $timestamps=false;
+    public $timestamps=true;
     public static function stat($key = '')
     {
         $data = config('constants.stat');

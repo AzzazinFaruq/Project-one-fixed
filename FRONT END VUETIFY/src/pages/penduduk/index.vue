@@ -9,17 +9,13 @@
         :loading="!isLoad"
       >
         <template v-slot:[`item.actions`]="{ item }">
-
-            <v-icon  class="mr-2" color="success" @click="edit(item.id)"
+          <v-icon  class="mr-2" color="success" @click="edit(item.id)"
             >mdi-pencil</v-icon
           >
           <v-icon  class="mr-2" color="red" @click="confirmDelete(item.id)"
             >mdi-delete</v-icon
           >
           <v-icon  color="primary" @click="detail(item.id)">mdi-file</v-icon>
-
-
-
         </template>
         <!-- <template v-slot:item.tgl_lhr="{ value }">
             <v-chip>
@@ -172,8 +168,6 @@
 import axios from "axios";
 import { useRole } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router";
-
-
 export default {
 
   data() {
@@ -202,12 +196,10 @@ export default {
   mounted() {
     this.getPen();
   },
-
   methods: {
     edit(item) {
-      this.router.push(`/penduduk/edit/${item}`);
+      this.$router.push(`/penduduk/edit/${item}`);
     },
-
     getPen() {
       axios
         .get("http://localhost:8000/api/penduduk")

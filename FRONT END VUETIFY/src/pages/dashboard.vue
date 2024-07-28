@@ -7,13 +7,12 @@
 
 <script>
 import axios from "axios";
-
 import { useRouter } from "vue-router";
 useRouter;
 export default {
   data() {
     return {
-      nama: [],
+      data: [],
     };
   },
   mounted() {
@@ -24,14 +23,33 @@ export default {
       try {
         axios.get("http://localhost:8000/api/user").then((res) => {
           console.log(res.data);
-          this.nama = res.data.data;
+          this.data = res.data.data;
+          console.log(this.data.level)
+          switch(this.data.level){
+            case "superAdmin":
+            this.$router.push("/adminDash")
+              break;
+            case "enum":
+              break;
+            case "admin":
+            this.$router.push("/adminDash")
+              break;
+          }
         });
       } catch (error) {
         console.error(error);
       }
-     
+
     },
+    config(){
+      if(this.data.level != 'enum'){
+        // this.$router.push("/adminDash")
+      }
+
+    }
   },
-  created() {},
+  created() {
+    this.config();
+  },
 };
 </script>

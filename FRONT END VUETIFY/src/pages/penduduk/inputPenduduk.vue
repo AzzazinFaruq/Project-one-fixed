@@ -274,7 +274,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.kelamin);
+    console.log();
   },
 
   methods: {

@@ -14,11 +14,11 @@ class PendudukCon extends Controller
      */
     public function getPenduduk()
     {
-        $dt=Penduduk::get();
+        $dt=Penduduk::paginate(10);
 
         $datas = new Penduduk;
-
-            $hasil = $datas->get()->reduce(
+            $hasil = $datas->get();
+              $hasils= $hasil->reduce(
                 function ($items, $data){
 
                     $agama=penduduk::agama($data->agama);
@@ -53,17 +53,40 @@ class PendudukCon extends Controller
                         'stat' =>$stat
                     ];
                     return $items;
-                }, []
+                },
             );
 
+            // $result = [
+            //     'data' => $hasill->items(),
+            //     'pagination' => [
+            //         'current_page' => $posts->currentPage(),
+            //         'per_page' => $posts->perPage(),
+            //         'total' => $posts->total(),
+            //         'last_page' => $posts->lastPage(),
+            //         'next_page_url' => $posts->nextPageUrl(),
+            //         'prev_page_url' => $posts->previousPageUrl(),
+            //         'first_page_url' => $posts->url(1),
+            //         'last_page_url' => $posts->url($posts->lastPage()),
+            //     ],
+            //     'total_word_count' => $totalWordCount,
+            // ];
 
+// return $posts;
         return response()->json([
             'success' => true,
-            // 'message' => "Data DTKS Potensi Sasaran ".$data_dinas."",
-            // 'total' => count($hasil),
-            'data' => $hasil,
+
+            'data' => $hasils
+
+
         ], 200);
 
+    }
+    public function getbyID($id){
+        $dt= Penduduk::where('id',$id)->get();
+
+        return response()->json([
+            'data' => $dt,
+        ], 200);
     }
     public function showPenduduk($id)
     {
@@ -164,10 +187,10 @@ class PendudukCon extends Controller
         ]);
 
         if ($save) {
-            return response()->json(['valid'=>true,'massage'=>'sukses menambah siswa']);
+            return response()->json(['valid'=>true,'massage'=>'sukses menambah Penduduk']);
         }
         else{
-            return response()->json(['valid'=>false,'massage'=>'gagal menambah siswa']);
+            return response()->json(['valid'=>false,'massage'=>'gagal menambah Penduduk']);
         }
 
     }

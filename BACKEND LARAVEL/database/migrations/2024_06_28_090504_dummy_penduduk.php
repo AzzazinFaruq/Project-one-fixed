@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('data_idv', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('kels_id')->references('id')->on('data_kels');
             $table->string("nomer_kk",20);
             $table->string("nik",20);
             $table->string("nama");
