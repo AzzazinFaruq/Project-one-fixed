@@ -6,6 +6,7 @@
   :headers="head"
   :items="dataKeluarga"
   :search="search"
+  :loading="!isLoad"
   >
 <template v-slot:[`item.actions`]="{ item }">
   <v-icon  class="mr-2" color="success" @click="edit(item.id)">mdi-pencil</v-icon>
@@ -67,8 +68,13 @@
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>Status</v-col>
+                <v-col>{{ data[0].status }}</v-col>
+              </v-row>
+              <v-row>
+                <v-col>User</v-col>
                 <v-col>{{ data[0].user_id }}</v-col>
               </v-row>
+
             </div>
           </v-card-text>
           <v-card-actions>
@@ -87,6 +93,7 @@ import axios from 'axios';
 export default{
   data(){
     return{
+      isLoad:false,
       dialDetail: false,
       selectedId:null,
       dataKeluarga:[],
@@ -107,7 +114,8 @@ export default{
   methods :{
     detail(id) {
       try {
-        axios.get(`http://localhost:8000/api/keluarga/${id}`).then((res) => {
+        this.load();
+        axios.get(`/api/keluarga/${id}`).then((res) => {
           this.detailKeluarga = res.data;
           console.log(this.itemDetail);
           this.dialDetail = true;
@@ -117,7 +125,7 @@ export default{
     },
     getKeluarga(){
       try{
-        axios.get("http://localhost:8000/api/keluarga")
+        axios.get("/api/keluarga")
         .then((res)=>{
           console.log(res.data.data)
           this.dataKeluarga=res.data.data;
@@ -140,7 +148,7 @@ export default{
       this.selectedId = id;
       try {
         await axios.delete(
-          `http://localhost:8000/api/deleteKeluarga/${this.selectedId}`
+          `/api/deleteKeluarga/${this.selectedId}`
         ); // Ganti dengan endpoint yang sesuai
         // this.load();
         this.getKeluarga();
@@ -150,6 +158,16 @@ export default{
         this.closeDialog(); // Tutup dialog meskipun ada kesalahan
       }
     },
+    load() {
+      this.isLoad = false;
+      setTimeout(() => {
+        this.getitem;
+        this.isLoad = true; // Setelah data selesai dimuat, matikan loading
+      }, 2000); // Contoh delay 2 detik untuk simulasi
+    },
+  },
+  created(){
+    this.load();
   }
 }
 </script>

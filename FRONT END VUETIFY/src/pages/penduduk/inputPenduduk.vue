@@ -63,7 +63,7 @@
         <v-row class="">
           <v-col>
             <label for="">Jenis Kelamin</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               :items="kelamin"
               item-title="name"
@@ -71,12 +71,12 @@
               v-model="form.kelamin"
               variant="outlined"
               required
-            ></v-select>
+            ></v-autocomplete>
             <h1>{{ form.kelamin }}</h1>
           </v-col>
           <v-col>
             <label for="">Status Kawin</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="statusKawin"
@@ -84,11 +84,11 @@
               item-value="id"
               required
               v-model="form.stat_kawin"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
           <v-col>
             <label for="">Hubungan Keluarga</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="hubungan"
@@ -96,13 +96,13 @@
               item-value="id"
               required
               v-model="form.hub_kel"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
           <v-col>
             <label for="">Warga Negara</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="warga"
@@ -110,11 +110,11 @@
               item-value="id"
               required
               v-model="form.warga_neg"
-            ></v-select
+            ></v-autocomplete
           ></v-col>
           <v-col>
             <label for="">Agama</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="agama"
@@ -122,13 +122,13 @@
               item-value="id"
               required
               v-model="form.agama"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
           <v-col>
             <label for="">Pendidikan</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="pendidikan"
@@ -136,11 +136,11 @@
               item-value="id"
               required
               v-model="form.pendidikan"
-            ></v-select
+            ></v-autocomplete
           ></v-col>
           <v-col>
             <label for="">Pekerjaan</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="pekerjaan"
@@ -148,7 +148,7 @@
               item-value="id"
               required
               v-model="form.pekerjaan"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
@@ -199,7 +199,7 @@
           v-model="form.domisili"
         ></v-textarea>
         <label>Status</label
-        ><v-select
+        ><v-autocomplete
           :rules="rules"
           variant="outlined"
           :items="stat"
@@ -207,7 +207,7 @@
           item-value="id"
           required
           v-model="form.stat"
-        ></v-select>
+        ></v-autocomplete6>
         <v-btn
           class="mt-4"
           location="center"
@@ -284,7 +284,7 @@ export default {
         .split("T")[0];
       try {
         axios
-          .post("http://localhost:8000/api/addPenduduk", this.form)
+          .post("/api/addPenduduk", this.form)
           .then((res) => {
             console.log(res);
             this.form.valid = res.data.valid;

@@ -10,6 +10,7 @@ class keluargaCon extends Controller
 {
     public function index(){
         $dt = keluarga::get();
+        
 
         return response()->json([
             'data' => $dt

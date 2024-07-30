@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     getPen() {
-      axios.get("http://localhost:8000/api/penduduk").then((res) => {
+      axios.get("/api/penduduk").then((res) => {
         console.log(res.data);
       });
     },

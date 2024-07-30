@@ -166,8 +166,6 @@
 </template>
 <script>
 import axios from "axios";
-import { useRole } from "@/stores/auth";
-import { useRoute, useRouter } from "vue-router";
 export default {
 
   data() {
@@ -202,7 +200,7 @@ export default {
     },
     getPen() {
       axios
-        .get("http://localhost:8000/api/penduduk")
+        .get("/api/penduduk")
         .then((response) => {
           // assign state users with response data
           console.log(response.data);
@@ -215,7 +213,7 @@ export default {
     },
     deletePenduduk(id) {
       try {
-        axios.delete(`http://localhost:8000/api/deletePenduduk/${id}`);
+        axios.delete(`/api/deletePenduduk/${id}`);
         this.getPen();
         alert("Data penduduk berhasil dihapus");
       } catch (error) {
@@ -233,7 +231,7 @@ export default {
     async deleteData() {
       try {
         await axios.delete(
-          `http://localhost:8000/api/deletePenduduk/${this.selectedId}`
+          `/api/deletePenduduk/${this.selectedId}`
         ); // Ganti dengan endpoint yang sesuai
         this.load();
         this.getPen();
@@ -252,7 +250,7 @@ export default {
     },
     detail(id) {
       try {
-        axios.get(`http://localhost:8000/api/penduduk/${id}`).then((res) => {
+        axios.get(`/api/penduduk/${id}`).then((res) => {
           this.itemDetail = res.data;
           console.log(this.itemDetail);
           this.dialDetail = true;
@@ -260,26 +258,11 @@ export default {
         });
       } catch {}
     },
-    check(){
-      const checking = useRole();
-      checking.check();
-      this.role=checking.role;
-      console.log(this.role)
-    },
-    switched(){
 
 
-    }
   },
   created() {
     this.load();
-    this.check();
-
-
-  },
-  computed(){
-    const checking = useRole();
-      checking.check()
   }
 };
 </script>

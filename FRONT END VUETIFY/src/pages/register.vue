@@ -92,7 +92,7 @@ export default {
     register() {
       try {
         axios
-          .post("http://localhost:8000/api/register", this.form)
+          .post("/api/register", this.form)
           .then((res) => {
             console.log(res.data);
             this.$router.push("/login");

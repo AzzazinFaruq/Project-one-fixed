@@ -26,6 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AppController::class, 'user']);
+    Route::get('/userAll', [AppController::class, 'index']);
     Route::get('/penduduk', [PendudukCon::class,'getPenduduk']);
     Route::get('/byID/{id}', [PendudukCon::class,'getbyID']);
     Route::get('/penduduk/{id}', [PendudukCon::class,'showPenduduk']);

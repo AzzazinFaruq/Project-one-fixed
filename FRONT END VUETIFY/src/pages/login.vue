@@ -72,7 +72,7 @@ export default {
   methods: {
     getToken() {
       axios
-        .get("http://localhost:8000/sanctum/csrf-cookie")
+        .get("/sanctum/csrf-cookie")
         .then((response) => {
           console.log(response);
         });
@@ -81,7 +81,7 @@ export default {
       const router = useRouter();
       this.getToken();
       try {
-        axios.post("http://localhost:8000/api/login", this.form).then((res) => {
+        axios.post("/api/login", this.form).then((res) => {
           console.log(res);
           this.role=res.data.data.role;
           console.log(this.role)

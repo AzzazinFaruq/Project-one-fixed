@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Penduduk extends Model
 {
@@ -12,6 +13,7 @@ class Penduduk extends Model
     protected $primarykey="id";
     protected $fillable = [
         'nomer_kk',
+        'kels_id',
         'nik',
         'nama',
         'tmp_lhr',
@@ -32,6 +34,12 @@ class Penduduk extends Model
 
     ];
     public $timestamps=true;
+
+    public function keluarga(): HasMany
+    {
+        return $this->hasMany(keluarga::class, 'kels_id');
+    }
+
     public static function stat($key = '')
     {
         $data = config('constants.stat');

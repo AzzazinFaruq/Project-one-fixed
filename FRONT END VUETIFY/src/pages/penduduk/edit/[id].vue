@@ -282,7 +282,7 @@ export default {
       try {
         const route = useRoute();
         axios
-          .get(`http://localhost:8000/api/byID/${route.params.id}`)
+          .get(`/api/byID/${route.params.id}`)
           .then((response) => {
             console.log(response.data);
             this.form = response.data.data[0];
@@ -301,7 +301,7 @@ export default {
           .split("T")[0];
         axios
           .put(
-            `http://localhost:8000/api/updatePenduduk/${id}`,
+            `/api/updatePenduduk/${id}`,
 
             this.form
           )

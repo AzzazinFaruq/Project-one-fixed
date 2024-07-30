@@ -21,7 +21,7 @@ export default {
   methods: {
     status() {
       try {
-        axios.get("http://localhost:8000/api/user").then((res) => {
+        axios.get("/api/user").then((res) => {
           console.log(res.data);
           this.data = res.data.data;
           console.log(this.data.level)

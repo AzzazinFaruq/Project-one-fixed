@@ -62,21 +62,27 @@
           required
         ></v-text-field>
         <label for="">STATUS</label>
-        <v-text-field
+       <v-select
           clearable
           :rules="rules"
           variant="outlined"
+          :items="stat"
+          item-title="name"
+          item-value="id"
+          required
           v-model="form.status"
-          required
-        ></v-text-field>
+       ></v-select>
         <label for="">USER</label>
-        <v-text-field
+        <v-autocomplete
           clearable
           :rules="rules"
           variant="outlined"
-          v-model="form.user_id"
+          :items="user"
+          item-title="name"
+          item-value="id"
           required
-        ></v-text-field>
+          v-model="form.user_id"
+       ></v-autocomplete>
         <v-btn
           class="mt-4"
           location="center"
@@ -114,6 +120,7 @@ export default {
       pendidikan: useData.pendidikan,
       pekerjaan: useData.pekerjaan,
       stat: useData.stat,
+      user:[],
       form: {
         no_kk: "",
         kk_nik: "",
@@ -123,21 +130,36 @@ export default {
         rw: "",
         kode_pos: "",
         status: "",
-        user_id: "",
+        user_id: 0,
       },
 
       rules: [(v) => !!v || "Form Tidak Boleh Kosong!"],
     };
   },
   mounted() {
-    console.log();
+    this.getUser()
   },
 
   methods: {
+    getUser(){
+      try{
+        axios.get("/api/userAll")
+        .then((res)=>{
+          this.user=res.data;
+          console.log(this.user)
+
+
+
+        })
+      }
+      catch(error){
+        return error;
+      }
+    },
     post() {
       try {
         axios
-          .post("http://localhost:8000/api/addKeluarga", this.form)
+          .post("/api/addKeluarga", this.form)
           .then((res) => {
             console.log(res);
             this.form.valid = res.data.valid;

@@ -17,4 +17,9 @@ class AppController extends Controller
             'data' => $request->user(),
         ], 200);
     }
+    public function index(){
+        $dt = User::get();
+
+        return response()->json($dt);
+    }
 }
