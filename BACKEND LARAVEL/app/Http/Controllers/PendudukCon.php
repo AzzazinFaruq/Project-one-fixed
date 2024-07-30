@@ -17,6 +17,7 @@ class PendudukCon extends Controller
         $dt=Penduduk::paginate(10);
 
         $datas = Penduduk::with('keluarga')->get();
+        // $datass= Penduduk::keluarga()->get();
               $hasils= $datas->reduce(
                 function ($items, $data){
 
@@ -75,6 +76,7 @@ class PendudukCon extends Controller
             'success' => true,
 
             'data' => $datas
+
 
 
         ], 200);

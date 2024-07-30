@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Penduduk extends Model
 {
@@ -35,9 +35,9 @@ class Penduduk extends Model
     ];
     public $timestamps=true;
 
-    public function keluarga(): HasMany
+    public function keluarga(): BelongsTo
     {
-        return $this->hasMany(keluarga::class, 'kels_id');
+        return $this->BelongsTo(keluarga::class, 'kels_id');
     }
 
     public static function stat($key = '')
