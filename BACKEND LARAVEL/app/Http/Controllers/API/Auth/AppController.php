@@ -18,7 +18,7 @@ class AppController extends Controller
         ], 200);
     }
     public function index(){
-        $dt = User::get();
+        $dt = User::with('keluarga','penduduk',)->get();
 
         return response()->json($dt);
     }

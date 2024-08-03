@@ -41,4 +41,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function penduduk(){
+        return $this->HasMany(penduduk::class, 'id');
+    }
+    public function keluarga(){
+        return $this->HasMany(keluarga::class, 'user_id');
+    }
+
 }

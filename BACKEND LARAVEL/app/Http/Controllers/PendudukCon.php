@@ -16,8 +16,7 @@ class PendudukCon extends Controller
     {
         $dt=Penduduk::paginate(10);
 
-        $datas = Penduduk::with('keluarga')->get();
-        // $datass= Penduduk::keluarga()->get();
+        $datas = Penduduk::with('keluarga','user')->paginate(10);
               $hasils= $datas->reduce(
                 function ($items, $data){
 
@@ -33,7 +32,8 @@ class PendudukCon extends Controller
 
                     $items[] = [
                         'id'=>$data->id,
-                        'nomer_kk'=>$data->nomer_kk,
+                        'kels_id'=>$data->kels_id,
+                        'nomer_kk'=>$data->keluarga->no_kk,
                         'nik' =>$data->nik,
                         'nama'=>$data->nama,
                         'tmp_lhr'=>$data->tmp_lhr,
@@ -47,10 +47,11 @@ class PendudukCon extends Controller
                         'pekerjaan'=>$pekerjaan,
                         'ayah'=>$data->ayah,
                         'ibu'=>$data->ibu,
-                        'kepala_kel'=>$data->kepala_kel,
+                        'kepala_kel'=>$data->keluarga->kk_nama,
                         'no_hp'=>$data->no_hp,
                         'domisili'=>$data->domisili,
-                        'stat' =>$stat
+                        'stat' =>$stat,
+                        'user_id'=>$data->user->name
                     ];
                     return $items;
                 },
@@ -75,7 +76,7 @@ class PendudukCon extends Controller
         return response()->json([
             'success' => true,
 
-            'data' => $datas
+            'data' => $hasils
 
 
 
@@ -108,7 +109,7 @@ class PendudukCon extends Controller
 
                 $items[] = [
                     'id'=>$data->id,
-                    'nomer_kk'=>$data->nomer_kk,
+                    'nomer_kk'=>$data->keluarga->no_kk,
                     'nik' =>$data->nik,
                     'nama'=>$data->nama,
                     'tmp_lhr'=>$data->tmp_lhr,
@@ -122,10 +123,12 @@ class PendudukCon extends Controller
                     'pekerjaan'=>$pekerjaan,
                     'ayah'=>$data->ayah,
                     'ibu'=>$data->ibu,
-                    'kepala_kel'=>$data->kepala_kel,
+                    'kepala_kel'=>$data->keluarga->kk_nama,
                     'no_hp'=>$data->no_hp,
                     'domisili'=>$data->domisili,
-                    'stat' =>$stat
+                    'stat' =>$stat,
+                    'user_id'=>$data->user->name
+
                 ];
                 return $items;
             }, []
@@ -142,7 +145,7 @@ class PendudukCon extends Controller
     public function addPenduduk(Request $req){
 
         $validator= Validator::make($req->all(),[
-            'nomer_kk'=>'required',
+            'kels_id'=>'required',
             'nik'=>'required',
             'nama'=>'required',
             'tmp_lhr'=>'required',
@@ -156,10 +159,10 @@ class PendudukCon extends Controller
             'pekerjaan'=>'required',
             'ayah'=>'required',
             'ibu'=>'required',
-            'kepala_kel'=>'required',
             'no_hp'=>'required',
             'domisili'=>'required',
             'stat'=>'required',
+            'user_id'=>'required'
 
 
         ]);
@@ -167,7 +170,7 @@ class PendudukCon extends Controller
             return response()->json(['valid'=>false,'massage'=>'pastikan form sudah terisi dengan benar']);
         }
         $save=Penduduk::create([
-            'nomer_kk'=>$req->get('nomer_kk'),
+            'kels_id'=>$req->get('kels_id'),
             'nik'=>$req->get('nik'),
             'nama'=>$req->get('nama'),
             'tmp_lhr'=>$req->get('tmp_lhr'),
@@ -181,10 +184,12 @@ class PendudukCon extends Controller
             'pekerjaan'=>$req->get('pekerjaan'),
             'ayah'=>$req->get('ayah'),
             'ibu'=>$req->get('ibu'),
-            'kepala_kel'=>$req->get('kepala_kel'),
             'no_hp'=>$req->get('no_hp'),
             'domisili'=>$req->get('domisili'),
-            'stat'=>$req->get('stat')
+            'stat'=>$req->get('stat'),
+            'user_id'=>$req->get('user_id')
+
+
         ]);
 
         if ($save) {
@@ -217,6 +222,7 @@ class PendudukCon extends Controller
             'no_hp' => 'required',
             'domisili' => 'required',
             'stat' => 'required',
+            'user_id'=>'required'
         ]);
 
         if ($validator->fails()) {

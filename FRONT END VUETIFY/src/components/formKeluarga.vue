@@ -1,9 +1,7 @@
 <template lang="">
+   <h1 class="text-center">FORM KELUARGA</h1>
+   <v-divider class='my-3'></v-divider>
   <v-container class="">
-    <v-card class="" elevation="4" max-width=""
-      ><v-card-title>
-        <h3 class="font-weight-medium font-weight: 400;">Input Penduduk</h3>
-      </v-card-title>
       <v-form class="ma-2" @submit.prevent="post">
         <label for="">NOMER KK</label>
         <v-text-field
@@ -72,17 +70,6 @@
           required
           v-model="form.status"
        ></v-select>
-        <label for="">USER</label>
-        <v-autocomplete
-          clearable
-          :rules="rules"
-          variant="outlined"
-          :items="user"
-          item-title="name"
-          item-value="id"
-          required
-          v-model="form.user_id"
-       ></v-autocomplete>
         <v-btn
           class="mt-4"
           location="center"
@@ -92,7 +79,6 @@
           >Submit</v-btn
         >
       </v-form>
-    </v-card>
   </v-container>
 </template>
 <script>
@@ -130,7 +116,7 @@ export default {
         rw: "",
         kode_pos: "",
         status: "",
-        user_id: 0,
+        user_id:'',
       },
 
       rules: [(v) => !!v || "Form Tidak Boleh Kosong!"],
@@ -143,13 +129,11 @@ export default {
   methods: {
     getUser(){
       try{
-        axios.get("/api/userAll")
+        axios.get("/api/user")
         .then((res)=>{
           this.user=res.data;
-          console.log(this.user)
-
-
-
+          this.form.user_id=res.data.data.id
+          console.log(res.data.data.id)
         })
       }
       catch(error){
@@ -167,7 +151,6 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.router.push("/penduduk");
             }
           });
       } catch (error) {

@@ -30,7 +30,8 @@ class Penduduk extends Model
         'kepala_kel',
         'no_hp',
         'domisili',
-        'stat'
+        'stat',
+        'user_id'
 
     ];
     public $timestamps=true;
@@ -38,6 +39,9 @@ class Penduduk extends Model
     public function keluarga(): BelongsTo
     {
         return $this->BelongsTo(keluarga::class, 'kels_id');
+    }
+    public function user(){
+        return $this->belongsTo(user::class, 'user_id');
     }
 
     public static function stat($key = '')

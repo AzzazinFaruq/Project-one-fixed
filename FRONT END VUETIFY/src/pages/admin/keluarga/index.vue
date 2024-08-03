@@ -16,7 +16,7 @@
 <template v-slot:top>
   <v-row>
     <v-col>
-      <v-btn class="ma-2" color="white" href="keluarga/inputKeluarga">Tambah Keluarga</v-btn>
+      <v-btn class="ma-2" color="white" href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
     </v-col>
     <v-col>
 <v-text-field
@@ -38,41 +38,41 @@
             <div v-for="data in detailKeluarga" :key="data.id">
               <v-row>
                 <v-col>Nomer KK</v-col>
-                <v-col>{{ data[0].no_kk }}</v-col>
+                <v-col>{{ data.no_kk }}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>NIK</v-col>
-                <v-col>{{ data[0].kk_nik }}</v-col>
+                <v-col>{{ data.kk_nik }}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>Nama</v-col>
-                <v-col>{{ data[0].kk_nama}}</v-col>
+                <v-col>{{ data.kk_nama}}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>RT</v-col>
-                <v-col>{{ data[0].rt }}</v-col>
+                <v-col>{{ data.rt }}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>RW</v-col>
-                <v-col>{{ data[0].rw }}</v-col>
+                <v-col>{{ data.rw }}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>Kode Pos</v-col>
-                <v-col>{{ data[0].kode_pos }}</v-col>
+                <v-col>{{ data.kode_pos }}</v-col>
               </v-row>
               <v-divider class="my-2"></v-divider>
               <v-row>
                 <v-col>Status</v-col>
-                <v-col>{{ data[0].status }}</v-col>
+                <v-col>{{ data.status }}</v-col>
               </v-row>
               <v-row>
                 <v-col>User</v-col>
-                <v-col>{{ data[0].user_id }}</v-col>
+                <v-col>{{ data.user_id }}</v-col>
               </v-row>
 
             </div>
@@ -103,21 +103,38 @@ export default{
         { title: "Nomer KK", value: "no_kk" },
         { title: "Nama", value: "kk_nama" },
         { title: "Status", value: "status" },
+        { title: "User", value: "user_id" },
         { title: "Action", value: "actions" },
       ],
     }
   },
   mounted(){
     this.getKeluarga();
+    this.role();
 
   },
   methods :{
+    role(){
+      try {
+        axios.get("/api/user").then((res) => {
+          this.data = res.data.data;
+          this.level = res.data.data.level
+          switch(this.level){
+            case "enum":
+              this.$router.push("/forbidden")
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
     detail(id) {
       try {
         this.load();
         axios.get(`/api/keluarga/${id}`).then((res) => {
           this.detailKeluarga = res.data;
-          console.log(this.itemDetail);
+          console.log(this.detailKeluarga);
           this.dialDetail = true;
           this.selectedId=id;
         });
@@ -127,8 +144,8 @@ export default{
       try{
         axios.get("/api/keluarga")
         .then((res)=>{
-          console.log(res.data.data)
-          this.dataKeluarga=res.data.data;
+          console.log(res.data)
+          this.dataKeluarga=res.data;
         })
 
       }
@@ -150,7 +167,7 @@ export default{
         await axios.delete(
           `/api/deleteKeluarga/${this.selectedId}`
         ); // Ganti dengan endpoint yang sesuai
-        // this.load();
+        this.load();
         this.getKeluarga();
         this.closeDialog(); // Tutup dialog
       } catch (error) {
