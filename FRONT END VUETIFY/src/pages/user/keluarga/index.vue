@@ -72,7 +72,7 @@
               </v-row>
               <v-row>
                 <v-col>User</v-col>
-                <v-col>{{ data.user_id }}</v-col>
+                <v-col>{{ data.user_name }}</v-col>
               </v-row>
 
             </div>
@@ -103,14 +103,13 @@ export default{
         { title: "Nomer KK", value: "no_kk" },
         { title: "Nama", value: "kk_nama" },
         { title: "Status", value: "status" },
-        { title: "User", value: "user_id" },
+        { title: "User", value: "user_name" },
         { title: "Action", value: "actions" },
       ],
     }
   },
   mounted(){
     this.getKeluarga();
-    this.role();
 
   },
   methods :{
@@ -136,7 +135,7 @@ export default{
       try {
         this.load();
         axios.get(`/api/keluarga/${id}`).then((res) => {
-          this.detailKeluarga = res.data.data;
+          this.detailKeluarga = res.data;
           console.log(res.data);
           this.dialDetail = true;
           this.selectedId=id;
@@ -145,10 +144,10 @@ export default{
     },
     getKeluarga(){
       try{
-        axios.get("/api/keluarga")
+        axios.get("/api/userDt")
         .then((res)=>{
           console.log(res.data)
-          this.dataKeluarga=res.data;
+          this.dataKeluarga=res.data.keluarga;
         })
 
       }
