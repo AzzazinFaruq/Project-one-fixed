@@ -204,25 +204,25 @@ class PendudukCon extends Controller
     public function updatePenduduk(Request $req, $id){
 
         $validator=Validator::make($req->all(),[
-            'nomer_kk' => 'required',
-            'nik' => 'required',
-            'nama' => 'required',
-            'tmp_lhr' => 'required',
-            'tgl_lhr' => 'required',
-            'kelamin' => 'required',
-            'stat_kawin' => 'required',
-            'hub_kel' => 'required',
-            'warga_neg' => 'required',
-            'agama' => 'required',
-            'pendidikan' => 'required',
-            'pekerjaan' => 'required',
-            'ayah' => 'required',
-            'ibu' => 'required',
-            'kepala_kel' => 'required',
-            'no_hp' => 'required',
-            'domisili' => 'required',
-            'stat' => 'required',
+            'kels_id'=>'required',
+            'nik'=>'required',
+            'nama'=>'required',
+            'tmp_lhr'=>'required',
+            'tgl_lhr'=>'required',
+            'kelamin'=>'required',
+            'stat_kawin'=>'required',
+            'hub_kel'=>'required',
+            'warga_neg'=>'required',
+            'agama'=>'required',
+            'pendidikan'=>'required',
+            'pekerjaan'=>'required',
+            'ayah'=>'required',
+            'ibu'=>'required',
+            'no_hp'=>'required',
+            'domisili'=>'required',
+            'stat'=>'required',
             'user_id'=>'required'
+
         ]);
 
         if ($validator->fails()) {

@@ -114,6 +114,9 @@ export default{
 
   },
   methods :{
+    edit(item) {
+      this.$router.push(`/admin/keluarga/edit/${item}`);
+    },
     role(){
       try {
         axios.get("/api/user").then((res) => {
