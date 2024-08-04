@@ -78,26 +78,11 @@ export default {
         });
     },
     login() {
-      const router = useRouter();
       this.getToken();
       try {
         axios.post("/api/login", this.form).then((res) => {
-          console.log(res);
-          this.role=res.data.data.role;
-          console.log(this.role)
-          switch(this.role){
-            case "superAdmin":
-              this.$router.push("/adminDash")
-              break;
-            case "enum":
-              this.$router.push("/dashboard")
-              break;
-            case "admin":
-              break;
-            default:
-              alert("tidak Valid")
-          }
-
+          this.$router.push('/home')
+          localStorage.setItem('auth', 'true');
         });
       } catch (error) {
         alert(error);

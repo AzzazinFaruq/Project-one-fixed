@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <navbar :key="$route.fullPath"></navbar>
+    <navbar v-if="!isLoginPage && !reg  && !index"  :key="$route.fullPath"/>
     <v-main>
       <v-container fluid>
-        <router-view></router-view>
+        <router-view/>
       </v-container>
     </v-main>
 
@@ -14,6 +14,8 @@
 <script>
 import navbar from "./components/navbar.vue";
 import axios from "axios";
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 export default {
   components: {
     navbar,
@@ -23,13 +25,13 @@ export default {
       status:false
     }
   },
-  created(){
-    axios.get("http://localhost:8000/api/user")
-    .then((res=>{
-      console.log(res);
-      this.status=false;
+  setup(){
+    const route = useRoute();
+    const isLoginPage = computed(() => route.path === '/login');
+    const reg = computed(() => route.path === '/register');
+    const index = computed(() => route.path === '/');
 
-    }))
+return { isLoginPage,reg,index };
   }
 
 };

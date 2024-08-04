@@ -21,8 +21,8 @@ class keluarga extends Model
         'status',
         'user_id',
     ];
-    public function penduduk(){
-        return $this->belongsTo(Penduduk::class);
+    public function user(){
+        return $this->belongsTo(user::class, 'user_id');
     }
     public static function stat($key = '')
     {

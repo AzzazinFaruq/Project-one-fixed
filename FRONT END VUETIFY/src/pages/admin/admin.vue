@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       data: [],
-      level:""
+      level:"none"
     };
   },
   mounted() {
@@ -24,17 +24,13 @@ export default {
     status() {
       try {
         axios.get("/api/user").then((res) => {
-          console.log(res.data);
           this.data = res.data.data;
           this.level = res.data.data.level
-          console.log(this.level)
           switch(this.level){
-            case "superAdmin":
-              break;
             case "enum":
-              this.$router.push("/dashboard")
+              this.$router.push("/forbidden")
               break;
-            case "admin":
+            default:
               break;
           }
 
@@ -44,21 +40,6 @@ export default {
       }
 
     },
-    config(){
-      switch(this.level){
-            case "superAdmin":
-              alert("iya")
-              break;
-            case "enum":
-              this.$router.push("/dashboard")
-              break;
-            case "admin":
-              alert('iya')
-              break;
-
-          }
-
-    }
   },
   created() {
 

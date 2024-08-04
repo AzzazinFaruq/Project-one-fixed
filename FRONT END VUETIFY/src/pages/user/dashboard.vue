@@ -1,7 +1,8 @@
 <template>
   <v-container class="">
     <h1>Halaman Dashboard</h1>
-    <p>Ini Adalah Halaman Dashboard</p>
+    <v-divider class="mb-3"> </v-divider>
+    <p>Selamat Datang, <b>{{ this.data.name }}</b></p>
   </v-container>
 </template>
 

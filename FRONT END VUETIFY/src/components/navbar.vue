@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar v-if="success=true" :elevation="10" color="green" dark app>
+  <v-app-bar v-if="success=true" :elevation="10" color="green" dark app >
     <v-app-bar-nav-icon @click.stop="drawer = !drawer"> </v-app-bar-nav-icon>
     <v-toolbar-title class="text-uppercase">
       <span class="">PROJECT DATA</span>
@@ -118,18 +118,20 @@ export default {
     logout: false,
     data: [],
     success: false,
-    drawer: false,
+    drawer: true,
 
     links: [],
     links1: [
-      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/dashboard" },
-      { icon: "mdi-folder", text: "Data Penduduk", route: "penduduk" },
-      { icon: "mdi-folder-home", text: "Data Keluarga", route: "keluarga" },
+      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
+      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/admin/admin"  },
+      { icon: "mdi-folder", text: "Data Penduduk", route: "/admin/penduduk" },
+      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/admin/keluarga" },
       { icon: "mdi-information", text: "About", route: "about" },
     ],
     links2: [
-      { icon: "mdi-view-dashboard", text: "Home", route: "/" },
-      { icon: "mdi-information", text: "About", route: "about" },
+      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
+      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/user/dashboard" },
+      { icon: "mdi-information", text: "About", route: "/about" },
     ],
   }),
   mounted() {
@@ -160,6 +162,7 @@ export default {
           this.success = false;
           this.$router.push("/");
           this.navlist();
+          localStorage.removeItem('auth')
         });
       } catch (error) {
         error;

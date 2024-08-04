@@ -25,7 +25,7 @@
         <template v-slot:top>
           <v-row>
             <v-col>
-              <v-btn class="ma-2" href="/penduduk/inputPenduduk" compact
+              <v-btn class="ma-2" href="/admin/penduduk/inputPenduduk" compact
                 >Tambah data</v-btn
               ></v-col
             >
@@ -150,6 +150,11 @@
                 <v-col>Status</v-col>
                 <v-col>{{ data[0].stat }}</v-col>
               </v-row>
+              <v-divider class="my-2"></v-divider>
+              <v-row>
+                <v-col>User</v-col>
+                <v-col>{{ data[0].user_id }}</v-col>
+              </v-row>
 
             </div>
           </v-card-text>
@@ -181,8 +186,8 @@ export default {
         { title: "NIK", value: "nik" },
         { title: "Nama", value: "nama" },
         { title: "Kelamin", value: "kelamin" },
-        { title: "Agama", value: "agama" },
         { title: "Status", value: "stat" },
+        { title: "User", value: "user_id" },
         { title: "Action", value: "actions" },
       ],
       name: "",
@@ -192,9 +197,25 @@ export default {
     };
   },
   mounted() {
+    this.role();
     this.getPen();
   },
   methods: {
+    role(){
+      try {
+        axios.get("/api/user").then((res) => {
+          this.data = res.data.data;
+          this.level = res.data.data.level
+          switch(this.level){
+            case "enum":
+              this.$router.push("/forbidden")
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
     edit(item) {
       this.$router.push(`/penduduk/edit/${item}`);
     },
@@ -202,7 +223,6 @@ export default {
       axios
         .get("/api/penduduk")
         .then((response) => {
-          // assign state users with response data
           console.log(response.data);
           this.getitem = response.data.data;
         })

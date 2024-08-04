@@ -9,21 +9,55 @@ use Illuminate\Support\Facades\Validator;
 class keluargaCon extends Controller
 {
     public function index(){
-        $dt = keluarga::get();
-        
+        $datas = keluarga::with('user')->get();
+        $hasils= $datas->reduce(
+            function ($items, $data){
+                $stat=keluarga::stat($data->status);
+                $items[] = [
+                'id'=>$data->id,
+                'no_kk'=>$data->no_kk,
+                'kk_nik'=>$data->kk_nik,
+                'kk_nama'=>$data->kk_nama,
+                'alamat'=>$data->alamat,
+                'rt'=>$data->rt,
+                'rw'=>$data->rw,
+                'kode_pos'=>$data->kode_pos,
+                'status'=>$stat,
+                'user_id'=>$data->user->name,
+                ];
+                return $items;
+            },
+        );
 
-        return response()->json([
-            'data' => $dt
-        ]);
+
+        return response()->json($hasils);
 
     }
 
     public function getbyID($id){
         $dt= keluarga::where('id',$id)->get();
 
-        return response()->json([
-            'data' => $dt,
-        ], 200);
+        $hasils= $dt->reduce(
+            function ($items, $data){
+                $stat=keluarga::stat($data->status);
+                $items[] = [
+               'id'=>$data->id,
+                'no_kk'=>$data->no_kk,
+                'kk_nik'=>$data->kk_nik,
+                'kk_nama'=>$data->kk_nama,
+                'alamat'=>$data->alamat,
+                'rt'=>$data->rt,
+                'rw'=>$data->rw,
+                'kode_pos'=>$data->kode_pos,
+                'status'=>$stat,
+                'user_id'=>$data->user->name,
+                ];
+                return $items;
+            },
+        );
+
+
+        return response()->json($hasils);
     }
 
     public function addKeluarga(Request $req){

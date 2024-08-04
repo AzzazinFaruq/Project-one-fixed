@@ -1,21 +1,22 @@
 <template lang="">
+   <h1 class="text-center">FORM PENDUDUK</h1>
+   <v-divider class='my-3'></v-divider>
   <v-container class="">
-    <v-card class="" elevation="4" max-width=""
-      ><v-card-title>
-        <h3 class="font-weight-medium font-weight: 400;">Input Penduduk</h3>
-      </v-card-title>
-
-      <v-form class="ma-2 pa-2" @submit.prevent="post" lazy-validation>
+      <v-form class="" @submit.prevent="post" lazy-validation>
         <v-row class="">
           <v-col>
-            <label>Nomer KK</label>
-            <v-text-field
-              clearable
+            <label for="">PILIH NO KK / KEPALA KELUARGA</label>
+            <v-autocomplete
+              :item-props="itemProps"
               :rules="rules"
+              :items="dataKel"
+              item-title="kk_nama"
+              item-value="id"
+              v-model="form.kels_id"
               variant="outlined"
-              v-model="form.nomer_kk"
               required
-            ></v-text-field>
+            ></v-autocomplete>
+
           </v-col>
           <v-col>
             <label class="">NIK</label>
@@ -72,7 +73,7 @@
               variant="outlined"
               required
             ></v-autocomplete>
-            <h1>{{ form.kelamin }}</h1>
+
           </v-col>
           <v-col>
             <label for="">Status Kawin</label
@@ -174,14 +175,6 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <label class="">Kepala Keluarga</label>
-        <v-text-field
-          clearable
-          :rules="rules"
-          variant="outlined"
-          required
-          v-model="form.kepala_kel"
-        ></v-text-field>
         <label class="">Nomor HP</label>
         <v-text-field
           clearable
@@ -207,7 +200,7 @@
           item-value="id"
           required
           v-model="form.stat"
-        ></v-autocomplete6>
+        ></v-autocomplete>
         <v-btn
           class="mt-4"
           location="center"
@@ -217,7 +210,7 @@
           >Submit</v-btn
         >
       </v-form>
-    </v-card>
+
   </v-container>
 </template>
 <script>
@@ -237,6 +230,8 @@ export default {
   },
   data() {
     return {
+      user:[],
+      dataKel:[],
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
@@ -249,6 +244,7 @@ export default {
 
       form: {
         nomer_kk: "",
+        kels_id:1,
         nik: "",
         nama: "",
         tmp_lhr: "",
@@ -274,10 +270,37 @@ export default {
     };
   },
   mounted() {
-    console.log();
+    this.getKeluarga();
+    this.getUser();
   },
 
   methods: {
+    getUser(){
+      try{
+        axios.get("/api/userAll")
+        .then((res)=>{
+          this.user=res.data;
+          console.log(this.user)
+        })
+      }
+      catch(error){
+        return error;
+      }
+    },
+    getKeluarga(){
+      try{
+        axios.get("/api/keluarga")
+        .then((res)=>{
+          console.log(res.data);
+          this.dataKel=res.data;
+        })
+
+      }
+      catch(error){
+        return error;
+      }
+    },
+
     post() {
       this.form.tgl_lhr = new Date(this.form.tgl_lhr)
         .toISOString()
@@ -299,6 +322,11 @@ export default {
         error, router.push("/login");
       }
     },
+    itemProps (item) {
+        return {
+          title: item.no_kk+' ['+item.kk_nama+']'
+        }
+      }
   },
 };
 </script>

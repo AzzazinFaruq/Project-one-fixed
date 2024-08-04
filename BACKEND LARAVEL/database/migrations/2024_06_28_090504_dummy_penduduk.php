@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('data_idv', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kels_id')->references('id')->on('data_kels');
-            $table->string("nomer_kk",20);
             $table->string("nik",20);
             $table->string("nama");
             $table->string("tmp_lhr");
@@ -28,10 +27,10 @@ return new class extends Migration
             $table->tinyInteger('pekerjaan')->null();
             $table->string('ayah')->null();
             $table->string('ibu')->null();
-            $table->string('kepala_kel')->null();
             $table->string('no_hp',15)->null();
             $table->longText('domisili')->null();
             $table->tinyInteger('stat')->default(0);
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
 
             // $table->id();
