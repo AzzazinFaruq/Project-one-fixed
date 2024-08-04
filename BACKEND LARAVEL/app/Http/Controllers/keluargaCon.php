@@ -50,14 +50,23 @@ class keluargaCon extends Controller
                 'rw'=>$data->rw,
                 'kode_pos'=>$data->kode_pos,
                 'status'=>$stat,
-                'user_id'=>$data->user->name,
+                'user_id'=>$data->user->id,
+                'user_name'=>$data->user->name
                 ];
                 return $items;
             },
         );
 
 
+
         return response()->json($hasils);
+    }
+    public function byID($id){
+        $dt= keluarga::where('id',$id)->get();
+
+        return response()->json([
+            'data' => $dt,
+        ], 200);
     }
 
     public function addKeluarga(Request $req){
@@ -107,6 +116,33 @@ class keluargaCon extends Controller
             return response()->json(['message' => 'Data penduduk tidak ditemukan.'], 404);
         }
     }
+    public function update(Request $req, $id){
+
+        $validator=Validator::make($req->all(),[
+            'no_kk'=>'required',
+            'kk_nik'=>'required',
+            'kk_nama'=>'required',
+            'alamat'=>'required',
+            'rt'=>'required',
+            'rw'=>'required',
+            'kode_pos'=>'required',
+            'status'=>'required',
+            'user_id'=>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson());
+        }
+        $save=keluarga::where('id', $id)->update($req->all());
+        if ($save) {
+            return response()->json(['status'=>true,'massage'=>'sukses menambah siswa']);
+        }
+        else{
+            return response()->json(['status'=>false,'massage'=>'gagal menambah siswa']);
+        }
+    }
+
 
 
 }
+

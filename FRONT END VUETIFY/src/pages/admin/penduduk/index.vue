@@ -217,7 +217,7 @@ export default {
       }
     },
     edit(item) {
-      this.$router.push(`/penduduk/edit/${item}`);
+      this.$router.push(`/admin/penduduk/edit/${item}`);
     },
     getPen() {
       axios

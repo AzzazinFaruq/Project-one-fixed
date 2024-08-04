@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <navbar v-if="!isLoginPage && !reg  && !index"  :key="$route.fullPath"/>
+    <navbar v-if="!isLoginPage && !reg  && !index && !forbid"  :key="$route.fullPath"/>
     <v-main>
       <v-container fluid>
         <router-view/>
@@ -30,8 +30,9 @@ export default {
     const isLoginPage = computed(() => route.path === '/login');
     const reg = computed(() => route.path === '/register');
     const index = computed(() => route.path === '/');
+    const forbid= computed(() => route.path === '/forbidden');
 
-return { isLoginPage,reg,index };
+return { isLoginPage,reg,index,forbid};
   }
 
 };

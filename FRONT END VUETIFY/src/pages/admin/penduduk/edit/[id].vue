@@ -8,14 +8,18 @@
       <v-form class="ma-2 pa-2" @submit.prevent="post(form.id)">
         <v-row class="">
           <v-col>
-            <label>Nomer KK</label>
-            <v-text-field
-              clearable
+            <label for="">PILIH KELUARGA</label>
+            <v-autocomplete
+              :item-props="itemProps"
               :rules="rules"
+              :items="dataKel"
+              item-title="kels_id"
+              item-value="id"
+              v-model="form.kels_id"
               variant="outlined"
-              v-model="form.nomer_kk"
               required
-            ></v-text-field>
+            ></v-autocomplete>
+
           </v-col>
           <v-col>
             <label class="">NIK</label>
@@ -63,7 +67,7 @@
         <v-row class="">
           <v-col>
             <label for="">Jenis Kelamin</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               :items="kelamin"
               item-title="name"
@@ -71,11 +75,12 @@
               v-model="form.kelamin"
               variant="outlined"
               required
-            ></v-select>
+            ></v-autocomplete>
+
           </v-col>
           <v-col>
             <label for="">Status Kawin</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="statusKawin"
@@ -83,11 +88,11 @@
               item-value="id"
               required
               v-model="form.stat_kawin"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
           <v-col>
             <label for="">Hubungan Keluarga</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="hubungan"
@@ -95,13 +100,13 @@
               item-value="id"
               required
               v-model="form.hub_kel"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
           <v-col>
             <label for="">Warga Negara</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="warga"
@@ -109,11 +114,11 @@
               item-value="id"
               required
               v-model="form.warga_neg"
-            ></v-select
+            ></v-autocomplete
           ></v-col>
           <v-col>
             <label for="">Agama</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="agama"
@@ -121,13 +126,13 @@
               item-value="id"
               required
               v-model="form.agama"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
           <v-col>
             <label for="">Pendidikan</label>
-            <v-select
+            <v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="pendidikan"
@@ -135,11 +140,11 @@
               item-value="id"
               required
               v-model="form.pendidikan"
-            ></v-select
+            ></v-autocomplete
           ></v-col>
           <v-col>
             <label for="">Pekerjaan</label
-            ><v-select
+            ><v-autocomplete
               :rules="rules"
               variant="outlined"
               :items="pekerjaan"
@@ -147,7 +152,7 @@
               item-value="id"
               required
               v-model="form.pekerjaan"
-            ></v-select>
+            ></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="">
@@ -173,14 +178,6 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <label class="">Kepala Keluarga</label>
-        <v-text-field
-          clearable
-          :rules="rules"
-          variant="outlined"
-          required
-          v-model="form.kepala_kel"
-        ></v-text-field>
         <label class="">Nomor HP</label>
         <v-text-field
           clearable
@@ -198,7 +195,7 @@
           v-model="form.domisili"
         ></v-textarea>
         <label>Status</label
-        ><v-select
+        ><v-autocomplete
           :rules="rules"
           variant="outlined"
           :items="stat"
@@ -206,7 +203,7 @@
           item-value="id"
           required
           v-model="form.stat"
-        ></v-select>
+        ></v-autocomplete>
         <v-btn
           class="mt-4"
           location="center"
@@ -238,6 +235,7 @@ export default {
   },
   data() {
     return {
+      datakel:[],
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
@@ -248,25 +246,27 @@ export default {
       stat: useData.stat,
       form: [
         {
-          id: "",
-          nomer_kk: "",
-          nik: "",
-          nama: "",
-          tmp_lhr: "",
-          tgl_lhr: "",
-          kelamin: "",
-          stat_kawin: "",
-          hub_kel: "",
-          warga_neg: "",
-          agama: "",
-          pendidikan: "",
-          pekerjaan: "",
-          ayah: "",
-          ibu: "",
-          kepala_kel: "",
-          no_hp: "",
-          domisili: "",
-          stat: "",
+        nomer_kk: "",
+        kels_id:'',
+        nik: "",
+        nama: "",
+        tmp_lhr: "",
+        tgl_lhr: new Date(),
+        kelamin: "",
+        stat_kawin: "",
+        hub_kel: "",
+        warga_neg: "",
+        agama: "",
+        pendidikan: "",
+        pekerjaan: "",
+        ayah: "",
+        ibu: "",
+        kepala_kel: "",
+        no_hp: "",
+        domisili: "",
+        stat: "",
+        user_id:'',
+        valid: false,
         },
       ],
 
@@ -278,7 +278,21 @@ export default {
   },
   setup() {},
   methods: {
+    getKeluarga(){
+      try{
+        axios.get("/api/keluarga")
+        .then((res)=>{
+          console.log(res.data);
+          this.dataKel=res.data;
+        })
+
+      }
+      catch(error){
+        return error;
+      }
+    },
     get() {
+      this.getKeluarga();
       try {
         const route = useRoute();
         axios
@@ -307,12 +321,17 @@ export default {
           )
           .then((res) => {
             console.log(res.message);
-            this.$router.replace("/penduduk");
+            this.$router.replace("/admin/penduduk");
           });
       } catch (error) {
         error;
       }
     },
+    itemProps (item) {
+        return {
+          title: item.no_kk+' ['+item.kk_nama+']'
+        }
+      }
   },
 };
 </script>
