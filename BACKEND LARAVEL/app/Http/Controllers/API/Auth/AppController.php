@@ -5,12 +5,9 @@ namespace App\Http\Controllers\API\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-<<<<<<< HEAD
 use Hash;
-=======
 use App\Models\Penduduk;
 use App\Models\keluarga;
->>>>>>> 012f50bff2332158689606eefa678a48360a8b95
 
 class AppController extends Controller
 {
@@ -28,7 +25,6 @@ class AppController extends Controller
 
         return response()->json($dt);
     }
-<<<<<<< HEAD
 
     public function userUpdate(Request $request, $id) {
 
@@ -51,7 +47,7 @@ class AppController extends Controller
 
         }
     }
-=======
+
     public function userData(Request $request)
     {
         $id = $request->user()->id;
@@ -132,5 +128,4 @@ class AppController extends Controller
     //         'data' => $dt,
     //     ], 200);
     // }
->>>>>>> 012f50bff2332158689606eefa678a48360a8b95
 }

@@ -1,6 +1,6 @@
 module.exports = {
   // options...
   devServer: {
-    proxy: "http://localhost:8000",
+    proxy: "https://apikk.spora.id",
   },
 };

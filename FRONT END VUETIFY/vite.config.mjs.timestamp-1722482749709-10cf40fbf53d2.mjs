@@ -41,10 +41,10 @@ var vite_config_default = defineConfig({
   },
   server: {
     port: 3e3,
-    proxy: "http://localhost:8000"
+    proxy: "https://apikk.spora.id"
   },
   devServer: {
-    proxy: "http://localhost:8000"
+    proxy: "https://apikk.spora.id"
   }
 });
 export {

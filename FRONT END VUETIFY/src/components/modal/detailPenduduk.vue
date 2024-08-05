@@ -45,7 +45,7 @@ const dt = ref([]);
 
 onMounted(
   async () =>
-    await axios.get("http://localhost:8000/api/penduduk/" + id).then((res) => {
+    await axios.get("https://apikk.spora.id/api/penduduk/" + id).then((res) => {
       console.log(res.data);
       dt.value = res.data;
     })
