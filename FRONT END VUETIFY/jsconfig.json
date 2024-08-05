@@ -6,8 +6,15 @@
     "baseUrl": "./",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["http://localhost:8000/api"]
+      "@/*": [
+        "http://localhost:8000/api"
+      ]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
   }
 }
