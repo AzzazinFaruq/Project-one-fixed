@@ -27,7 +27,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //USER API
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AppController::class, 'user']);
+<<<<<<< HEAD
     Route::put('/user-update/{id}', [AppController::class, 'userUpdate']);
+=======
+    Route::get('/userDt', [AppController::class, 'userData']);
+>>>>>>> 012f50bff2332158689606eefa678a48360a8b95
     Route::get('/userAll', [AppController::class, 'index']);
     //PENDUDUK API
     Route::get('/penduduk', [PendudukCon::class,'getPenduduk']);
@@ -39,7 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/deletePenduduk/{id}', [PendudukCon::class, 'destroy']);
     //KELUARGA API
     Route::get('/keluarga', [keluargaCon::class, 'index']);
-    Route::get('/keluarga/{id}', [keluargaCon::class, 'ByID']);
+    Route::get('/keluarga/{id}', [keluargaCon::class, 'getByID']);
     Route::post('/addKeluarga', [keluargaCon::class, 'addKeluarga']);
     Route::put('/editKeluarga/{id}', [keluargaCon::class, 'update']);
     Route::delete('/deleteKeluarga/{id}', [keluargaCon::class, 'destroy']);

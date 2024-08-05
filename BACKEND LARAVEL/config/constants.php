@@ -42,6 +42,7 @@ return [
 	'sex' => [
 		1 => 'LAKI-LAKI',
 		2 => 'PEREMPUAN',
+        3 => 'LAINNYA'
 	],
 	'jk' => [
 		1 => 'Lk',

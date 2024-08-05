@@ -126,11 +126,13 @@ export default {
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/admin/admin"  },
       { icon: "mdi-folder", text: "Data Penduduk", route: "/admin/penduduk" },
       { icon: "mdi-folder-home", text: "Data Keluarga", route: "/admin/keluarga" },
-      { icon: "mdi-information", text: "About", route: "about" },
+      { icon: "mdi-information", text: "About", route: "/about" },
     ],
     links2: [
       { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/user/dashboard" },
+      { icon: "mdi-folder", text: "Data Penduduk", route: "/user/penduduk" },
+      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/user/keluarga" },
       { icon: "mdi-information", text: "About", route: "/about" },
     ],
   }),
@@ -155,7 +157,7 @@ export default {
     },
     handleLogout() {
       try {
-        axios.post("http://localhost:8000/api/logout").then((res) => {
+        axios.post("/api/logout").then((res) => {
           console.log("Logout response:", res.data);
           this.logout = false;
           this.status();
@@ -172,7 +174,7 @@ export default {
 
     status() {
       try {
-        axios.get("http://localhost:8000/api/user").then((res) => {
+        axios.get("/api/user").then((res) => {
           this.data = res.data.data;
           this.success = res.data.success;
           this.role=res.data.data.level
