@@ -7,6 +7,7 @@ use App\Http\Controllers\API\Auth\AppController;
 use App\Http\Controllers\PendudukCon;
 use App\Http\Controllers\constCon;
 use App\Http\Controllers\keluargaCon;
+use App\Http\Controllers\universalCon as univ;
 
 
 /*
@@ -28,9 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AppController::class, 'user']);
     Route::put('/update/{id}', [AppController::class, 'userUpdate']);
-    Route::put('/pass-update/{id}', [AppController::class, 'PassUpdate']);
     Route::get('/userDt', [AppController::class, 'userData']);
-    Route::get('/userAll', [AppController::class, 'index']);
     //PENDUDUK API
     Route::get('/penduduk', [PendudukCon::class,'getPenduduk']);
     Route::get('/byID/{id}', [PendudukCon::class,'getbyID']);
@@ -47,6 +46,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/addKeluarga', [keluargaCon::class, 'addKeluarga']);
     Route::put('/editKeluarga/{id}', [keluargaCon::class, 'update']);
     Route::delete('/deleteKeluarga/{id}', [keluargaCon::class, 'destroy']);
+
+    //LAIN-LAIN
+    Route::get('/jumlah', [univ::class, 'dataCount']);
+    Route::get('/alive', [univ::class, 'aliveCount']);
+
 
 
 

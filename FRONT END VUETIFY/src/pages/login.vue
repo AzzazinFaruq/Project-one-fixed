@@ -105,7 +105,7 @@ export default {
             case true:
               localStorage.setItem('token', res.data.data.token);
               localStorage.setItem('auth', 'true');
-              // this.$router.push('/home')
+              this.$router.push('/home')
               break;
             case false:
               alert(res.data.message)

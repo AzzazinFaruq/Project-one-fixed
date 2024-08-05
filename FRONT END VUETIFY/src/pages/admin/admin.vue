@@ -1,13 +1,46 @@
 <template>
-  <v-container >
+  <v-container fluid class="m">
     <h1>Admin Dashboard</h1>
-    <p>Ini Adalah Halaman Dashboard Admin</p>
     <v-divider class="my-2"></v-divider>
-    <h5>Selamat Datang {{ data.name }}</h5>
-  </v-container>
-  <v-container >
+    <div class="mt-5">
+      <v-row>
+        <card
+      icon="mdi-home"
+      title="Keluarga"
+      description="Total Keluarga"
+      :count="keluarga"
+      card="brown-lighten-1"
+      color="brown-lighten-2"
 
-    <v-card class="pa-2">
+      />
+      <card
+      icon="mdi-account"
+      title="Penduduk"
+      description="Total Penduduk"
+      :count="penduduk"
+      card="light-blue-darken-2"
+      color="light-blue-darken-1 text-white"
+      />
+      <card
+      icon="mdi-account-check"
+      title="Aktif"
+      description="Penduduk Total"
+      :count="stat.aktif"
+      card="green-lighten-1"
+      color="green-lighten-2 text-white"
+      />
+      <card
+      icon="mdi-account-cancel"
+      title="Inaktif"
+      description="Penduduk Total"
+      :count="stat.inaktif"
+      color="red-accent-2"
+      card="red-lighten-1 text-white"
+      />
+      </v-row>
+    </div>
+    <div class="mt-5">
+      <v-card class="pa-2">
       <h3 class="ma-2">DATA TERBARU</h3>
       <v-divider></v-divider>
     <v-tabs
@@ -22,43 +55,11 @@
     <v-card-text>
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
-          <v-card>
-      <v-table>
-        <thead>
-      <tr>
-        <th class="text-left">
-          NOMOR KK
-        </th>
-        <th class="text-left">
-          NOMOR NIK
-        </th>
-        <th class="text-left">
-          NAMA
-        </th>
-        <th class="text-left">
-          STATUS
-        </th>
-        <th class="text-left">
-          USER
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="item in dtkel"
-        :key="item.id"
-      >
-        <td>{{ item.no_kk }}</td>
-        <td>{{ item.kk_nik }}</td>
-        <td>{{ item.kk_nama }}</td>
-        <td>{{ item.status }}</td>
-        <td>{{ item.user_id }}</td>
-      </tr>
-    </tbody>
-      </v-table>
-    </v-card>
+        <dtTable
+        :dthead="head"
+        :dtbody="dtkel"
+        />
         </v-tabs-window-item>
-
         <v-tabs-window-item value="two">
           Two
         </v-tabs-window-item>
@@ -69,14 +70,31 @@
       </v-tabs-window>
     </v-card-text>
   </v-card>
+    </div>
+
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
+import card from '@/components/card.vue';
+import dtTable from '@/components/dtTable.vue';
 export default {
+  components:{
+    card,dtTable
+  },
   data() {
     return {
+      head:[
+        {id:0, name:'NOMOR KK'},
+        {id:1, name:'NOMOR NIK'},
+        {id:2, name:'NAMA'},
+        {id:3, name:'STATUS'},
+        {id:4, name:'USER'}
+      ],
+      keluarga:0,
+      penduduk:'',
+      stat:[],
       tab: null,
       data: [],
       level:"none",
@@ -86,8 +104,24 @@ export default {
   mounted() {
     this.status();
     this.datalast();
+    this.counter();
+    this.alive();
   },
   methods: {
+    alive(){
+      axios.get('/api/alive')
+      .then((res)=>{
+        this.stat=res.data.data;
+      })
+    },
+    counter(){
+      axios.get('/api/jumlah')
+      .then((res)=>{
+        console.log(res.data)
+        this.keluarga=res.data.keluarga;
+        this.penduduk=res.data.penduduk;
+      })
+    },
     status() {
       try {
         axios.get("/api/user").then((res) => {
