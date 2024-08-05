@@ -5,44 +5,7 @@
       <span class="">PROJECT DATA</span>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-
-    <v-menu>
-      <template v-slot:activator="{ props }">
-        <v-btn v-bind="props">
-          {{ data.email }}
-        </v-btn>
-        <v-btn v-if="success=false">Login</v-btn>
-      </template>
-      <v-list >
-        <v-list-item >
-          <div class="ma-2 mb-4">
-            <h4>Anda Login Sebagai</h4>
-            <p class="mb-5">{{ data.name }}</p>
-            <v-divider></v-divider>
-            <v-btn
-              class="mt-5"
-              prepend-icon="mdi-logout"
-              x-small
-              elevation=""
-              color=""
-              @click="logout = true"
-              v-if="(success = true)"
-              >Logout</v-btn
-            >
-            <v-btn
-              class="mt-5"
-              prepend-icon="mdi-logout"
-              x-small
-              elevation=""
-              color=""
-              @click="logout = true"
-              v-else
-              >Login</v-btn
-            >
-          </div>
-        </v-list-item>
-      </v-list>
-    </v-menu>
+    <v-btn icon="mdi-logout" color="red" @click="logout=true"></v-btn>
 
     <v-menu>
       <template v-slot:activator="{ props }">
@@ -53,11 +16,12 @@
       <v-list density="comfortable">
         <v-list-item
           class=""
-          min-height=""
+          min-width="100"
           density="default"
-          v-for="(links, i) in links"
+          v-for="(links, i) in drawerdt"
           :key="i"
           :value="links"
+          :prepend-icon="links.icon"
           :to="links.route"
           :title="links.text"
         >
@@ -119,21 +83,25 @@ export default {
     data: [],
     success: false,
     drawer: true,
+    drawerdt:[
+      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
+      { icon: "mdi-account", text: "Profile", route: "/profile" },
 
+    ],
     links: [],
     links1: [
-      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/admin/admin"  },
       { icon: "mdi-folder", text: "Data Penduduk", route: "/admin/penduduk" },
       { icon: "mdi-folder-home", text: "Data Keluarga", route: "/admin/keluarga" },
+      { icon: "mdi-account", text: "Profile", route: "/profile" },
       { icon: "mdi-information", text: "About", route: "/about" },
     ],
     links2: [
-      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/user/dashboard" },
       { icon: "mdi-folder", text: "Data Penduduk", route: "/user/penduduk" },
       { icon: "mdi-folder-home", text: "Data Keluarga", route: "/user/keluarga" },
       { icon: "mdi-information", text: "About", route: "/about" },
+      { icon: "mdi-account", text: "Profile", route: "/profile" },
     ],
   }),
   mounted() {

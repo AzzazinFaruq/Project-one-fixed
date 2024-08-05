@@ -25,7 +25,7 @@
         <template v-slot:top>
           <v-row>
             <v-col>
-              <v-btn class="ma-2" href="/admin/penduduk/inputPenduduk" compact
+              <v-btn class="ma-2" href="/user/penduduk/inputPenduduk" compact
                 >Tambah data</v-btn
               ></v-col
             >
@@ -216,7 +216,7 @@ export default {
       }
     },
     edit(item) {
-      this.$router.push(`/admin/penduduk/edit/${item}`);
+      this.$router.push(`/user/penduduk/edit/${item}`);
     },
     getPen() {
       axios

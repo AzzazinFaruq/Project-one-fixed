@@ -16,7 +16,7 @@
 <template v-slot:top>
   <v-row>
     <v-col>
-      <v-btn class="ma-2" color="white" href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
+      <v-btn class="ma-2" color="white" href="/user/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
     </v-col>
     <v-col>
 <v-text-field
@@ -114,7 +114,7 @@ export default{
   },
   methods :{
     edit(item) {
-      this.$router.push(`/admin/keluarga/edit/${item}`);
+      this.$router.push(`/user/keluarga/edit/${item}`);
     },
     role(){
       try {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Hash;
+use Validator;
 use App\Models\Penduduk;
 use App\Models\keluarga;
 
@@ -30,6 +31,7 @@ class AppController extends Controller
 
         $data = [
             'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
             'updated_at' => now(),
         ];
@@ -47,7 +49,26 @@ class AppController extends Controller
 
         }
     }
+    public function PassUpdate(Request $request, $id) {
 
+        $data = [
+            'password' => Hash::make($request->password),
+            'updated_at' => now(),
+        ];
+
+        if (User::where('id', $id)->update($data)) {
+            return [
+                'message' => 'Sukses',
+                'status' => 200,
+            ];
+        } else {
+            return [
+                'message' => 'Gagal Update',
+                'status' => 400,
+            ];
+
+        }
+    }
     public function userData(Request $request)
     {
         $id = $request->user()->id;

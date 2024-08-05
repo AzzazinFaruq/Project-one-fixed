@@ -154,7 +154,7 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.$router.push("/admin/keluarga");
+              this.$router.go(-1);
             }
           });
       } catch (error) {

@@ -321,7 +321,7 @@ export default {
           )
           .then((res) => {
             console.log(res.message);
-            this.$router.replace("/admin/penduduk");
+            this.$router.go(-1);
           });
       } catch (error) {
         error;

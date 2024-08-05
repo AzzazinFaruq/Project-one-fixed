@@ -7,8 +7,8 @@
 
       <v-form class="ma-2 pa-2" @submit.prevent="post" lazy-validation>
         <v-row class="">
-          <v-col>
-            <label for="">PILIH KELUARGA</label>
+          <v-col >
+            <label for="">PILIH NO KK / KEPALA KELUARGA</label>
             <v-autocomplete
               :item-props="itemProps"
               :rules="rules"
@@ -19,9 +19,9 @@
               variant="outlined"
               required
             ></v-autocomplete>
-
+            <v-btn color="black" variant="outlined" class='mb-4' href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
           </v-col>
-          <v-col>
+          <v-col >
             <label class="">NIK</label>
             <v-text-field
               clearable
@@ -314,7 +314,7 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.$router.push("/admin/penduduk");
+              this.$router.go(-1);
             }
           });
       } catch (error) {

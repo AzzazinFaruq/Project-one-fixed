@@ -131,7 +131,7 @@ export default {
     get() {
       const route = useRoute();
       try {
-        axios.get(`/api/keluarga/${route.params.id}`)
+        axios.get(`/api/kel/${route.params.id}`)
         .then((res)=>{
           this.form =  res.data.data[0];
         })
@@ -163,7 +163,7 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.$router.push("/admin/keluarga");
+              this.$router.go(-1);
             }
           });
       } catch (error) {

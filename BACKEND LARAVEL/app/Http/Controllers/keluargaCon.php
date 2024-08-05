@@ -8,6 +8,27 @@ use Illuminate\Support\Facades\Validator;
 
 class keluargaCon extends Controller
 {
+    public function latest(){
+        $datas = keluarga::latest()->with('user')->take(5)->get();
+        $hasils= $datas->reduce(
+            function ($items, $data){
+                $stat=keluarga::stat($data->status);
+                $items[] = [
+                'id'=>$data->id,
+                'no_kk'=>$data->no_kk,
+                'kk_nik'=>$data->kk_nik,
+                'status'=>$stat,
+                'kk_nama'=>$data->kk_nama,
+                'user_id'=>$data->user->name,
+                ];
+                return $items;
+            },
+        );
+
+
+        return response()->json($hasils);
+
+    }
     public function index(){
         $datas = keluarga::with('user')->get();
         $hasils= $datas->reduce(

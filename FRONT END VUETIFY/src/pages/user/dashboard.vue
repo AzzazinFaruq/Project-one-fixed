@@ -4,6 +4,11 @@
     <v-divider class="mb-3"> </v-divider>
     <p>Selamat Datang, <b>{{ this.data.name }}</b></p>
   </v-container>
+  <v-container >
+<v-card>
+  vtable
+</v-card>
+  </v-container>
 </template>
 
 <script>
