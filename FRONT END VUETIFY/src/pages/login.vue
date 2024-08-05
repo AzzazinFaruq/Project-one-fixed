@@ -63,13 +63,31 @@ export default {
   data() {
     return {
       role:"",
+      success:false,
       form: {
         email: "",
         password: "",
       },
     };
   },
+  mounted(){
+    this.check();
+  },
   methods: {
+    check(){
+      axios.get('/api/user')
+      .then((res)=>{
+        this.success=res.data.success;
+        switch (this.success) {
+            case true:
+              alert('ANDA SUDAH LOGIN!!')
+              this.$router.push('/home')
+              break;
+            case false:
+              break;
+          }
+      })
+    },
     getToken() {
       axios
         .get("/sanctum/csrf-cookie")
@@ -81,8 +99,19 @@ export default {
       this.getToken();
       try {
         axios.post("/api/login", this.form).then((res) => {
-          this.$router.push('/home')
-          localStorage.setItem('auth', 'true');
+          console.log(res.data.data.token)
+          this.success = res.data.success;
+          switch (this.success) {
+            case true:
+              localStorage.setItem('token', res.data.data.token);
+              localStorage.setItem('auth', 'true');
+              // this.$router.push('/home')
+              break;
+            case false:
+              alert(res.data.message)
+              break;
+          }
+
         });
       } catch (error) {
         alert(error);

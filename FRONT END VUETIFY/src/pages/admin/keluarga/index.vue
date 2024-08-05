@@ -72,7 +72,7 @@
               </v-row>
               <v-row>
                 <v-col>User</v-col>
-                <v-col>{{ data.user_id }}</v-col>
+                <v-col>{{ data.user_name }}</v-col>
               </v-row>
 
             </div>
@@ -136,7 +136,7 @@ export default{
       try {
         this.load();
         axios.get(`/api/keluarga/${id}`).then((res) => {
-          this.detailKeluarga = res.data.data;
+          this.detailKeluarga = res.data;
           console.log(res.data);
           this.dialDetail = true;
           this.selectedId=id;
