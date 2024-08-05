@@ -7,7 +7,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": [
-        "http://localhost:8000/api"
+        "https://apikk.spora.id/api"
       ]
     },
     "lib": [

@@ -44,9 +44,9 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    proxy: "http://localhost:8000",
+    proxy: "https://apikk.spora.id",
   },
   devServer: {
-    proxy: "http://localhost:8000",
+    proxy: "https://apikk.spora.id",
   },
 });
