@@ -6,17 +6,24 @@ use App\Models\Penduduk;
 use Illuminate\Http\Request;
 use App\Http\Resources\PendudukRes;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class PendudukCon extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function getPenduduk()
+    public function getPenduduk(Request $request)
     {
-        $dt=Penduduk::paginate(10);
-
-        $datas = Penduduk::with('keluarga','user')->paginate(10);
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = Penduduk::where('user_id',$id)->with('keluarga','user')->paginate(10);
+        }
+        else {
+            $datas = Penduduk::with('keluarga','user')->paginate(10);
+        }
               $hasils= $datas->reduce(
                 function ($items, $data){
 
@@ -75,20 +82,56 @@ class PendudukCon extends Controller
 // return $posts;
         return response()->json([
             'success' => true,
-
             'data' => $hasils
-
-
-
         ], 200);
 
     }
     public function getbyID($id){
         $dt= Penduduk::where('id',$id)->get();
-
         return response()->json([
             'data' => $dt,
         ], 200);
+    }
+    public function latest(Request $request)
+    {
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = Penduduk::where('user_id',$id)->latest()->take(5)->get();
+        }
+        else {
+            $datas = Penduduk::latest()->take(5)->get();
+        }
+        $hasil = $datas->reduce(
+            function ($items, $data){
+
+                $agama=penduduk::agama($data->agama);
+                $hub=penduduk::hub_kel($data->hub_kel);
+                $stat_kwn=penduduk::stat_kawin($data->stat_kawin);
+                $kelamin=penduduk::kelamin($data->kelamin);
+                $pendidikan=penduduk::pendidikan($data->pendidikan);
+                $pekerjaan=penduduk::pekerjaan($data->pekerjaan);
+                $stat=penduduk::stat($data->stat);
+                $warga=penduduk::warga_neg($data->warga_neg);
+
+
+                $items[] = [
+                    'id'=>$data->id,
+                    'kk'=>$data->keluarga->no_kk.' / '.$data->keluarga->kk_nama,
+                    'nik' =>$data->nik,
+                    'nama'=>$data->nama,
+                    'kepala_kel'=>$data->keluarga->kk_nama,
+                    'status' =>$stat,
+                    'user_id'=>$data->user->name
+
+                ];
+                return $items;
+            }, []
+        );
+
+
+    return response()->json($hasil);
     }
     public function showPenduduk($id)
     {

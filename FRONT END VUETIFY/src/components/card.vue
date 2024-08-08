@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto my-4" :color="card" min-width="300">
+  <v-card class="mx-1 my-4" :color="card" min-width="295" elevation="10">
       <v-row class="ma-1">
         <v-col>
           <h1>{{ title }}</h1>
@@ -12,7 +12,7 @@
       <div>
         <v-row class="">
         <v-col class="">
-          <v-btn class="ml-3" append-icon="mdi-arrow-right" :color="color">Detail</v-btn>
+          <v-btn class="ml-3" append-icon="mdi-arrow-right" :color="color" :href="route">Detail</v-btn>
         </v-col>
         <v-col class="text-right pt-2">
         <v-chip
@@ -33,6 +33,10 @@
 export default {
   name: 'DataCard',
   props: {
+    route:{
+      type: String,
+      required: true
+    },
     card:{
       type: String,
       required: true

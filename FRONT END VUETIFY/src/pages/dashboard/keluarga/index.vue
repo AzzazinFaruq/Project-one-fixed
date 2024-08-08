@@ -16,7 +16,7 @@
 <template v-slot:top>
   <v-row>
     <v-col>
-      <v-btn class="ma-2" color="white" href="/user/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
+      <v-btn class="ma-2" color="white" href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
     </v-col>
     <v-col>
 <v-text-field
@@ -103,7 +103,7 @@ export default{
         { title: "Nomer KK", value: "no_kk" },
         { title: "Nama", value: "kk_nama" },
         { title: "Status", value: "status" },
-        { title: "User", value: "user_name" },
+        { title: "User", value: "user_id" },
         { title: "Action", value: "actions" },
       ],
     }
@@ -114,22 +114,7 @@ export default{
   },
   methods :{
     edit(item) {
-      this.$router.push(`/user/keluarga/edit/${item}`);
-    },
-    role(){
-      try {
-        axios.get("/api/user").then((res) => {
-          this.data = res.data.data;
-          this.level = res.data.data.level
-          switch(this.level){
-            case "enum":
-              this.$router.push("/forbidden")
-              break;
-          }
-        });
-      } catch (error) {
-        console.error(error);
-      }
+      this.$router.push(`/admin/keluarga/edit/${item}`);
     },
     detail(id) {
       try {
@@ -144,10 +129,10 @@ export default{
     },
     getKeluarga(){
       try{
-        axios.get("/api/userDt")
+        axios.get("/api/keluarga")
         .then((res)=>{
           console.log(res.data)
-          this.dataKeluarga=res.data.keluarga;
+          this.dataKeluarga=res.data;
         })
 
       }

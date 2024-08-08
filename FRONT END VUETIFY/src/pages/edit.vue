@@ -1,5 +1,17 @@
 <template>
-  <v-card>
+  <v-container fluid>
+    <v-alert
+      v-model="notif"
+      density='compact'
+      type="success"
+      variant="tonal"
+      title="Sukses"
+
+      closable
+    >
+    Sukses Edit Password User
+    </v-alert>
+    <v-card class="mt-3">
     <v-card-title primary-title>
       Edit Profile
     </v-card-title>
@@ -8,7 +20,6 @@
         <label for="">Nama</label>
         <v-text-field
         clearable
-          :rules="rules"
           variant="outlined"
           v-model="dtuser.name"
           required
@@ -16,7 +27,6 @@
         <label for="">Email</label>
         <v-text-field
           clearable
-          :rules="rules"
           variant="outlined"
           v-model="dtuser.email"
           required
@@ -56,9 +66,9 @@
           </v-card-text>
         </v-card>
         </v-dialog>
-
     </v-card-text>
   </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -66,6 +76,7 @@ import axios from 'axios';
 export default {
 data(){
   return{
+    notif:false,
     dialog:false,
     password:'',
     dtuser:{
@@ -106,6 +117,10 @@ methods: {
   passup(id){
     try {
       axios.put(`/api/update/${id}`,this.dtuser)
+      .then((res)=>{
+        this.dialog=false;
+        this.notif=true;
+      })
     } catch (error) {
 
     }

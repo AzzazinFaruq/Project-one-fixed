@@ -25,7 +25,7 @@
         <template v-slot:top>
           <v-row>
             <v-col>
-              <v-btn class="ma-2" href="/user/penduduk/inputPenduduk" compact
+              <v-btn class="ma-2" href="/admin/penduduk/inputPenduduk" compact
                 >Tambah data</v-btn
               ></v-col
             >
@@ -197,6 +197,7 @@ export default {
     };
   },
   mounted() {
+    this.role();
     this.getPen();
   },
   methods: {
@@ -205,25 +206,25 @@ export default {
         axios.get("/api/user").then((res) => {
           this.data = res.data.data;
           this.level = res.data.data.level
-          switch(this.level){
-            case "enum":
-              this.$router.push("/forbidden")
-              break;
-          }
+          // switch(this.level){
+          //   case "enum":
+          //     this.$router.push("/forbidden")
+          //     break;
+          // }
         });
       } catch (error) {
         console.error(error);
       }
     },
     edit(item) {
-      this.$router.push(`/user/penduduk/edit/${item}`);
+      this.$router.push(`/admin/penduduk/edit/${item}`);
     },
     getPen() {
       axios
-        .get("/api/userDt")
+        .get("/api/penduduk")
         .then((response) => {
           console.log(response.data);
-          this.getitem = response.data.penduduk;
+          this.getitem = response.data.data;
         })
         .catch((error) => {
           console.log(error);

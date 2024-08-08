@@ -7,11 +7,9 @@
 // Plugins
 import { registerPlugins } from "@/plugins";
 import { createPinia } from "pinia";
-
-
+import VueApexCharts from "vue3-apexcharts";
 // Components
 import App from "./App.vue";
-
 // Composables
 import { createApp } from "vue";
 import axios from "axios";
@@ -26,6 +24,6 @@ const pinia = createPinia();
 const app = createApp(App);
 
 registerPlugins(app);
-
+app.use(VueApexCharts);
 app.use(pinia);
 app.mount("#app");

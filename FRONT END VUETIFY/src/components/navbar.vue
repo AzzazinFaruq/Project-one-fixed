@@ -46,7 +46,7 @@
       class=""
       min-height=""
       density="default"
-      v-for="(links, i) in links"
+      v-for="(links, i) in links1"
       :key="i"
       :value="links"
       :to="links.route"
@@ -88,41 +88,18 @@ export default {
       { icon: "mdi-account", text: "Profile", route: "/profile" },
 
     ],
-    links: [],
     links1: [
-      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/admin/admin"  },
-      { icon: "mdi-folder", text: "Data Penduduk", route: "/admin/penduduk" },
-      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/admin/keluarga" },
+      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/dashboard"  },
+      { icon: "mdi-folder", text: "Data Penduduk", route: "/dashboard/penduduk" },
+      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/dashboard/keluarga" },
       { icon: "mdi-account", text: "Profile", route: "/profile" },
       { icon: "mdi-information", text: "About", route: "/about" },
-    ],
-    links2: [
-      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/user/dashboard" },
-      { icon: "mdi-folder", text: "Data Penduduk", route: "/user/penduduk" },
-      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/user/keluarga" },
-      { icon: "mdi-information", text: "About", route: "/about" },
-      { icon: "mdi-account", text: "Profile", route: "/profile" },
     ],
   }),
   mounted() {
     this.status();
-    this.navlist();
   },
   methods: {
-    navlist() {
-      switch(this.role){
-            case "superAdmin":
-              this.links=this.links1
-              break;
-            case "enum":
-              this.links=this.links2
-              break;
-            case "admin":
-              this.links=this.links2
-              break;
-
-          }
-    },
     handleLogout() {
       try {
         axios.post("/api/logout").then((res) => {

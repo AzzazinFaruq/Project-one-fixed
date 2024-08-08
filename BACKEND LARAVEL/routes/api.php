@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/userDt', [AppController::class, 'userData']);
     //PENDUDUK API
     Route::get('/penduduk', [PendudukCon::class,'getPenduduk']);
+    Route::get('/latestpen', [PendudukCon::class,'latest']);
     Route::get('/byID/{id}', [PendudukCon::class,'getbyID']);
     Route::get('/penduduk/{id}', [PendudukCon::class,'showPenduduk']);
     Route::put('/updatePenduduk/{id}', [PendudukCon::class,'updatePenduduk']);
@@ -50,6 +51,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //LAIN-LAIN
     Route::get('/jumlah', [univ::class, 'dataCount']);
     Route::get('/alive', [univ::class, 'aliveCount']);
+    Route::get('/marry', [univ::class, 'marryCount']);
+    Route::get('/gender', [univ::class, 'genderCount']);
+    Route::get('/data', [univ::class, 'rangeData']);
 
 
 

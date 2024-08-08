@@ -5,20 +5,29 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\keluarga;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class keluargaCon extends Controller
 {
-    public function latest(){
-        $datas = keluarga::latest()->with('user')->take(5)->get();
+    public function latest(Request $request){
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = keluarga::where('user_id',$id)->latest()->with('user')->take(5)->get();
+        }
+        else {
+            $datas = keluarga::latest()->with('user')->take(5)->get();
+        }
         $hasils= $datas->reduce(
             function ($items, $data){
                 $stat=keluarga::stat($data->status);
                 $items[] = [
                 'id'=>$data->id,
-                'no_kk'=>$data->no_kk,
-                'kk_nik'=>$data->kk_nik,
+                'kk'=>$data->no_kk,
+                'nik'=>$data->kk_nik,
                 'status'=>$stat,
-                'kk_nama'=>$data->kk_nama,
+                'nama'=>$data->kk_nama,
                 'user_id'=>$data->user->name,
                 ];
                 return $items;
@@ -29,8 +38,17 @@ class keluargaCon extends Controller
         return response()->json($hasils);
 
     }
-    public function index(){
-        $datas = keluarga::with('user')->get();
+    public function index(Request $request){
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = keluarga::where('user_id',$id)->with('user')->get();
+        }
+        else {
+            $datas = keluarga::with('user')->get();
+        }
+
         $hasils= $datas->reduce(
             function ($items, $data){
                 $stat=keluarga::stat($data->status);

@@ -3,14 +3,15 @@
     <h1>Admin Dashboard</h1>
     <v-divider class="my-2"></v-divider>
     <div class="mt-5">
-      <v-row>
-        <card
-      icon="mdi-home"
+    <v-row class="m-2">
+     <card
+      icon="mdi-human-male-female-child"
       title="Keluarga"
       description="Total Keluarga"
       :count="keluarga"
       card="brown-lighten-1"
       color="brown-lighten-2"
+      route="/admin/keluarga"
 
       />
       <card
@@ -20,6 +21,7 @@
       :count="penduduk"
       card="light-blue-darken-2"
       color="light-blue-darken-1 text-white"
+      route="/admin/penduduk"
       />
       <card
       icon="mdi-account-check"
@@ -37,10 +39,21 @@
       color="red-accent-2"
       card="red-lighten-1 text-white"
       />
-      </v-row>
+    </v-row>
     </div>
     <div class="mt-5">
-      <v-card class="pa-2">
+        <v-row justify="center" class="ma-2" elevation="5">
+          <marrychart/>
+          <genderchart/>
+      </v-row>
+    </div>
+    <div class="mt-5" >
+      <v-row justify="center">
+        <totalchart/>
+      </v-row>
+    </div>
+    <div class="mt-10">
+      <v-card class="pa-2" elevation="10">
       <h3 class="ma-2">DATA TERBARU</h3>
       <v-divider></v-divider>
     <v-tabs
@@ -56,16 +69,15 @@
       <v-tabs-window v-model="tab">
         <v-tabs-window-item value="one">
         <dtTable
-        :dthead="head"
+        :dthead="headkel"
         :dtbody="dtkel"
         />
         </v-tabs-window-item>
         <v-tabs-window-item value="two">
-          Two
-        </v-tabs-window-item>
-
-        <v-tabs-window-item value="three">
-          Three
+        <dtTable
+        :dthead="headpen"
+        :dtbody="dtpen"
+        />
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>
@@ -76,36 +88,46 @@
 </template>
 
 <script>
+import genderchart from '@/components/chart/genderchart.vue';
+import marrychart from '@/components/chart/marrychart.vue';
+import totalchart from '@/components/chart/totalchart.vue';
 import axios from 'axios'
 import card from '@/components/card.vue';
 import dtTable from '@/components/dtTable.vue';
+
 export default {
   components:{
-    card,dtTable
   },
   data() {
     return {
-      head:[
+      headkel:[
         {id:0, name:'NOMOR KK'},
         {id:1, name:'NOMOR NIK'},
         {id:2, name:'NAMA'},
         {id:3, name:'STATUS'},
         {id:4, name:'USER'}
       ],
+      headpen:[
+        {id:0, name:'NOMOR KK / KEPALA KELUARGA'},
+        {id:1, name:'NOMOR NIK'},
+        {id:2, name:'NAMA'},
+        {id:3, name:'STATUS'},
+        {id:4, name:'USER'}
+      ],
+
       keluarga:0,
       penduduk:'',
       stat:[],
-      tab: null,
+      tab: 'one',
       data: [],
       level:"none",
-      dtkel:[]
+      dtkel:[],
+      dtpen:[]
     };
   },
   mounted() {
-    this.status();
-    this.datalast();
-    this.counter();
-    this.alive();
+    this.kellast();
+    this.fetchData();
   },
   methods: {
     alive(){
@@ -122,28 +144,40 @@ export default {
         this.penduduk=res.data.penduduk;
       })
     },
-    status() {
-      try {
-        axios.get("/api/user").then((res) => {
-          this.data = res.data.data;
-          this.level = res.data.data.level
-          switch(this.level){
-            case "enum":
-              this.$router.push("/forbidden")
-              break;
-            default:
-              break;
-          }
-        });
-      } catch (error) {
-        console.error(error);
-      }
+    async fetchData() {
+        this.penlast();
+        this.counter();
+        this.alive();
     },
-    datalast(){
+    status() {
+      // try {
+      //   axios.get("/api/user").then((res) => {
+      //     this.data = res.data.data;
+      //     this.level = res.data.data.level
+      //     switch(this.level){
+      //       case "enum":
+      //         this.$router.push("/forbidden")
+      //         break;
+      //       default:
+      //         break;
+      //     }
+      //   });
+      // } catch (error) {
+      //   console.error(error);
+      // }
+    },
+    kellast(){
       axios.get('/api/latestkel')
       .then((res)=>{
         console.log(res.data)
         this.dtkel = res.data;
+      })
+    },
+    penlast(){
+      axios.get('/api/latestpen')
+      .then((res)=>{
+        console.log(res.data)
+        this.dtpen = res.data;
       })
     }
   },

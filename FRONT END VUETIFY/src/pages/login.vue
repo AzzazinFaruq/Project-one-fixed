@@ -81,7 +81,7 @@ export default {
         switch (this.success) {
             case true:
               alert('ANDA SUDAH LOGIN!!')
-              this.$router.push('/home')
+              this.$router.push('/dashboard')
               break;
             case false:
               break;
@@ -99,13 +99,12 @@ export default {
       this.getToken();
       try {
         axios.post("/api/login", this.form).then((res) => {
-          console.log(res.data.data.token)
           this.success = res.data.success;
           switch (this.success) {
             case true:
               localStorage.setItem('token', res.data.data.token);
               localStorage.setItem('auth', 'true');
-              this.$router.push('/home')
+              this.$router.push('/dashboard')
               break;
             case false:
               alert(res.data.message)

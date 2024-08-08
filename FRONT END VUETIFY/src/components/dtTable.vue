@@ -16,9 +16,9 @@
         v-for="item in dtbody"
         :key="item.id"
       >
-        <td>{{ item.no_kk }}</td>
-        <td>{{ item.kk_nik }}</td>
-        <td>{{ item.kk_nama }}</td>
+        <td>{{ item.kk }}</td>
+        <td>{{ item.nik }}</td>
+        <td>{{ item.nama }}</td>
         <td>{{ item.status }}</td>
         <td>{{ item.user_id }}</td>
       </tr>
