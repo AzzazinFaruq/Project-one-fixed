@@ -1,18 +1,15 @@
 import { defineStore } from "pinia";
-
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    role: 'user', // Default role, bisa diganti sesuai kebutuhan
-  }),
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+export const test = defineStore({
+  id: "setup",
   actions: {
-    setRole(newRole) {
-      this.role = newRole;
-    },
-    isRole(role) {
-      return this.role === role;
-    },
-    isNotRole(role) {
-      return this.role !== role;
-    },
+    setup(){
+      const isAdmin = computed(() => localStorage.getItem('auth') === 'true');
+      const route = useRouter();
+      if (!isAdmin.value) {
+        route.push('/login')
+      }
+    }
   },
 });

@@ -185,8 +185,12 @@
 <script>
 import axios from "axios";
 import { succes } from "./inputPenduduk.vue";
+import { test } from '@/stores/restrict';
+const use = test();
 export default {
-
+  setup(){
+    use.setup();
+  },
   data() {
     return {
       notif:succes,

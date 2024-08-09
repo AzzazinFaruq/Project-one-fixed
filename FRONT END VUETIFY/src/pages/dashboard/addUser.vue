@@ -91,7 +91,12 @@
 </template>
 <script>
 import axios from "axios";
+import { test } from '@/stores/restrict';
+const use = test();
 export default {
+  setup(){
+    use.setup();
+  },
   data() {
     return {
       form: {
@@ -130,6 +135,9 @@ export default {
             this.data = res.data.data.level;
             if (this.data=='superAdmin') {
               this.status=false;
+            }
+            else if (this.data=='enum') {
+              this.$router.push('/forbidden')
             }
           });
       } catch (error) {

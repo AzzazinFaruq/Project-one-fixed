@@ -3,12 +3,7 @@
     <h1>Welcome, {{ name }}</h1>
     <v-divider></v-divider>
     <v-btn color="success" class="mt-3" variant="outlined" @click="goTo()">Go to Dashboard</v-btn>
-
-
   </v-container>
-
-
-
 </template>
 <script>
 import axios from 'axios';

@@ -1,7 +1,7 @@
 <template>
   <h1>403 FORBIDDEN ACCESS</h1>
   <p>you dont have permission to acces this page</p>
-  <a href="/home">Back to Home</a>
+  <a href="/dashboard">Back to Home</a>
 </template>
 <script>
 import { computed } from 'vue';

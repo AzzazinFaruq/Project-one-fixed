@@ -108,8 +108,13 @@ import axios from 'axios'
 import card from '@/components/card.vue';
 import dtTable from '@/components/dtTable.vue';
 import { success } from '../login.vue';
+import { test } from '@/stores/restrict';
+const use = test();
 
 export default {
+  setup(){
+    use.setup();
+  },
   components:{
   },
   data() {

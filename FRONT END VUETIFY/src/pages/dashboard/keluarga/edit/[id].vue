@@ -88,11 +88,13 @@
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { useCons } from "@/stores/constant";
+import { test } from '@/stores/restrict';
+const use = test();
 const useData = useCons();
 export default {
   setup() {
+    use.setup();
     const useData = useCons();
-
     return {
       useData,
     };

@@ -221,10 +221,13 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useCons } from "@/stores/constant";
+import { test } from '@/stores/restrict';
+const use = test();
 const useData = useCons();
 
 export default {
   setup() {
+    use.setup();
     const useData = useCons();
     const router = useRouter();
 

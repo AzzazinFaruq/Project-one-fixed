@@ -32,7 +32,12 @@
 </template>
 <script>
 import axios from 'axios';
+import { test } from '@/stores/restrict';
+const use = test();
 export default {
+setup(){
+  use.setup();
+},
 data(){
   return{
     userdata:[],
