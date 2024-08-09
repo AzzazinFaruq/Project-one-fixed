@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <navbar v-if="!isLoginPage && !reg  && !index && !forbid"  :key="$route.fullPath"/>
+    <navbar v-if="!isLoginPage && !reg  && !index && !forbid"/>
     <v-main>
       <v-container fluid>
         <router-view/>

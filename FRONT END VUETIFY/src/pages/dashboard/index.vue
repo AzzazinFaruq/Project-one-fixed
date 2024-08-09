@@ -2,6 +2,19 @@
   <v-container fluid class="m">
     <h1>Admin Dashboard</h1>
     <v-divider class="my-2"></v-divider>
+    <div>
+      <v-alert
+      v-model="notif"
+      class="my-5"
+      density='compact'
+      type="success"
+      variant="Tonal"
+      title="Success"
+      closable
+    >
+    Sukses Login
+    </v-alert>
+    </div>
     <div class="mt-5">
     <v-row class="m-2">
      <card
@@ -94,12 +107,14 @@ import totalchart from '@/components/chart/totalchart.vue';
 import axios from 'axios'
 import card from '@/components/card.vue';
 import dtTable from '@/components/dtTable.vue';
+import { success } from '../login.vue';
 
 export default {
   components:{
   },
   data() {
     return {
+      notif:success,
       headkel:[
         {id:0, name:'NOMOR KK'},
         {id:1, name:'NOMOR NIK'},

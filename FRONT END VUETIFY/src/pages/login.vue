@@ -27,13 +27,13 @@
               variant="outlined"
               color
             ></v-text-field>
-            <v-row class="mb-4">
+            <!-- <v-row class="mb-4">
               <v-col>
                 <p class="font-weight-light text-center">
                   <a class="no-underline" href="/register">Sign Up</a>
                 </p>
               </v-col>
-            </v-row>
+            </v-row> -->
             <v-btn
               location="center"
               class="mt-4"
@@ -53,6 +53,7 @@
 import axios from "axios";
 import { useRouter } from "vue-router";
 const router = useRouter();
+export var success=false;
 export default {
   setup() {
     const router = useRouter();
@@ -104,6 +105,7 @@ export default {
             case true:
               localStorage.setItem('token', res.data.data.token);
               localStorage.setItem('auth', 'true');
+              success=true;
               this.$router.push('/dashboard')
               break;
             case false:

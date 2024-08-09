@@ -221,6 +221,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useCons } from "@/stores/constant";
 const useData = useCons();
+export var succes=false;
 export default {
   setup() {
     const useData = useCons();
@@ -315,7 +316,8 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.$router.go(-1);
+              succes=true;
+              this.$router.push('/dashboard/penduduk');
             }
           });
       } catch (error) {

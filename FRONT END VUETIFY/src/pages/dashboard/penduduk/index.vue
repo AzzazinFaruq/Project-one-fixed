@@ -1,7 +1,20 @@
 <template>
   <v-container fluid>
-    <h1 class="mb-5 ma-3">Data Penduduk</h1>
-    <v-card>
+    <h1 class="mb-2 ma-3">Data Penduduk</h1>
+    <v-alert
+      v-model="notif"
+      class="my-5"
+      density='compact'
+      type="success"
+      variant="outlined"
+      title="Sukses"
+      closable
+    >
+    Sukses Edit Password User
+    </v-alert>
+    <v-card
+    elevation="5"
+    >
       <v-data-table
         :headers="head"
         :items="getitem"
@@ -23,9 +36,9 @@
             </v-chip>
           </template> -->
         <template v-slot:top>
-          <v-row>
+          <v-row class="ma-1">
             <v-col>
-              <v-btn class="ma-2" href="/admin/penduduk/inputPenduduk" compact
+              <v-btn class="" href="/dashboard/penduduk/inputPenduduk" compact
                 >Tambah data</v-btn
               ></v-col
             >
@@ -37,7 +50,7 @@
                 variant="outlined"
                 label="Search"
                 append-inner-icon="mdi-magnify"
-                class="ma-2"
+                class=""
               ></v-text-field
             ></v-col>
           </v-row>
@@ -171,11 +184,12 @@
 </template>
 <script>
 import axios from "axios";
+import { succes } from "./inputPenduduk.vue";
 export default {
 
   data() {
     return {
-
+      notif:succes,
       isLoad: false,
       dialog: false,
       dialDetail: false,

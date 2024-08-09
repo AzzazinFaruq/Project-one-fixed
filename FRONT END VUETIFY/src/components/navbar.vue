@@ -46,7 +46,7 @@
       class=""
       min-height=""
       density="default"
-      v-for="(links, i) in links1"
+      v-for="(links, i) in links"
       :key="i"
       :value="links"
       :to="links.route"
@@ -71,8 +71,9 @@
 <script>
 import axios from "axios";
 import { useRouter } from "vue-router";
-
-
+// import { useNav } from "@/stores/nav";
+const usenav = 'test';
+export var name ='';
 export default {
   setup() {
     const router = useRouter();
@@ -88,11 +89,21 @@ export default {
       { icon: "mdi-account", text: "Profile", route: "/profile" },
 
     ],
+    links: [
+    ],
     links1: [
       { icon: "mdi-view-dashboard", text: "Dashboard", route: "/dashboard"  },
       { icon: "mdi-folder", text: "Data Penduduk", route: "/dashboard/penduduk" },
       { icon: "mdi-folder-home", text: "Data Keluarga", route: "/dashboard/keluarga" },
       { icon: "mdi-account", text: "Profile", route: "/profile" },
+      { icon: "mdi-information", text: "About", route: "/about" },
+    ],
+    links2: [
+      { icon: "mdi-view-dashboard", text: "Dashboard", route: "/dashboard"  },
+      { icon: "mdi-folder", text: "Data Penduduk", route: "/dashboard/penduduk" },
+      { icon: "mdi-folder-home", text: "Data Keluarga", route: "/dashboard/keluarga" },
+      { icon: "mdi-account", text: "Profile", route: "/profile" },
+      { icon: "mdi-account-plus", text: "Tambah User", route: "/dashboard/addUser" },
       { icon: "mdi-information", text: "About", route: "/about" },
     ],
   }),
@@ -122,6 +133,7 @@ export default {
         axios.get("/api/user").then((res) => {
           this.data = res.data.data;
           this.success = res.data.success;
+          name=res.data.data.name
           this.role=res.data.data.level
           this.navlist();
         });
@@ -130,6 +142,14 @@ export default {
         this.success = false;
       }
     },
+    navlist(){
+      if (this.role == 'enum') {
+        this.links=this.links1;
+      }
+      else if (this.role == 'admin' || this.role=='superAdmin') {
+        this.links=this.links2
+      }
+    }
   },
   created() {
     console.log(this.success)
