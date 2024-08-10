@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="m">
-    <h1>Admin Dashboard</h1>
+    <h1>{{ level }} Dashboard</h1>
     <v-divider class="my-2"></v-divider>
     <div>
       <v-alert
@@ -16,7 +16,7 @@
     </v-alert>
     </div>
     <div class="mt-5">
-    <v-row class="m-2">
+    <v-row class="m-2" justify="center">
      <card
       icon="mdi-human-male-female-child"
       title="Keluarga"
@@ -55,7 +55,7 @@
     </v-row>
     </div>
     <div class="mt-5">
-        <v-row justify="center" class="ma-2" elevation="5">
+        <v-row justify="center" class="ma-1" elevation="5">
           <marrychart/>
           <genderchart/>
       </v-row>
@@ -140,13 +140,13 @@ export default {
       stat:[],
       tab: 'one',
       data: [],
-      level:"none",
+      level:"",
       dtkel:[],
       dtpen:[]
     };
   },
   mounted() {
-    this.kellast();
+    this.status();
     this.fetchData();
   },
   methods: {
@@ -165,26 +165,23 @@ export default {
       })
     },
     async fetchData() {
+        this.kellast();
         this.penlast();
         this.counter();
         this.alive();
     },
     status() {
       // try {
-      //   axios.get("/api/user").then((res) => {
-      //     this.data = res.data.data;
-      //     this.level = res.data.data.level
-      //     switch(this.level){
-      //       case "enum":
-      //         this.$router.push("/forbidden")
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //   });
-      // } catch (error) {
-      //   console.error(error);
-      // }
+        axios.get("/api/user").then((res) => {
+          this.data = res.data.data;
+          const data = res.data.data.level
+          if (data == 'admin' || data == 'superAdmin') {
+            this.level = 'Admin';
+          }
+          else{
+            this.level = '';
+          }
+        });
     },
     kellast(){
       axios.get('/api/latestkel')

@@ -1,7 +1,12 @@
 <template>
+  <v-skeleton-loader
+  :loading="!loading"
+  type="card"
+  width="900px"
+  class="mt-5"
+  >
   <v-card
   elevation="10"
-  width="98%"
   class="mt-5"
   >
       <v-card-title class=" text-center" >
@@ -29,8 +34,9 @@
       ></v-select>
     </v-col>
   </v-row>
-  <apexchart width="100%" height="450"  type="line" :options="options" :series="series" class="pr-7 pb-3 "></apexchart>
+  <apexchart width="900px" height="450px"  type="line" :options="options" :series="series" class="pr-7 pb-3 "></apexchart>
   </v-card>
+  </v-skeleton-loader>
 </template>
 <script>
 import axios from "axios";
@@ -39,10 +45,11 @@ const useData = useCons();
 export default {
   data() {
     return {
+      loading:false,
       tahun:[],
       bulan:useData.bulan,
-      inbulan:8,
-      intahun:2024,
+      inbulan:0,
+      intahun:0,
       options: {
         colors: ['#85aded'],
         xaxis: {
@@ -59,8 +66,20 @@ export default {
   },
   mounted() {
     this.fetchData();
+    this.current();
   },
   methods: {
+    load() {
+      setTimeout(() => {
+        this.fetchData();
+        this.loading = true; // Setelah data selesai dimuat, matikan loading
+      }, 4000); // Contoh delay 2 detik untuk simulasi
+    },
+    current(){
+    const today = new Date();
+     this.intahun = today.getFullYear();
+     this.inbulan = String(today.getMonth() + 1);
+    },
     fetchData() {
         axios.get('/api/data',{
           params:{
@@ -95,6 +114,9 @@ export default {
     intahun(){
       this.fetchData();
     }
-  }
+  },
+  created() {
+    this.load();
+  },
 };
 </script>

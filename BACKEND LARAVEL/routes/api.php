@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/deletePenduduk/{id}', [PendudukCon::class, 'destroy']);
     //KELUARGA API
     Route::get('/keluarga', [keluargaCon::class, 'index']);
+    Route::get('/keluargaidx', [keluargaCon::class, 'get']);
     Route::get('/latestkel', [keluargaCon::class, 'latest']);
     Route::get('/keluarga/{id}', [keluargaCon::class, 'getByID']);
     Route::get('/kel/{id}', [keluargaCon::class, 'ByID']);

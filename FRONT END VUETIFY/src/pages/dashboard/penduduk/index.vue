@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <h1 class="mb-2 ma-3">Data Penduduk</h1>
     <v-alert
       v-model="notif"
@@ -20,7 +20,18 @@
         :items="getitem"
         :search="search"
         :loading="!isLoad"
+        hide-default-footer
       >
+      <template v-slot:bottom>
+        <VDivider/>
+        <div class="ma-2">
+          <v-pagination
+          v-model="page"
+          :length="last_page"
+          :total-visible="7"
+        ></v-pagination>
+        </div>
+      </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-icon  class="mr-2" color="success" @click="edit(item.id)"
             >mdi-pencil</v-icon
@@ -42,17 +53,30 @@
                 >Tambah data</v-btn
               ></v-col
             >
-            <v-col></v-col>
+            <VSpacer/>
             <v-col>
-              <v-text-field
+              <v-row>
+                <v-col>
+                <v-select
+                :items="[5,10,20,50,100]"
+                v-model="totalData"
+                variant="outlined"
+                label="Items Per Page"
+                density="compact"
+              ></v-select>
+                </v-col>
+                <v-col>
+                <v-text-field
                 density="compact"
                 v-model="search"
                 variant="outlined"
                 label="Search"
                 append-inner-icon="mdi-magnify"
                 class=""
-              ></v-text-field
-            ></v-col>
+              ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
           </v-row>
         </template>
       </v-data-table>
@@ -212,6 +236,9 @@ export default {
       getitem: [],
       itemDetail: {},
       userRole:"",
+      page: 1,
+      last_page:0,
+      totalData:5
     };
   },
   mounted() {
@@ -223,7 +250,7 @@ export default {
       try {
         axios.get("/api/user").then((res) => {
           this.data = res.data.data;
-          this.level = res.data.data.level
+          this.level = res.data.data.level;
           // switch(this.level){
           //   case "enum":
           //     this.$router.push("/forbidden")
@@ -238,16 +265,21 @@ export default {
       this.$router.push(`/admin/penduduk/edit/${item}`);
     },
     getPen() {
-      axios
-        .get("/api/penduduk")
+      this.load();
+      try{
+        axios
+        .get(`/api/penduduk/?page=${this.page}&item=${this.totalData}`)
         .then((response) => {
-          console.log(response.data);
-          this.getitem = response.data.data;
+          console.log(response.data.data.last_page);
+          this.getitem = response.data.data.data;
+          this.totalPages = response.data.data.total;
+          this.last_page = response.data.data.last_page
         })
-        .catch((error) => {
-          console.log(error);
-          this.router.push("/login");
-        });
+
+      }
+        catch{
+
+        };
     },
     deletePenduduk(id) {
       try {
@@ -298,6 +330,15 @@ export default {
     },
 
 
+  },
+  watch:{
+    page(){
+      this.getPen();
+    },
+    totalData(){
+      this.page=1;
+      this.getPen();
+    },
   },
   created() {
     this.load();

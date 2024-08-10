@@ -7,27 +7,52 @@
   :items="dataKeluarga"
   :search="search"
   :loading="!isLoad"
+  hide-default-footer
   >
+  <template v-slot:bottom>
+        <VDivider/>
+        <div class="ma-2">
+          <v-pagination
+           v-model="page"
+          :length="last_page"
+          :total-visible="7"
+        ></v-pagination>
+        </div>
+      </template>
 <template v-slot:[`item.actions`]="{ item }">
   <v-icon  class="mr-2" color="success" @click="edit(item.id)">mdi-pencil</v-icon>
   <v-icon  class="mr-2" color="red" @click="deleteData(item.id)">mdi-delete</v-icon>
   <v-icon  color="primary" @click="detail(item.id)">mdi-file</v-icon>
 </template>
 <template v-slot:top>
-  <v-row>
+  <v-row class="ma-1">
     <v-col>
-      <v-btn class="ma-2" color="white" href="/dashboard/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
+      <v-btn class="" color="white" href="/dashboard/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
     </v-col>
-    <v-col>
-<v-text-field
-  density="compact"
-  v-model="search"
-  variant="outlined"
-  label="Search"
-  append-inner-icon="mdi-magnify"
-  class="ma-2"
-></v-text-field>
-</v-col>
+    <VSpacer/>
+            <v-col>
+              <v-row class="">
+                <v-col>
+                <v-select
+                :items="[5,10,20,50,100]"
+                v-model="totalData"
+                variant="outlined"
+                label="Items Per Page"
+                density="compact"
+              ></v-select>
+                </v-col>
+                <v-col>
+                <v-text-field
+                density="compact"
+                v-model="search"
+                variant="outlined"
+                label="Search"
+                append-inner-icon="mdi-magnify"
+                class=""
+              ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-col>
   </v-row>
 </template>
 </v-data-table>
@@ -96,6 +121,15 @@ export default{
   setup(){
     use.setup();
   },
+  watch:{
+    page(){
+      this.getKeluarga();
+    },
+    totalData(){
+      this.page=1;
+      this.getKeluarga();
+    },
+  },
   data(){
     return{
       isLoad:false,
@@ -111,6 +145,9 @@ export default{
         { title: "User", value: "user_id" },
         { title: "Action", value: "actions" },
       ],
+      page: 1,
+      last_page:0,
+      totalData:5
     }
   },
   mounted(){
@@ -134,10 +171,13 @@ export default{
     },
     getKeluarga(){
       try{
-        axios.get("/api/keluarga")
+        this.load();
+        axios.get(`/api/keluarga/?page=${this.page}&item=${this.totalData}`)
         .then((res)=>{
           console.log(res.data)
-          this.dataKeluarga=res.data;
+          this.dataKeluarga=res.data.data;
+          this.totalPages = res.data.total;
+          this.last_page = res.data.last_page;
         })
 
       }

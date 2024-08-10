@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\keluarga;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 class keluargaCon extends Controller
 {
     public function latest(Request $request){
@@ -39,6 +39,8 @@ class keluargaCon extends Controller
 
     }
     public function index(Request $request){
+        $tampil=$request->input('item');
+        $total= keluarga::count();
         $role =$request->user()->level;
         $datas;
         if ($role=='enum') {
@@ -46,7 +48,7 @@ class keluargaCon extends Controller
             $datas = keluarga::where('user_id',$id)->with('user')->get();
         }
         else {
-            $datas = keluarga::with('user')->get();
+            $datas = keluarga::with('user')->paginate($tampil);
         }
 
         $hasils= $datas->reduce(
@@ -67,9 +69,13 @@ class keluargaCon extends Controller
                 return $items;
             },
         );
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = $tampil;
+        $currentItems = array_slice($hasils, ($currentPage - 1) * $perPage, $perPage);
+        $paginatedItems = new LengthAwarePaginator($hasils, $total , $perPage);
 
 
-        return response()->json($hasils);
+        return response()->json($paginatedItems);
 
     }
 
@@ -105,6 +111,22 @@ class keluargaCon extends Controller
 
         return response()->json([
             'data' => $dt,
+        ], 200);
+    }
+    public function get(Request $request){
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = keluarga::where('user_id',$id)->with('user')->get();
+        }
+        else {
+            $datas = keluarga::with('user')->get();
+        }
+
+        $dt= keluarga::get();
+        return response()->json([
+            'data' => $datas,
         ], 200);
     }
 

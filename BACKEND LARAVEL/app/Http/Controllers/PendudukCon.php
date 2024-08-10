@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PendudukRes;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PendudukCon extends Controller
 {
@@ -15,16 +17,18 @@ class PendudukCon extends Controller
      */
     public function getPenduduk(Request $request)
     {
+        $tampil=$request->input('item');
+        $total= Penduduk::count();
         $role =$request->user()->level;
         $datas;
         if ($role=='enum') {
             $id = $request->user()->id;
-            $datas = Penduduk::where('user_id',$id)->with('keluarga','user')->paginate(10);
+            $datas = Penduduk::where('user_id',$id)->with('keluarga','user')->get();
         }
         else {
-            $datas = Penduduk::with('keluarga','user')->paginate(10);
+            $datas = Penduduk::with('keluarga','user')->paginate($tampil);
         }
-              $hasils= $datas->reduce(
+              $hasils= $datas->getCollection()->reduce(
                 function ($items, $data){
 
                     $agama=penduduk::agama($data->agama);
@@ -63,6 +67,11 @@ class PendudukCon extends Controller
                     return $items;
                 },
             );
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $perPage = $tampil;
+            $currentItems = array_slice($hasils, ($currentPage - 1) * $perPage, $perPage);
+            $paginatedItems = new LengthAwarePaginator($hasils, $total , $perPage);
+
 
             // $result = [
             //     'data' => $hasill->items(),
@@ -82,7 +91,7 @@ class PendudukCon extends Controller
 // return $posts;
         return response()->json([
             'success' => true,
-            'data' => $hasils
+            'data' => $paginatedItems
         ], 200);
 
     }
