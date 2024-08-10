@@ -21,7 +21,7 @@
       </template>
 <template v-slot:[`item.actions`]="{ item }">
   <v-icon  class="mr-2" color="success" @click="edit(item.id)">mdi-pencil</v-icon>
-  <v-icon  class="mr-2" color="red" @click="deleteData(item.id)">mdi-delete</v-icon>
+  <v-icon  class="mr-2" color="red" @click="confirmDelete(item.id)">mdi-delete</v-icon>
   <v-icon  color="primary" @click="detail(item.id)">mdi-file</v-icon>
 </template>
 <template v-slot:top>
@@ -111,6 +111,19 @@
         </v-card>
       </v-dialog>
 </v-card>
+<v-dialog v-model="dialog" max-width="400px">
+        <v-card>
+          <v-card-title class="headline">Konfirmasi Penghapusan</v-card-title>
+          <v-card-text>Kamu yakin ingin menghapus data ini?</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="closeDialog"
+              >Batal</v-btn
+            >
+            <v-btn color="red darken-1" text @click="deleteData(selectedId)">Hapus</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
   </v-container>
 </template>
 <script>
@@ -134,6 +147,7 @@ export default{
     return{
       isLoad:false,
       dialDetail: false,
+      dialog:false,
       selectedId:null,
       dataKeluarga:[],
       detailKeluarga:[],

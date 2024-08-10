@@ -283,10 +283,10 @@ export default {
   methods: {
     getKeluarga(){
       try{
-        axios.get("/api/keluarga")
+        axios.get("/api/keluargaidx")
         .then((res)=>{
           console.log(res.data);
-          this.dataKel=res.data;
+          this.dataKel=res.data.data;
         })
 
       }

@@ -262,7 +262,7 @@ export default {
       }
     },
     edit(item) {
-      this.$router.push(`/admin/penduduk/edit/${item}`);
+      this.$router.push(`/dashboard/penduduk/edit/${item}`);
     },
     getPen() {
       this.load();

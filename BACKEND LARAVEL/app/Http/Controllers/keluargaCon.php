@@ -159,10 +159,10 @@ class keluargaCon extends Controller
         ]);
 
         if ($save) {
-            return response()->json(['valid'=>true,'massage'=>'sukses menambah Penduduk']);
+            return response()->json(['valid'=>true,'massage'=>'sukses menambah Keluarga']);
         }
         else{
-            return response()->json(['valid'=>false,'massage'=>'gagal menambah Penduduk']);
+            return response()->json(['valid'=>false,'massage'=>'gagal menambah Keluarga']);
         }
 
     }
@@ -172,9 +172,9 @@ class keluargaCon extends Controller
 
         if ($penduduk) {
             $penduduk->delete();
-            return response()->json(['message' => 'Data penduduk berhasil dihapus.'], 200);
+            return response()->json(['message' => 'Data keluarga berhasil dihapus.'], 200);
         } else {
-            return response()->json(['message' => 'Data penduduk tidak ditemukan.'], 404);
+            return response()->json(['message' => 'Data keluarga tidak ditemukan.'], 404);
         }
     }
     public function update(Request $req, $id){
@@ -196,10 +196,10 @@ class keluargaCon extends Controller
         }
         $save=keluarga::where('id', $id)->update($req->all());
         if ($save) {
-            return response()->json(['status'=>true,'massage'=>'sukses menambah siswa']);
+            return response()->json(['status'=>true,'massage'=>'sukses edit keluarga']);
         }
         else{
-            return response()->json(['status'=>false,'massage'=>'gagal menambah siswa']);
+            return response()->json(['status'=>false,'massage'=>'gagal edit keluarga']);
         }
     }
 

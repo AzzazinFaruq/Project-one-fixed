@@ -282,10 +282,10 @@ class PendudukCon extends Controller
         }
         $save=Penduduk::where('id', $id)->update($req->all());
         if ($save) {
-            return response()->json(['status'=>true,'massage'=>'sukses menambah siswa']);
+            return response()->json(['status'=>true,'massage'=>'sukses edit penduduk']);
         }
         else{
-            return response()->json(['status'=>false,'massage'=>'gagal menambah siswa']);
+            return response()->json(['status'=>false,'massage'=>'gagal edit penduduk']);
         }
 
     }
