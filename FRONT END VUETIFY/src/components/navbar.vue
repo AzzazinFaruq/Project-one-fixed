@@ -140,6 +140,7 @@ export default {
       } catch (error) {
         error;
         this.success = false;
+        this.$router.push('/login')
       }
     },
     navlist(){

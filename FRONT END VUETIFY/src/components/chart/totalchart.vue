@@ -73,7 +73,7 @@ export default {
       setTimeout(() => {
         this.fetchData();
         this.loading = true; // Setelah data selesai dimuat, matikan loading
-      }, 4000); // Contoh delay 2 detik untuk simulasi
+      },3000); // Contoh delay 2 detik untuk simulasi
     },
     current(){
     const today = new Date();

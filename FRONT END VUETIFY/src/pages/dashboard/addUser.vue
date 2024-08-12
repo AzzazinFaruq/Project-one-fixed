@@ -121,7 +121,7 @@ export default {
           .post("/api/register", this.form)
           .then((res) => {
             console.log(res.data);
-            this.$router.push("/login");
+            this.$router.push("/dashboard");
           });
       } catch (error) {
         error;

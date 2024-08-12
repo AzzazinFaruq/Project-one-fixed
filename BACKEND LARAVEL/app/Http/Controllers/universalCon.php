@@ -21,7 +21,7 @@ class universalCon extends Controller
             $penduduk= Penduduk::where('user_id',$id)->count();
             $keluarga= keluarga::where('user_id',$id)->count();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $penduduk= Penduduk::count();
             $keluarga= keluarga::count();
         }
@@ -39,7 +39,7 @@ class universalCon extends Controller
             $alivepen= Penduduk::where('user_id',$id)->where('stat', 1)->count();
             $nopen= Penduduk::where('user_id',$id)->where('stat', 2)->count();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
         $alivepen= Penduduk::where('stat', 1)->count();
         $nopen= Penduduk::where('stat', 2)->count();
         }
@@ -66,7 +66,7 @@ class universalCon extends Controller
             $ceraihidup= Penduduk::where('user_id',$id)->where('stat_kawin', 3)->count();
             $ceraimati= Penduduk::where('user_id',$id)->where('stat_kawin', 4)->count();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $belum= Penduduk::where('stat_kawin', 1)->count();
             $kawin= Penduduk::where('stat_kawin', 2)->count();
             $ceraihidup= Penduduk::where('stat_kawin', 3)->count();
@@ -90,7 +90,7 @@ class universalCon extends Controller
             $belum= Penduduk::where('user_id',$id)->where('kelamin', 1)->count();
             $kawin= Penduduk::where('user_id',$id)->where('kelamin', 2)->count();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin') {
             $belum= Penduduk::where('kelamin', 1)->count();
             $kawin= Penduduk::where('kelamin', 2)->count();
         }
@@ -133,7 +133,7 @@ class universalCon extends Controller
             $dataPerDay []= $records;
             }
             }
-            else {
+            else if($role=='admin'||$role=='superAdmin'){
                 for ($day = 1; $day <= $limit; $day++) {
                     $records = Penduduk::whereYear('created_at', $year)
                     ->whereMonth('created_at', $month)

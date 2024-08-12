@@ -16,7 +16,7 @@ class keluargaCon extends Controller
             $id = $request->user()->id;
             $datas = keluarga::where('user_id',$id)->latest()->with('user')->take(5)->get();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $datas = keluarga::latest()->with('user')->take(5)->get();
         }
         $hasils= $datas->reduce(
@@ -45,9 +45,10 @@ class keluargaCon extends Controller
         $datas;
         if ($role=='enum') {
             $id = $request->user()->id;
-            $datas = keluarga::where('user_id',$id)->with('user')->get();
+            $total= keluarga::where('user_id',$id)->count();
+            $datas = keluarga::where('user_id',$id)->paginate($tampil);
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $datas = keluarga::with('user')->paginate($tampil);
         }
 

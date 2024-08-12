@@ -7,10 +7,9 @@
   >
   <v-card
   class="ma-3 ml-10"
-  min-width="500"
   elevation="10"
   >
-<apexchart width="100%" type="pie" :options="options" :series="series2" ></apexchart>
+<apexchart width="500" type="pie" :options="options" :series="series2" ></apexchart>
   </v-card>
 </v-skeleton-loader>
 </template>
@@ -21,6 +20,10 @@ data(){
   return{
     loading:false,
     options: {
+        responsive:[{
+          breakpoint:400
+    }],
+
         labels:['LAKI-LAKI','PEREMPUAN']
       },
       series2: [],

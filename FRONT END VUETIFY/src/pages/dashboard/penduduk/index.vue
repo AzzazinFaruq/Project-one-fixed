@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid class="">
     <h1 class="mb-2 ma-3">Data Penduduk</h1>
     <v-alert
       v-model="notif"
@@ -47,37 +47,39 @@
             </v-chip>
           </template> -->
         <template v-slot:top>
-          <v-row class="ma-1">
+          <v-row class="d-flex ma-1">
             <v-col>
-              <v-btn class="" href="/dashboard/penduduk/inputPenduduk" compact
-                >Tambah data</v-btn
-              ></v-col
-            >
-            <VSpacer/>
-            <v-col>
-              <v-row>
-                <v-col>
-                <v-select
+            <div class="d-flex justify-start mb-2">
+            <v-btn  href="/dashboard/penduduk/inputPenduduk" compact>Tambah data</v-btn>
+          </div>
+          </v-col>
+          <VSpacer/>
+          <v-col>
+            <div class="d-flex align-start">
+            <v-select
+                class="mr-2"
                 :items="[5,10,20,50,100]"
                 v-model="totalData"
                 variant="outlined"
+                width="130"
+                max-width="130"
                 label="Items Per Page"
                 density="compact"
               ></v-select>
-                </v-col>
-                <v-col>
                 <v-text-field
                 density="compact"
                 v-model="search"
+                width="300"
+                max-width="300"
                 variant="outlined"
                 label="Search"
                 append-inner-icon="mdi-magnify"
                 class=""
               ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
+          </div>
+          </v-col>
+        </v-row>
+
         </template>
       </v-data-table>
       <v-dialog v-model="dialog" max-width="400px">

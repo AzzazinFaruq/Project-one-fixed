@@ -25,35 +25,38 @@
   <v-icon  color="primary" @click="detail(item.id)">mdi-file</v-icon>
 </template>
 <template v-slot:top>
-  <v-row class="ma-1">
-    <v-col>
-      <v-btn class="" color="white" href="/dashboard/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
-    </v-col>
-    <VSpacer/>
+  <v-row class="d-flex ma-1">
             <v-col>
-              <v-row class="">
-                <v-col>
-                <v-select
+            <div class="d-flex justify-start mb-2">
+            <v-btn  href="/dashboard/keluarga/inputKeluarga" compact>Tambah data</v-btn>
+          </div>
+          </v-col>
+          <VSpacer/>
+          <v-col>
+            <div class="d-flex align-start">
+            <v-select
+                class="mr-2"
                 :items="[5,10,20,50,100]"
                 v-model="totalData"
                 variant="outlined"
+                width="130"
+                max-width="130"
                 label="Items Per Page"
                 density="compact"
               ></v-select>
-                </v-col>
-                <v-col>
                 <v-text-field
                 density="compact"
                 v-model="search"
+                width="300"
+                max-width="300"
                 variant="outlined"
                 label="Search"
                 append-inner-icon="mdi-magnify"
                 class=""
               ></v-text-field>
-                </v-col>
-              </v-row>
-            </v-col>
-  </v-row>
+          </div>
+          </v-col>
+        </v-row>
 </template>
 </v-data-table>
 <v-dialog v-model="dialDetail" max-width="400px">

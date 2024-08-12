@@ -5,13 +5,15 @@
   :loading="!loading"
   class="ma-1"
   >
+  <div id="container">
   <v-card
   class="ma-3 mr-10"
-  min-width="350"
+  width="500"
   elevation="10"
  >
- <apexchart width="500" type="bar" :options="options" :series="series1" class="ma-2" ></apexchart>
+ <apexchart type="bar" :options="options" :series="series1" class="ma-2" ></apexchart>
 </v-card>
+</div>
   </v-skeleton-loader>
 </template>
 <script>
@@ -21,10 +23,11 @@ data(){
   return{
     loading:false,
     options: {
+        width:'500px',
         responsive:[{
-          breakpoint:350,
+          breakpoint:400,
           options:{
-            width:350
+            width:'300px'
           }
         }],
         fill: {
@@ -39,11 +42,15 @@ data(){
 },
 mounted(){
 this.marry();
+this.updatewidth()
 },
 created() {
   this.load();
 },
 methods:{
+  updatewidth(){
+    console.log(document.getElementById('container'))
+  },
   load() {
       setTimeout(() => {
         this.marry();

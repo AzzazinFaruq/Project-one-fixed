@@ -52,7 +52,7 @@ export default {
     load() {
       setTimeout(() => {
         this.loading = true; // Setelah data selesai dimuat, matikan loading
-      }, 4000); // Contoh delay 2 detik untuk simulasi
+      }, 2000); // Contoh delay 2 detik untuk simulasi
     },
   },
   props: {

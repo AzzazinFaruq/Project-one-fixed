@@ -1,5 +1,13 @@
 <template>
-  <v-card>
+  <v-skeleton-loader
+  type="card"
+  width="100%"
+  :loading="!loading"
+  class="ma-1"
+  >
+  <v-card
+  width="100%"
+  >
       <v-table>
         <thead>
       <tr>
@@ -25,9 +33,25 @@
     </tbody>
       </v-table>
     </v-card>
+  </v-skeleton-loader>
 </template>
 <script>
 export default {
+  data(){
+    return{
+      loading:false
+    }
+  },
+  methods: {
+    load() {
+      setTimeout(() => {
+        this.loading = true; // Setelah data selesai dimuat, matikan loading
+      },4000); // Contoh delay 2 detik untuk simulasi
+    },
+  },
+created() {
+  this.load();
+},
   props: {
     dthead:{
       type: Array,

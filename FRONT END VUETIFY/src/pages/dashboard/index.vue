@@ -2,19 +2,6 @@
   <v-container fluid class="m">
     <h1>{{ level }} Dashboard</h1>
     <v-divider class="my-2"></v-divider>
-    <div>
-      <v-alert
-      v-model="notif"
-      class="my-5"
-      density='compact'
-      type="success"
-      variant="Tonal"
-      title="Success"
-      closable
-    >
-    Sukses Login
-    </v-alert>
-    </div>
     <div class="mt-5">
     <v-row class="m-2" justify="center">
      <card
@@ -24,7 +11,7 @@
       :count="keluarga"
       card="brown-lighten-1"
       color="brown-lighten-2"
-      route="/admin/keluarga"
+      route="/dashboard/keluarga"
 
       />
       <card
@@ -34,7 +21,7 @@
       :count="penduduk"
       card="light-blue-darken-2"
       color="light-blue-darken-1 text-white"
-      route="/admin/penduduk"
+      route="/dashboard/penduduk"
       />
       <card
       icon="mdi-account-check"
@@ -43,6 +30,7 @@
       :count="stat.aktif"
       card="green-lighten-1"
       color="green-lighten-2 text-white"
+      route="/dashboard/penduduk"
       />
       <card
       icon="mdi-account-cancel"
@@ -51,11 +39,12 @@
       :count="stat.inaktif"
       color="red-accent-2"
       card="red-lighten-1 text-white"
+      route="/dashboard/penduduk"
       />
     </v-row>
     </div>
-    <div class="mt-5">
-        <v-row justify="center" class="ma-1" elevation="5">
+    <div class="mt-5 ">
+        <v-row justify="center" class="ma-1 " elevation="5">
           <marrychart/>
           <genderchart/>
       </v-row>

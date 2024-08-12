@@ -14,6 +14,16 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import axios from "axios";
 
+
+axios.interceptors.response.use(
+  response => response,
+  error => {
+      if (error.response && error.response.status === 401) {
+          localStorage.removeItem('auth');
+      }
+      return Promise.reject(error);
+  }
+);
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;

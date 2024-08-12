@@ -296,7 +296,7 @@ export default {
         .then((res)=>{
           console.log(res.data);
           this.dataKel=res.data.data;
-          this.form.kels_id=res.data[0].id;
+          this.form.kels_id=res.data.data[0].id;
         })
 
       }

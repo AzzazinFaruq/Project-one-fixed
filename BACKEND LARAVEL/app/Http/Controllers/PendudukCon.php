@@ -23,9 +23,10 @@ class PendudukCon extends Controller
         $datas;
         if ($role=='enum') {
             $id = $request->user()->id;
-            $datas = Penduduk::where('user_id',$id)->with('keluarga','user')->get();
+            $total= Penduduk::where('user_id',$id)->count();
+            $datas = Penduduk::where('user_id',$id)->with('keluarga','user')->paginate($tampil);
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $datas = Penduduk::with('keluarga','user')->paginate($tampil);
         }
               $hasils= $datas->getCollection()->reduce(
@@ -109,7 +110,7 @@ class PendudukCon extends Controller
             $id = $request->user()->id;
             $datas = Penduduk::where('user_id',$id)->latest()->take(5)->get();
         }
-        else {
+        else if($role=='admin'||$role=='superAdmin'){
             $datas = Penduduk::latest()->take(5)->get();
         }
         $hasil = $datas->reduce(
