@@ -77,8 +77,8 @@ export default {
     },
     current(){
     const today = new Date();
-     this.intahun = today.getFullYear();
-     this.inbulan = String(today.getMonth() + 1);
+     this.intahun = parseInt(today.getFullYear());
+     this.inbulan = parseInt(today.getMonth() + 1);
     },
     fetchData() {
         axios.get('/api/data',{

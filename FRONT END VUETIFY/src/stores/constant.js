@@ -3,6 +3,10 @@ import { defineStore } from "pinia";
 export const useCons = defineStore({
   id: "options",
   state: () => ({
+    domisili:[
+      {id:1, name:"PENDUDUK TETAP"},
+      {id:2, name:"PENDUDUK DOMISILI"}
+    ],
     bulan: [
       { id: 1, name: "Januari" },
       { id: 2, name: "Februari" },

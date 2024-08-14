@@ -7,6 +7,7 @@
   :items="dataKeluarga"
   :search="search"
   :loading="!isLoad"
+  :items-per-page="totalData"
   hide-default-footer
   >
   <template v-slot:bottom>
@@ -195,6 +196,7 @@ export default{
           this.dataKeluarga=res.data.data;
           this.totalPages = res.data.total;
           this.last_page = res.data.last_page;
+          console.log(this.dataKeluarga)
         })
 
       }

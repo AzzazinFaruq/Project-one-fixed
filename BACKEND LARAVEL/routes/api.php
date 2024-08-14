@@ -43,6 +43,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/keluarga', [keluargaCon::class, 'index']);
     Route::get('/keluargaidx', [keluargaCon::class, 'get']);
     Route::get('/latestkel', [keluargaCon::class, 'latest']);
+    Route::get('/latestkelinput', [keluargaCon::class, 'latestforinput']);
     Route::get('/keluarga/{id}', [keluargaCon::class, 'getByID']);
     Route::get('/kel/{id}', [keluargaCon::class, 'ByID']);
     Route::post('/addKeluarga', [keluargaCon::class, 'addKeluarga']);

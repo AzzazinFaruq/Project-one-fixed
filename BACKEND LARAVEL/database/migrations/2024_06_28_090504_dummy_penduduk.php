@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('ayah')->null();
             $table->string('ibu')->null();
             $table->string('no_hp',15)->null();
-            $table->longText('domisili')->null();
+            $table->tinyInteger('domisili')->null();
             $table->tinyInteger('stat')->default(0);
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();

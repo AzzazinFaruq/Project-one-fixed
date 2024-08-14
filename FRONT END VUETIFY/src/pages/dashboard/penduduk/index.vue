@@ -20,6 +20,7 @@
         :items="getitem"
         :search="search"
         :loading="!isLoad"
+        :items-per-page="totalData"
         hide-default-footer
       >
       <template v-slot:bottom>
@@ -95,7 +96,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="dialDetail" max-width="400px">
+      <v-dialog v-model="dialDetail" width="1000px">
         <v-card>
           <v-card-title class="headline mt-2">Detail Penduduk</v-card-title>
           <v-card-text>

@@ -39,13 +39,6 @@ var vite_config_default = defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"]
   },
-  server: {
-    port: 3e3,
-    proxy: "https://apikk.spora.id"
-  },
-  devServer: {
-    proxy: "https://apikk.spora.id"
-  }
 });
 export {
   vite_config_default as default

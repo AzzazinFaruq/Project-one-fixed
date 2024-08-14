@@ -27,7 +27,7 @@ axios.interceptors.response.use(
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
-axios.defaults.headers.common['Authorization'] = `bearer ${localStorage.getItem('token')}`;
+axios.defaults.headers.common['Authorization'] = ['bearer',`${localStorage.getItem('token')}`] ;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const pinia = createPinia();

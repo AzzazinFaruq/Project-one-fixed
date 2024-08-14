@@ -1,12 +1,9 @@
 <template lang="">
   <v-container class="">
-    <v-stepper
-    alt-labels
-    hide-actions
-    v-model="step"
-    :items="['Input Data Keluarga', 'Input Data Kepala Keluarga']"
-    >
-    <template v-slot:item.1>
+    <v-card class="" elevation="4" max-width=""
+      ><v-card-title>
+        <h3 class="font-weight-medium font-weight: 400;">Input Penduduk</h3>
+      </v-card-title>
       <v-form class="ma-2" @submit.prevent="post">
         <label for="">NOMER KK</label>
         <v-text-field
@@ -81,15 +78,10 @@
           type="submit"
           elevation="2"
           color="green"
-          :rules="rules"
-          >Submit</v-btn>
+          >Submit</v-btn
+        >
       </v-form>
-    </template>
-
-   <template v-slot:item.2>
-    <formPenduduk/>
-   </template>
-</v-stepper>
+    </v-card>
   </v-container>
 </template>
 <script>
@@ -97,9 +89,9 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useCons } from "@/stores/constant";
 import { test } from '@/stores/restrict';
-import formPenduduk from "@/components/formPenduduk.vue";
 const use = test();
 const useData = useCons();
+export var stepper =1;
 export default {
   setup() {
     use.setup();
@@ -112,7 +104,6 @@ export default {
   },
   data() {
     return {
-      step:1,
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
@@ -166,7 +157,8 @@ export default {
               alert(res.data.massage);
             } else {
               alert(res.data.massage);
-              this.step=2;
+              stepper=1;
+              // this.$router.go(-1);
             }
           });
       } catch (error) {

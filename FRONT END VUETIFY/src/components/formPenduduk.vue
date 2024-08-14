@@ -1,27 +1,23 @@
 <template lang="">
   <v-container class="">
-    <v-card class="" elevation="4" max-width=""
-      ><v-card-title>
-        <h3 class="font-weight-medium font-weight: 400;">Input Penduduk</h3>
-      </v-card-title>
-
-      <v-form class="ma-2 pa-2" @submit.prevent="post(form.id)">
+      <v-form class="ma-2 pa-2" @submit.prevent="post" lazy-validation>
         <v-row class="">
-          <v-col>
-            <label for="">PILIH KELUARGA</label>
+          <v-col >
+            <label for="">PILIH NO KK / KEPALA KELUARGA</label>
             <v-autocomplete
               :item-props="itemProps"
               :rules="rules"
               :items="dataKel"
-              item-title="kels_id"
+              item-title="nama"
               item-value="id"
               v-model="form.kels_id"
               variant="outlined"
               required
+              disabled
             ></v-autocomplete>
-
+            <v-btn color="black" variant="outlined" class='mb-4' href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
           </v-col>
-          <v-col>
+          <v-col >
             <label class="">NIK</label>
             <v-text-field
               clearable
@@ -100,6 +96,7 @@
               item-value="id"
               required
               v-model="form.hub_kel"
+              disabled
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -216,18 +213,16 @@
           >Submit</v-btn
         >
       </v-form>
-    </v-card>
   </v-container>
 </template>
 <script>
 import axios from "axios";
-import { ref, onMounted } from "vue";
-import { useRouter, useRoute, RouterLink } from "vue-router";
+import { useRouter } from "vue-router";
 import { useCons } from "@/stores/constant";
 import { test } from '@/stores/restrict';
 const use = test();
 const useData = useCons();
-
+export var succes=false;
 export default {
   setup() {
     use.setup();
@@ -241,7 +236,8 @@ export default {
   },
   data() {
     return {
-      datakel:[],
+      user:[],
+      dataKel:[],
       domisili:useData.domisili,
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
@@ -251,17 +247,18 @@ export default {
       pendidikan: useData.pendidikan,
       pekerjaan: useData.pekerjaan,
       stat: useData.stat,
-      form: [
-        {
+
+
+      form: {
         nomer_kk: "",
-        kels_id:'',
+        kels_id:1,
         nik: "",
         nama: "",
         tmp_lhr: "",
         tgl_lhr: new Date(),
         kelamin: "",
         stat_kawin: "",
-        hub_kel: "",
+        hub_kel: 1,
         warga_neg: "",
         agama: "",
         pendidikan: "",
@@ -270,27 +267,36 @@ export default {
         ibu: "",
         kepala_kel: "",
         no_hp: "",
-        domisili:0,
+        domisili: "",
         stat: "",
         user_id:'',
         valid: false,
-        },
-      ],
 
-      rules: [(v) => !!v || "Wajib Diisi!"],
+      },
+
+      rules: [(v) => !!v || "Form Tidak Boleh Kosong!"],
     };
   },
   mounted() {
-    this.get();
+    this.getKeluarga();
+    this.inputter();
   },
-  setup() {},
+
   methods: {
+    inputter(){
+      axios.get("api/user")
+      .then((res)=>{
+        console.log(res.data.data.id);
+        this.form.user_id=res.data.data.id;
+      })
+    },
     getKeluarga(){
       try{
-        axios.get("/api/keluargaidx")
+        axios.get("/api/latestkel")
         .then((res)=>{
-          console.log(res.data);
-          this.dataKel=res.data.data;
+          console.log(res.data[0]);
+          this.dataKel=res.data;
+          this.form.kels_id=res.data[0].id;
         })
 
       }
@@ -298,45 +304,32 @@ export default {
         return error;
       }
     },
-    get() {
-      this.getKeluarga();
-      try {
-        const route = useRoute();
-        axios
-          .get(`/api/byID/${route.params.id}`)
-          .then((response) => {
-            console.log(response.data);
-            this.form = response.data.data[0];
-            this.form.tgl_lhr = new Date(response.data.data[0].tgl_lhr);
-            console.log(this.form);
-            // this.form.value = response.data;
-          });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    },
-    post(id) {
-      try {
-        this.form.tgl_lhr = new Date(this.form.tgl_lhr)
-          .toISOString()
-          .split("T")[0];
-        axios
-          .put(
-            `/api/updatePenduduk/${id}`,
 
-            this.form
-          )
+    post() {
+      this.form.tgl_lhr = new Date(this.form.tgl_lhr)
+        .toISOString()
+        .split("T")[0];
+      try {
+        axios
+          .post("/api/addPenduduk", this.form)
           .then((res) => {
-            console.log(res.message);
-            this.$router.go(-1);
+            console.log(res);
+            this.form.valid = res.data.valid;
+            if (this.form.valid == false) {
+              alert(res.data.massage);
+            } else {
+              alert(res.data.massage);
+              succes=true;
+              this.$router.push('/dashboard/penduduk');
+            }
           });
       } catch (error) {
-        error;
+        error, router.push("/login");
       }
     },
     itemProps (item) {
         return {
-          title: item.no_kk+' ['+item.kk_nama+']'
+          title: item.kk+' ['+item.nama+']'
         }
       }
   },

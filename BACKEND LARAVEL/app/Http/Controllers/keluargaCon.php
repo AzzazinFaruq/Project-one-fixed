@@ -38,6 +38,35 @@ class keluargaCon extends Controller
         return response()->json($hasils);
 
     }
+    public function latestforinput(Request $request){
+        $role =$request->user()->level;
+        $datas;
+        if ($role=='enum') {
+            $id = $request->user()->id;
+            $datas = keluarga::where('user_id',$id)->latest()->with('user')->take(1)->get();
+        }
+        else if($role=='admin'||$role=='superAdmin'){
+            $datas = keluarga::latest()->with('user')->take(1)->get();
+        }
+        $hasils= $datas->reduce(
+            function ($items, $data){
+                $stat=keluarga::stat($data->status);
+                $items[] = [
+                'id'=>$data->id,
+                'kk'=>$data->no_kk,
+                'nik'=>$data->kk_nik,
+                'status'=>$stat,
+                'nama'=>$data->kk_nama,
+                'user_id'=>$data->user->name,
+                ];
+                return $items;
+            },
+        );
+
+
+        return response()->json($hasils);
+
+    }
     public function index(Request $request){
         $tampil=$request->input('item');
         $total= keluarga::count();

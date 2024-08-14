@@ -43,7 +43,14 @@ class Penduduk extends Model
     public function user(){
         return $this->belongsTo(user::class, 'user_id');
     }
+    public static function dom($key = '')
+    {
+        $data = config('constants.domisili');
+        if ( !isset($data[$key]) )
+            return $data;
 
+        return $data[$key];
+    }
     public static function stat($key = '')
     {
         $data = config('constants.stat');

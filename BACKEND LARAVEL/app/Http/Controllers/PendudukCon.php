@@ -39,6 +39,7 @@ class PendudukCon extends Controller
                     $pendidikan=penduduk::pendidikan($data->pendidikan);
                     $pekerjaan=penduduk::pekerjaan($data->pekerjaan);
                     $stat=penduduk::stat($data->stat);
+                    $dom=penduduk::dom($data->domisili);
                     $warga=penduduk::warga_neg($data->warga_neg);
 
 
@@ -150,6 +151,7 @@ class PendudukCon extends Controller
         $hasil = Penduduk::where('id',$id)->get()->reduce(
             function ($items, $data){
 
+                $dom=penduduk::dom($data->domisili);
                 $agama=penduduk::agama($data->agama);
                 $hub=penduduk::hub_kel($data->hub_kel);
                 $stat_kwn=penduduk::stat_kawin($data->stat_kawin);
@@ -178,7 +180,7 @@ class PendudukCon extends Controller
                     'ibu'=>$data->ibu,
                     'kepala_kel'=>$data->keluarga->kk_nama,
                     'no_hp'=>$data->no_hp,
-                    'domisili'=>$data->domisili,
+                    'domisili'=>$dom,
                     'stat' =>$stat,
                     'user_id'=>$data->user->name
 

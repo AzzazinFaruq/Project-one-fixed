@@ -186,6 +186,10 @@ return [
     "stat"=>[
         1 => 'AKTIF',
         2=>"TIDAK AKTIF"
+    ],
+    "domisili"=>[
+        1=>'PENDUDUK TETAP',
+        2=>'PENDUDUK DOMISILI'
     ]
 
 ];

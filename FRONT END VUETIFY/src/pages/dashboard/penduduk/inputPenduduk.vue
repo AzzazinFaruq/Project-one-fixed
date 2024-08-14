@@ -187,13 +187,16 @@
           v-model="form.no_hp"
         ></v-text-field>
         <label class="">Domisili</label>
-        <v-textarea
+        <v-select
           clearable
           :rules="rules"
           variant="outlined"
+          :items="domisili"
+          item-title="name"
+          item-value="id"
           required
           v-model="form.domisili"
-        ></v-textarea>
+        ></v-select>
         <label>Status</label
         ><v-autocomplete
           :rules="rules"
@@ -239,6 +242,7 @@ export default {
     return {
       user:[],
       dataKel:[],
+      domisili:useData.domisili,
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
