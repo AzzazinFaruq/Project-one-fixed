@@ -81,7 +81,7 @@ export default {
       required: true
     },
     count: {
-      type: Number,
+      type: String,
       required: true
     }
   }

@@ -105,6 +105,7 @@ export default {
             case true:
               localStorage.setItem('token', res.data.data.token);
               localStorage.setItem('auth', 'true');
+              localStorage.setItem('loginAlert', 'true');
               success=true;
               this.$router.push('/dashboard')
               break;

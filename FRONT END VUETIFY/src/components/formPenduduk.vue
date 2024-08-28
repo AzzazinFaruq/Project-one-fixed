@@ -320,7 +320,7 @@ export default {
             } else {
               alert(res.data.massage);
               succes=true;
-              this.$router.push('/dashboard/penduduk');
+              this.$router.push('/dashboard/keluarga');
             }
           });
       } catch (error) {

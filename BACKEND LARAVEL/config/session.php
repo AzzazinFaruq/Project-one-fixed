@@ -18,7 +18,15 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'file'),
+    'driver' => env('SESSION_DRIVER', 'cookie'),
+
+    'cookie' => [
+    'name' => 'laravel_session',
+    'lifetime' => 120, // 2 hours
+    'expire_on_close' => true,
+    'secure' => true,
+    'same_site' => 'lax',
+],
 
     /*
     |--------------------------------------------------------------------------

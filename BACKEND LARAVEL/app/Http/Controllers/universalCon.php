@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Penduduk;
 use App\Models\keluarga;
 use App\Models\User;
+use App\Http\Controllers\keluargaCon;
+use App\Http\Controllers\PendudukCon;
 
 class universalCon extends Controller
 {
 
-//For ADMIN
     public function dataCount(Request $request){
         $role =$request->user()->level;
         $penduduk;
@@ -25,7 +26,7 @@ class universalCon extends Controller
             $penduduk= Penduduk::count();
             $keluarga= keluarga::count();
         }
-     return response()->json([
+     return ([
         'penduduk'=>$penduduk,
         'keluarga'=>$keluarga
      ]);
@@ -46,11 +47,11 @@ class universalCon extends Controller
         // $nokel= keluarga::where('status', 2)->count();
         // $aktiftot= $alivepen + $alivekel;
         // $inaktiftot= $nopen + $nokel;
-     return response()->json([
-        'data'=>[
+     return ([
+
             'aktif'=>$alivepen,
             'inaktif'=>$nopen
-        ]
+
      ]);
     }
     public function marryCount(Request $request){
@@ -152,6 +153,23 @@ class universalCon extends Controller
         ]);
 
     }
-//For USER
+
+    public function AllData(Request $request){
+
+        $kelcon= new keluargaCon();
+        $pencon= new PendudukCon();
+
+        $Jumlah = $this->dataCount($request);
+        $status = $this->aliveCount($request);
+        // $lastkel = $kelcon->latestkel($request);
+        // $lastpen = $pencon->latest($request);
+
+        return response()->json([
+
+            "jumlah" => $Jumlah,
+            'Status' => $status,
+            
+        ]);
+    }
 
 }

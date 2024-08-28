@@ -1,14 +1,25 @@
 <template>
-  <v-container fluid class="m">
+  <v-container>
     <h1>{{ level }} Dashboard</h1>
     <v-divider class="my-2"></v-divider>
+    <div class="my-2">
+      <v-alert
+    v-model="loginPoUp"
+    color="success"
+    variant="tonal"
+    closable
+    title="Login Berhasil"
+    >
+    Selamat Datang di dashboard {{ level }} {{ data.name }}
+    </v-alert>
+    </div>
     <div class="mt-5">
     <v-row class="m-2" justify="center">
      <card
       icon="mdi-human-male-female-child"
       title="Keluarga"
       description="Total Keluarga"
-      :count="keluarga"
+      :count="datacardjumlah.keluarga"
       card="brown-lighten-1"
       color="brown-lighten-2"
       route="/dashboard/keluarga"
@@ -18,7 +29,7 @@
       icon="mdi-account"
       title="Penduduk"
       description="Total Penduduk"
-      :count="penduduk"
+      :count="datacardjumlah.penduduk"
       card="light-blue-darken-2"
       color="light-blue-darken-1 text-white"
       route="/dashboard/penduduk"
@@ -27,7 +38,7 @@
       icon="mdi-account-check"
       title="Aktif"
       description="Penduduk Total"
-      :count="stat.aktif"
+      :count="datacardstatus.aktif"
       card="green-lighten-1"
       color="green-lighten-2 text-white"
       route="/dashboard/penduduk"
@@ -36,7 +47,7 @@
       icon="mdi-account-cancel"
       title="Inaktif"
       description="Penduduk Total"
-      :count="stat.inaktif"
+      :count="datacardstatus.inaktif"
       color="red-accent-2"
       card="red-lighten-1 text-white"
       route="/dashboard/penduduk"
@@ -108,6 +119,7 @@ export default {
   },
   data() {
     return {
+      loginPoUp:false,
       notif:success,
       headkel:[
         {id:0, name:'NOMOR KK'},
@@ -124,9 +136,8 @@ export default {
         {id:4, name:'USER'}
       ],
 
-      keluarga:0,
-      penduduk:'',
-      stat:[],
+      datacardjumlah:[],
+      datacardstatus:[],
       tab: 'one',
       data: [],
       level:"",
@@ -135,29 +146,29 @@ export default {
     };
   },
   mounted() {
-    this.status();
     this.fetchData();
+    this.popup();
   },
   methods: {
-    alive(){
-      axios.get('/api/alive')
-      .then((res)=>{
-        this.stat=res.data.data;
-      })
-    },
-    counter(){
-      axios.get('/api/jumlah')
-      .then((res)=>{
-        console.log(res.data)
-        this.keluarga=res.data.keluarga;
-        this.penduduk=res.data.penduduk;
-      })
+    popup(){
+      if (localStorage.getItem('loginAlert')==='true') {
+        this.loginPoUp=true;
+        localStorage.removeItem('loginAlert');
+      }
     },
     async fetchData() {
+        this.status();
         this.kellast();
         this.penlast();
-        this.counter();
-        this.alive();
+        this.dataForCard();
+    },
+    dataForCard(){
+      axios.get('/api/allData')
+      .then((res)=>{
+        this.datacardjumlah = res.data.jumlah;
+        this.datacardstatus = res.data.Status;
+
+      })
     },
     status() {
       // try {
@@ -175,14 +186,12 @@ export default {
     kellast(){
       axios.get('/api/latestkel')
       .then((res)=>{
-        console.log(res.data)
         this.dtkel = res.data;
       })
     },
     penlast(){
       axios.get('/api/latestpen')
       .then((res)=>{
-        console.log(res.data)
         this.dtpen = res.data;
       })
     }

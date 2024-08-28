@@ -51,6 +51,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::delete('/deleteKeluarga/{id}', [keluargaCon::class, 'destroy']);
 
     //LAIN-LAIN
+    Route::get('/allData', [univ::class, 'AllData']);
     Route::get('/jumlah', [univ::class, 'dataCount']);
     Route::get('/alive', [univ::class, 'aliveCount']);
     Route::get('/marry', [univ::class, 'marryCount']);

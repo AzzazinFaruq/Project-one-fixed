@@ -13,7 +13,19 @@ import App from "./App.vue";
 // Composables
 import { createApp } from "vue";
 import axios from "axios";
+import axiosRetry from 'axios-retry';
 
+
+axiosRetry(axios, {
+  retries: 3, // Jumlah maksimum percobaan ulang
+  retryDelay: (retryCount) => {
+    return retryCount * 1000; // Menunggu 1 detik di antara setiap percobaan
+  },
+  retryCondition: (error) => {
+    // Mengatur kondisi retry hanya untuk status 429
+    return error.response.status === 429;
+  },
+});
 
 axios.interceptors.response.use(
   response => response,
