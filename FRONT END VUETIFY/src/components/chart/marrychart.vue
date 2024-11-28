@@ -1,20 +1,7 @@
 <template>
-  <v-skeleton-loader
-  type="card"
-  width="500"
-  :loading="!loading"
-  class="ma-1"
-  >
-  <div id="container">
-  <v-card
-  class="ma-3 mr-10"
-  width="500"
-  elevation="10"
- >
- <apexchart type="bar" :options="options" :series="series1" class="ma-2" ></apexchart>
-</v-card>
-</div>
-  </v-skeleton-loader>
+
+ <apexchart type="bar" :options="options"  :series="series1" height="400px"  class="ma-2" ></apexchart>
+
 </template>
 <script>
 import axios from 'axios';
@@ -31,10 +18,22 @@ data(){
           }
         }],
         fill: {
-        colors: '#49aa27'
+        colors: '#2184D8'
         },
         xaxis: {
           categories: ['Belum Kawin','Sudah Kawin','Cerai Hidup','Cerai Mati']
+        },
+        yaxis: {
+          tickAmount: 3,
+          min: 0,
+          max: function(max) {
+            return Math.ceil(max / 5) * 5;
+          },
+          labels: {
+            formatter: function(value) {
+              return Math.round(value);
+            }
+          }
         }
       },
       series1: [],

@@ -1,0 +1,65 @@
+
+.v-btn{
+    text-transform: none !important;
+    line-height: 1.5 !important;
+  }
+  
+  a{
+    text-decoration: none;
+    color: black;
+  }
+  
+  label{
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .container-login {
+    width: 600px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      @media screen and (max-width:600px) {
+      width: 95%;
+      }
+      .card-login{
+      padding: 64px;
+      @media screen and (max-width:600px) {
+        padding: 32px;
+      }
+      .image-login{
+        margin-bottom: 32px;
+      }
+    }
+  }
+  .v-container{
+    padding: 0px !important;
+  }
+  .no-underline {
+    text-decoration: none !important;
+    color: grey;
+  }
+  .no-underline:hover {
+    color: black; /* Ganti dengan warna yang diinginkan */
+  }
+  
+  /* Untuk border normal */
+  :deep(.v-field.v-field--outlined .v-field__outline) {
+    border-width: 2px !important; /* sesuaikan ketebalan yang diinginkan */
+  }
+  
+  /* Untuk border saat hover */
+  :deep(.v-field.v-field--outlined:hover .v-field__outline) {
+    border-width: 2px !important;
+  }
+  
+  /* Untuk border saat focus */
+  :deep(.v-field--focused .v-field__outline) {
+    border-width: 2px !important;
+  }
+  
+  /* Untuk border bottom */
+  :deep(.v-field.v-field--outlined .v-field__outline-bottom) {
+    border-bottom-width: 2px !important;
+  }

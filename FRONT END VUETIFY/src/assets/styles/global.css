@@ -1,0 +1,36 @@
+.v-field {
+  background-color: #F9F2EE !important;
+}
+
+.v-field.v-field--variant-outlined {
+  background-color: #F9F2EE !important;
+}
+
+.v-field.v-field--variant-outlined .v-field__outline {
+  color: #925C42 !important;
+}
+
+/* Saat hover */
+.v-field.v-field--variant-outlined:hover .v-field__outline {
+  color: #ECD6CB !important;
+}
+
+/* Saat focus */
+.v-field--focused .v-field__outline {
+  color: #925C42 !important;
+}
+
+/* Untuk select dan combobox */
+.v-select .v-field, 
+.v-combobox .v-field {
+  background-color: #F9F2EE !important;
+}
+
+/* Untuk menu dropdown */
+.v-menu .v-list {
+  background-color: #F9F2EE !important;
+} 
+
+.v-btn{
+  text-transform: none !important;
+}

@@ -1,39 +1,16 @@
 <template>
-        <v-skeleton-loader
-          min-width="295"
-          class="mr-2 my-4"
-          :loading="!loading"
-          type="card"
-        >
-        <v-card class="" :color="card" min-width="295" elevation="10">
-      <v-row class="ma-1">
-        <v-col>
-          <h1>{{ title }}</h1>
-          <p class="text-body-1 "> {{ description }}</p>
-        </v-col>
-        <v-col class="text-right">
-          <v-icon  class="text-left" size="80">{{ icon }}</v-icon>
-        </v-col>
-      </v-row>
-      <div>
-        <v-row class="">
-        <v-col class="">
-          <v-btn class="ml-3" append-icon="mdi-arrow-right" :color="color" :href="route">Detail</v-btn>
-        </v-col>
-        <v-col class="text-right pt-2">
-        <v-chip
-        size="x-large"
-        color="white"
-        class=" mr-3 mb-2"
-      >
-      <h3>{{ count }}</h3>
-      </v-chip>
-        </v-col>
-      </v-row>
-
+    <v-card class="pa-5" min-width="295" elevation="0" rounded="lg">
+      <div class="d-flex justify-space-between">
+        <p class="text-h6">{{ title }}</p>
+        <div class="icon-wrapper" :style="{ backgroundColor: bgColor, color: iconColor }">
+          <v-icon size="32">{{ icon }}</v-icon>
+        </div>
+      </div>
+      <div class="">
+        <h1>{{ count }}</h1>
       </div>
   </v-card>
-        </v-skeleton-loader>
+
 </template>
 
 <script>
@@ -56,18 +33,6 @@ export default {
     },
   },
   props: {
-    route:{
-      type: String,
-      required: true
-    },
-    card:{
-      type: String,
-      required: true
-    },
-    color:{
-      type: String,
-      required: true
-    },
     icon: {
       type: String,
       required: true
@@ -83,13 +48,22 @@ export default {
     count: {
       type: String,
       required: true
+    },
+    bgColor: {
+      type: String,
+      default: '#F0FFF0' // warna default jika tidak ada props
+    },
+    iconColor: {
+      type: String,
+      default: '#F0FFF0' // warna default jika tidak ada props
     }
   }
 }
 </script>
 
 <style scoped>
-.v-card {
-  max-width: 400px;
+.icon-wrapper{
+  border-radius: 50%;
+  padding: 10px;
 }
 </style>

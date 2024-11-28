@@ -1,102 +1,79 @@
 <template>
-  <v-container>
-    <h1>{{ level }} Dashboard</h1>
-    <v-divider class="my-2"></v-divider>
-    <div class="my-2">
-      <v-alert
-    v-model="loginPoUp"
-    color="success"
-    variant="tonal"
-    closable
-    title="Login Berhasil"
-    >
-    Selamat Datang di dashboard {{ level }} {{ data.name }}
-    </v-alert>
-    </div>
+  <v-container fluid class="">
+  <div class="pa-5 mr-2">
     <div class="mt-5">
-    <v-row class="m-2" justify="center">
+    <v-row class="">
+      <v-col cols="12" md="6" lg="3">
      <card
-      icon="mdi-human-male-female-child"
-      title="Keluarga"
-      description="Total Keluarga"
+      bgColor="#F1EDF5"
+      icon-color="#6E4D99"
+      icon="mdi-account-multiple"
+      title="Total Keluarga"
       :count="datacardjumlah.keluarga"
-      card="brown-lighten-1"
-      color="brown-lighten-2"
-      route="/dashboard/keluarga"
+      />
+    </v-col>
+      <v-col cols="12" md="6" lg="3">
 
-      />
       <card
-      icon="mdi-account"
-      title="Penduduk"
-      description="Total Penduduk"
+      bgColor="#E9F3FB"
+      icon-color="#2184D8"
+      icon="mdi-account-multiple"
+      title="Total Penduduk"
       :count="datacardjumlah.penduduk"
-      card="light-blue-darken-2"
-      color="light-blue-darken-1 text-white"
-      route="/dashboard/penduduk"
       />
+    </v-col>
+      <v-col cols="12" md="6" lg="3">
       <card
-      icon="mdi-account-check"
-      title="Aktif"
-      description="Penduduk Total"
+      bgColor="#E6F6EF"
+      icon-color="#01A65D"
+      icon="mdi-check-bold"
+      title="Penduduk Aktif"
       :count="datacardstatus.aktif"
-      card="green-lighten-1"
-      color="green-lighten-2 text-white"
-      route="/dashboard/penduduk"
       />
+    </v-col>
+      <v-col cols="12" md="6" lg="3">
       <card
-      icon="mdi-account-cancel"
-      title="Inaktif"
-      description="Penduduk Total"
+      bgColor="#FEF0EF"
+      icon-color="#F76C5E"
+      icon="mdi-minus-circle"
+      title="Penduduk Inaktif"
       :count="datacardstatus.inaktif"
-      color="red-accent-2"
-      card="red-lighten-1 text-white"
-      route="/dashboard/penduduk"
       />
+    </v-col>
     </v-row>
     </div>
-    <div class="mt-5 ">
-        <v-row justify="center" class="ma-1 " elevation="5">
+    <div class="mt-5">
+        <v-row elevation="5">
+          <v-col cols="12" md="8">
+          <h3  class="mb-5">Status Penduduk</h3>
+          <v-card class="pa-5" elevation="0" height="90%" rounded="lg">
           <marrychart/>
+          </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+          <h3 class="mb-5">Jenis Kelamin</h3>
+          <v-card class="pa-5" elevation="0" height="90%" rounded="lg">
           <genderchart/>
+          </v-card>
+          </v-col>
       </v-row>
     </div>
     <div class="mt-5" >
-      <v-row justify="center">
+    <h3  class="mb-5">Riwayat Input</h3>
+    <v-card elevation="0" class="pa-5">
         <totalchart/>
-      </v-row>
+    </v-card>
+
     </div>
     <div class="mt-10">
-      <v-card class="pa-2" elevation="10">
-      <h3 class="ma-2">DATA TERBARU</h3>
-      <v-divider></v-divider>
-    <v-tabs
-      v-model="tab"
-      variant="outlined"
-      bg-color="deep-green-accent-4"
-    >
-      <v-tab value="one">DATA KELUARGA</v-tab>
-      <v-tab value="two">DATA PENDUDUK</v-tab>
-    </v-tabs>
 
-    <v-card-text>
-      <v-tabs-window v-model="tab">
-        <v-tabs-window-item value="one">
-        <dtTable
-        :dthead="headkel"
-        :dtbody="dtkel"
-        />
-        </v-tabs-window-item>
-        <v-tabs-window-item value="two">
         <dtTable
         :dthead="headpen"
         :dtbody="dtpen"
+        :toCapitalize="toCapitalize"
         />
-        </v-tabs-window-item>
-      </v-tabs-window>
-    </v-card-text>
-  </v-card>
     </div>
-
+  </div>
   </v-container>
 </template>
 
@@ -109,11 +86,14 @@ import card from '@/components/card.vue';
 import dtTable from '@/components/dtTable.vue';
 import { success } from '../login.vue';
 import { test } from '@/stores/restrict';
+import { useTitle } from '@/stores/title'
 const use = test();
 
 export default {
   setup(){
     use.setup();
+    const title = useTitle()
+    title.setTitle('Dashboard')  // Set title halaman
   },
   components:{
   },
@@ -121,19 +101,12 @@ export default {
     return {
       loginPoUp:false,
       notif:success,
-      headkel:[
-        {id:0, name:'NOMOR KK'},
-        {id:1, name:'NOMOR NIK'},
-        {id:2, name:'NAMA'},
-        {id:3, name:'STATUS'},
-        {id:4, name:'USER'}
-      ],
       headpen:[
-        {id:0, name:'NOMOR KK / KEPALA KELUARGA'},
-        {id:1, name:'NOMOR NIK'},
-        {id:2, name:'NAMA'},
-        {id:3, name:'STATUS'},
-        {id:4, name:'USER'}
+        {id:0, name:'Nomor KK / Kepala Keluarga'},
+        {id:1, name:'Nomor NIK'},
+        {id:2, name:'Nama'},
+        {id:3, name:'Status'},
+        {id:4, name:'User'}
       ],
 
       datacardjumlah:[],
@@ -158,7 +131,6 @@ export default {
     },
     async fetchData() {
         this.status();
-        this.kellast();
         this.penlast();
         this.dataForCard();
     },
@@ -183,18 +155,24 @@ export default {
           }
         });
     },
-    kellast(){
-      axios.get('/api/latestkel')
-      .then((res)=>{
-        this.dtkel = res.data;
-      })
-    },
     penlast(){
       axios.get('/api/latestpen')
-      .then((res)=>{
-        this.dtpen = res.data;
-      })
-    }
+        .then((res)=>{
+          this.dtpen = res.data.map(item => ({
+            ...item,
+            nama: this.toCapitalize(item.nama),
+            kepala: this.toCapitalize(item.kepala),
+            status: this.toCapitalize(item.status),
+            user: this.toCapitalize(item.user)
+          }));
+        })
+    },
+    toCapitalize(text) {
+      if (!text) return '';
+      return text.toString().toLowerCase().split(' ').map(word => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+    },
   },
   created() {
 

@@ -10,6 +10,7 @@ import "vuetify/styles";
 import { VDateInput } from "vuetify/labs/VDateInput";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
+import { VNumberInput } from 'vuetify/labs/VNumberInput'
 
 // Composables
 import { createVuetify } from "vuetify";
@@ -19,9 +20,22 @@ export default createVuetify({
   components,
   directives,
   theme: {
-    defaultTheme: "light",
+    defaultTheme: 'myCustomTheme',
+    themes: {
+      myCustomTheme: {
+        dark: false,
+        colors: {
+          background: '#F9F2EE',
+          primary: '#795548',
+        },
+        variables: {
+          'font-family': 'Helvetica, Arial, sans-serif',
+        },
+      },
+    },
   },
   components: {
     VDateInput,
+    VNumberInput,
   },
 });

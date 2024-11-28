@@ -1,17 +1,25 @@
 <template>
-   <v-skeleton-loader
-  type="card"
-  width="500"
-  :loading="!loading"
-  class="ma-1"
-  >
-  <v-card
-  class="ma-3 ml-10"
-  elevation="10"
-  >
-<apexchart width="500" type="pie" :options="options" :series="series2" ></apexchart>
-  </v-card>
-</v-skeleton-loader>
+  <div class="">
+<apexchart  type="pie" :options="options" height="350px"  :series="series2" ></apexchart>
+</div>
+<div class="">
+  <v-row class="d-flex justify-space-evenly ">
+    <v-col cols="6"  class="text-center">
+      <h1>{{ series2[0] }}</h1>
+      <p class="label-with-box">
+        <span class="color-box" style="background-color: #2196F3;"></span>
+        Laki-Laki
+      </p>
+    </v-col>
+    <v-col cols="6"  class="text-center">
+      <h1>{{ series2[1] }}</h1>
+      <p class="label-with-box">
+        <span class="color-box" style="background-color: #FF4081;"></span>
+        Perempuan
+      </p>
+    </v-col>
+  </v-row>
+</div>
 </template>
 <script>
 import axios from 'axios';
@@ -20,11 +28,34 @@ data(){
   return{
     loading:false,
     options: {
-        responsive:[{
-          breakpoint:400
-    }],
-
-        labels:['LAKI-LAKI','PEREMPUAN']
+        responsive:[
+          {
+            breakpoint: 1100,
+            options: {
+              chart: {
+                width: '100%',
+                height: '300px'
+              }
+            }
+          },
+          {
+            breakpoint: 400,
+            options: {
+              chart: {
+                width: '100%',
+                height: '250px'
+              }
+            }
+          }
+        ],
+        labels:['LAKI-LAKI','PEREMPUAN'],
+        colors: ['#BAD9F3', '#FDD1CD'],
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          show: false
+        }
       },
       series2: [],
   }
@@ -52,3 +83,16 @@ methods:{
 }
 }
 </script>
+
+<style scoped>
+.label-with-box {
+  gap: 8px;
+}
+
+.color-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+</style>

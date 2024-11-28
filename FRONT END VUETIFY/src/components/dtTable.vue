@@ -1,12 +1,7 @@
 <template>
-  <v-skeleton-loader
-  type="card"
-  width="100%"
-  :loading="!loading"
-  class="ma-1"
-  >
   <v-card
   width="100%"
+  ele
   >
       <v-table>
         <thead>
@@ -27,13 +22,20 @@
         <td>{{ item.kk }}</td>
         <td>{{ item.nik }}</td>
         <td>{{ item.nama }}</td>
-        <td>{{ item.status }}</td>
+        <td>
+          <v-chip
+            style="font-size: 12px;"
+            :color="item.status.toLowerCase() === 'aktif' ? 'success' : 'error'"
+            :text-color="white"
+          >
+            {{ item.status }}
+          </v-chip>
+        </td>
         <td>{{ item.user_id }}</td>
       </tr>
     </tbody>
       </v-table>
     </v-card>
-  </v-skeleton-loader>
 </template>
 <script>
 export default {

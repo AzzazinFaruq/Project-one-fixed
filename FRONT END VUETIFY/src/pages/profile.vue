@@ -1,34 +1,48 @@
 <template>
-<v-container>
-  <h1>Profile User</h1>
-  <v-card class="mt-5" max-width="500">
-     <v-row class="ma-2">
+<div class="pa-5">
+  <v-tabs
+      v-model="tab"
+      align-tabs="left"
+      color="#F76C5E"
+    >
+      <v-tab :value="one">Edit Profil</v-tab>
+      <v-tab :value="two">Keamanan</v-tab>
+    </v-tabs>
 
-      <v-col><h4>Name</h4></v-col>
-      <v-divider vertical :thickness="4" class="mx-2"></v-divider>
-      <v-col>{{ userdata.name }}</v-col>
-     </v-row>
-     <v-row class="ma-2">
-
-      <v-col><h4>Email</h4></v-col>
-      <v-divider vertical :thickness="4" class="mx-2"></v-divider>
-      <v-col>{{ userdata.email }}</v-col>
-     </v-row>
-     <v-btn color="black" class="ma-2" variant="outlined" href="/edit">Edit Profile</v-btn>
-     <v-btn color="red" class="ma-2" variant="outlined" @click='logout=true'>Log Out</v-btn>
-  </v-card>
-  <v-dialog v-model="logout" persistent max-width="290">
-    <v-card>
-      <v-card-title class="headline">Konfirmasi Logout</v-card-title>
-      <v-card-text> Apakah Anda yakin ingin logout? </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="red darken-1" text @click="handlelogout()">Ya</v-btn>
-        <v-btn color="green darken-1" text @click="logout = false">Tidak</v-btn>
-      </v-card-actions>
+    <v-card class="mt-5 pa-10" elevation="0">
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item value="one">
+          <div class="d-flex justify-center">
+            <div class="rounded-circle" style="background-color: #F76C5E; width: 150px; height: 150px;">
+              <v-img src="../assets/avatar.png" width="150" height="150"></v-img>
+            </div>
+          </div>
+          <div class="mt-5">
+            <label class="">Nama</label>
+            <v-text-field
+              class="mt-2"
+              v-model="userdata.name"
+              variant="outlined"
+              density="comfortable"
+            ></v-text-field>
+            <label class="">Email</label>
+            <v-text-field
+              class="mt-2"
+              v-model="userdata.email"
+              variant="outlined"
+              density="comfortable"
+            ></v-text-field>
+          </div>
+          <div class="d-flex justify-end">
+            <v-btn color="#01A65D" prepend-icon="mdi-content-save" class="text-white">Simpan</v-btn>
+          </div>
+        </v-tabs-window-item>
+        <v-tabs-window-item value="two">
+          Two
+        </v-tabs-window-item>
+      </v-tabs-window>
     </v-card>
-  </v-dialog>
-</v-container>
+</div>
 </template>
 <script>
 import axios from 'axios';
@@ -40,6 +54,7 @@ setup(){
 },
 data(){
   return{
+    tab:1,
     userdata:[],
     logout:false
   }
@@ -77,3 +92,10 @@ methods:{
 }
 
 </script>
+<style scoped>
+label{
+  font-size: 16px;
+  font-weight: 600;
+
+}
+</style>

@@ -29,13 +29,13 @@ export default{
   },
   methods:{
     status(){
-     switch(this.success){
+    switch(this.success){
       case 0 :
         this.$router.push('/login')
         break;
       case 1 :
         break;
-     }
+    }
     },
     user(){
       try{

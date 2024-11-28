@@ -8,12 +8,15 @@
 import { registerPlugins } from "@/plugins";
 import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 // Components
 import App from "./App.vue";
 // Composables
 import { createApp } from "vue";
 import axios from "axios";
 import axiosRetry from 'axios-retry';
+import './assets/styles/global.css'
 
 
 axiosRetry(axios, {
@@ -39,11 +42,13 @@ axios.interceptors.response.use(
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
-axios.defaults.headers.common['Authorization'] = ['bearer',`${localStorage.getItem('token')}`] ;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const pinia = createPinia();
 const app = createApp(App);
+
+app.use(VueSweetalert2);
+
 
 registerPlugins(app);
 app.use(pinia);

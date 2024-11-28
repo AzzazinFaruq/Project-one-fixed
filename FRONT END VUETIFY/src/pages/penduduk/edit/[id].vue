@@ -1,15 +1,14 @@
 <template lang="">
   <v-container class="">
     <v-card class="" elevation="4" max-width=""
-      ><v-card-title>
-        <h3 class="font-weight-medium font-weight: 400;">Input Penduduk</h3>
-      </v-card-title>
-
+      >
       <v-form class="ma-2 pa-2" @submit.prevent="post(form.id)">
         <v-row class="">
           <v-col>
-            <label for="">PILIH KELUARGA</label>
+            <label for="">Keluarga</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :item-props="itemProps"
               :rules="rules"
               :items="dataKel"
@@ -24,6 +23,8 @@
           <v-col>
             <label class="">NIK</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -34,6 +35,8 @@
         </v-row>
         <label for="">Nama Lengkap</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -44,6 +47,8 @@
           <v-col>
             <label for="">Tempat Lahir</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -54,6 +59,8 @@
           <v-col>
             <label for="">Tanggal Lahir</label>
             <v-date-input
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -68,6 +75,8 @@
           <v-col>
             <label for="">Jenis Kelamin</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               :items="kelamin"
               item-title="name"
@@ -81,6 +90,8 @@
           <v-col>
             <label for="">Status Kawin</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="statusKawin"
@@ -93,6 +104,8 @@
           <v-col>
             <label for="">Hubungan Keluarga</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="hubungan"
@@ -107,6 +120,8 @@
           <v-col>
             <label for="">Warga Negara</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="warga"
@@ -119,6 +134,8 @@
           <v-col>
             <label for="">Agama</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="agama"
@@ -133,6 +150,8 @@
           <v-col>
             <label for="">Pendidikan</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="pendidikan"
@@ -145,6 +164,8 @@
           <v-col>
             <label for="">Pekerjaan</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="pekerjaan"
@@ -159,6 +180,8 @@
           <v-col>
             <label class="custom-label">Ayah</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               id="input-1"
               clearable
               :rules="rules"
@@ -170,6 +193,8 @@
           <v-col>
             <label class="">Ibu</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -180,6 +205,8 @@
         </v-row>
         <label class="">Nomor HP</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -188,6 +215,8 @@
         ></v-text-field>
         <label class="">Domisili</label>
         <v-select
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -199,6 +228,8 @@
         ></v-select>
         <label>Status</label
         ><v-autocomplete
+          class="mt-3"
+          rounded="lg"
           :rules="rules"
           variant="outlined"
           :items="stat"
@@ -342,4 +373,12 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+.v-input{
+  margin-top: 10px;
+}
+label{
+  font-size: 14px;
+  font-weight: 600;
+}
+</style>
