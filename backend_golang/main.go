@@ -47,5 +47,13 @@ func main() {
 	protected.PUT("/updatependuduk/:id", controllers.UpdatePenduduk)
 	protected.DELETE("/deletependuduk/:id", controllers.DeletePenduduk)
 
+	//Universal
+	protected.GET("/alldata", controllers.AllData)
+	protected.GET("/jumlah", controllers.DataCount)
+	protected.GET("/alive", controllers.AliveCount)
+	protected.GET("/marry", controllers.MarryCount) 
+	protected.GET("/gender", controllers.GenderCount)
+	protected.GET("/data", controllers.RangeData)
+
 	router.Run(":8080")
 }

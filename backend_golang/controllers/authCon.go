@@ -111,6 +111,7 @@ func GetCurrentUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
+		"auth": true,
 		"data": user,
 	})
 }
