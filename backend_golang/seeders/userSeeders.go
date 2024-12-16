@@ -31,3 +31,4 @@ func SeedersUser(db gorm.DB) {
 	db.Create(&user)
 	log.Println("seed success")
 }
+

@@ -11,106 +11,144 @@ import (
 )
 
 func GetPenduduk(c *gin.Context) {
-	userData, exists := c.Get("user")
+	// Mengambil data user yang sedang login
+	userID, exists := c.Get("user")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User tidak terautentikasi"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found", "status": false})
 		return
 	}
 
-	user := userData.(models.User)
-	role := user.Level
-	
+	var user models.User
+	if err := setup.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found", "status": false})
+		return
+	}
+
+	var penduduk []models.Penduduk
+	var err error
 	var total int64
-	var pendudukList []models.Penduduk
-	query := setup.DB.Model(&models.Penduduk{})
 
-	if role == "enum" {
-		query = query.Where("user_id = ?", user.Id)
+	if user.Level == "admin" {
+		err = setup.DB.Preload("User").Preload("Keluarga").Order("created_at DESC").Find(&penduduk).Error
+	} else {
+		err = setup.DB.Preload("User").Preload("Keluarga").Where("user_id = ?", user.Id).Order("created_at DESC").Find(&penduduk).Error
 	}
 
-	// Hitung total
-	query.Count(&total)
+	setup.DB.Model(&models.Penduduk{}).Count(&total)
 
-	if err := query.Preload("Keluarga").Preload("User").Find(&pendudukList).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data"})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": false,
+			"error":  "Gagal mengambil data: " + err.Error(),
+		})
 		return
 	}
 
-	hasil := make([]map[string]interface{}, 0)
-	for _, data := range pendudukList {
-		hasil = append(hasil, map[string]interface{}{
-			"id":          data.Id,
-			"kels_id":     data.KelsId,
-			"nomer_kk":    data.Keluarga.NoKk,
-			"nik":         data.Nik,
-			"nama":        data.Nama,
-			"tmp_lhr":     data.TmpLahir,
-			"tgl_lhr":     data.TglLahir,
-			"kelamin":     config.GetKelamin(int(data.Kelamin)),
-			"stat_kawin":  config.GetStatusKawin(int(data.StatKawin)),
-			"hub_kel":     config.GetHubunganKeluarga(int(data.HubKel)),
-			"warga_neg":   config.GetWargaNegara(int(data.WargaNeg)),
-			"agama":       config.GetAgama(int(data.Agama)),
-			"pendidikan":  config.GetPendidikan(int(data.Pendidikan)),
-			"pekerjaan":   config.GetPekerjaan(int(data.Pekerjaan)),
-			"ayah":        data.Ayah,
-			"ibu":         data.Ibu,
-			"kepala_kel":  data.Keluarga.KkNama,
-			"no_hp":       data.NoHp,
-			"domisili":    data.Domisili,
-			"stat":        config.GetStatus(int(data.Status)),
-			"user_id":     data.User.Name,
+	if len(penduduk) == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  true,
+			"data":    []map[string]interface{}{},
+			"message": "Data kosong",
 		})
+		return
+	}
+
+	formattedPenduduks := make([]gin.H, len(penduduk))
+	for i, penduduk := range penduduk {
+
+		formattedPenduduks[i] = gin.H{
+			"id":         penduduk.Id,
+			"kels_id":    penduduk.KelsId,
+			"nomer_kk":   penduduk.Keluarga.NoKk,
+			"nik":        penduduk.Nik,
+			"nama":       penduduk.Nama,
+			"tmp_lhr":    penduduk.TmpLahir,
+			"tgl_lhr":    penduduk.TglLahir,
+			"kelamin":    config.GetKelamin(int(penduduk.Kelamin)),
+			"stat_kawin": config.GetStatusKawin(int(penduduk.StatKawin)),
+			"hub_kel":    config.GetHubunganKeluarga(int(penduduk.HubKel)),
+			"warga_neg":  config.GetWargaNegara(int(penduduk.WargaNeg)),
+			"agama":      config.GetAgama(int(penduduk.Agama)),
+			"pendidikan": config.GetPendidikan(int(penduduk.Pendidikan)),
+			"pekerjaan":  config.GetPekerjaan(int(penduduk.Pekerjaan)),
+			"ayah":       penduduk.Ayah,
+			"ibu":        penduduk.Ibu,
+			"kepala_kel": penduduk.Keluarga.KkNama,
+			"no_hp":      penduduk.NoHp,
+			"domisili":   penduduk.Domisili,
+			"stat":       config.GetStatus(int(penduduk.Status)),
+			"user_id":    penduduk.User.Id,
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"data": gin.H{
-			"data":        hasil,
-			"total":       total,
-		},
+		"user":  user,
+		"data":  formattedPenduduks,
+		"total": total,
 	})
 }
 
 func GetLatestPenduduk(c *gin.Context) {
-	userData, exists := c.Get("user")
+	// Mengambil data user yang sedang login
+	userID, exists := c.Get("user")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User tidak terautentikasi"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found", "status": false})
 		return
 	}
 
-	user := userData.(models.User)
-	role := user.Level
-
-	var pendudukList []models.Penduduk
-	query := setup.DB.Order("created_at DESC").Limit(5)
-
-	if role == "enum" {
-		query = query.Where("user_id = ?", user.Id)
-	}
-
-	if err := query.Preload("Keluarga").Preload("User").Find(&pendudukList).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data"})
+	var user models.User
+	if err := setup.DB.First(&user, userID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found", "status": false})
 		return
 	}
 
-	hasil := make([]map[string]interface{}, 0)
-	for _, data := range pendudukList {
-		hasil = append(hasil, map[string]interface{}{
-			"id":         data.Id,
-			"kk":         data.Keluarga.NoKk,
-			"nik":        data.Nik,
-			"nama":       data.Nama,
-			"kepala_kel": data.Keluarga.KkNama,
-			"status":     config.GetStatus(int(data.Status)),
-			"user_id":    data.User.Name,
+	var penduduk []models.Penduduk
+	var err error
+
+	if user.Level == "admin" {
+		err = setup.DB.Preload("User").Preload("Keluarga").Order("created_at DESC").Find(&penduduk).Error
+	} else {
+		err = setup.DB.Preload("User").Preload("Keluarga").Where("user_id = ?", user.Id).Order("created_at DESC").Find(&penduduk).Error
+	}
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": false,
+			"error":  "Gagal mengambil data: " + err.Error(),
 		})
+		return
 	}
 
-	c.JSON(http.StatusOK, hasil)
+	if len(penduduk) == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  true,
+			"data":    []map[string]interface{}{},
+			"message": "Data kosong",
+		})
+		return
+	}
+
+	formattedPenduduks := make([]gin.H, len(penduduk))
+	for i, penduduk := range penduduk {
+
+		formattedPenduduks[i] = gin.H{
+			"id":         penduduk.Id,
+			"nomer_kk":   penduduk.Keluarga.NoKk,
+			"nik":        penduduk.Nik,
+			"nama":       penduduk.Nama,
+			"kepala_kel": penduduk.Keluarga.KkNama,
+			"stat":       config.GetStatus(int(penduduk.Status)),
+			"user_id":    penduduk.User.Name,
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user":  user,
+		"data":  formattedPenduduks,
+	})
 }
 
-func ShowPenduduk(c *gin.Context) {
+func GetPendudukByID(c *gin.Context) {
 	id := c.Param("id")
 
 	var penduduk models.Penduduk
@@ -120,26 +158,26 @@ func ShowPenduduk(c *gin.Context) {
 	}
 
 	hasil := map[string]interface{}{
-		"id":          penduduk.Id,
-		"nomer_kk":    penduduk.Keluarga.NoKk,
-		"nik":         penduduk.Nik,
-		"nama":        penduduk.Nama,
-		"tmp_lhr":     penduduk.TmpLahir,
-		"tgl_lhr":     penduduk.TglLahir,
-		"kelamin":     config.GetKelamin(int(penduduk.Kelamin)),
-		"stat_kawin":  config.GetStatusKawin(int(penduduk.StatKawin)),
-		"hub_kel":     config.GetHubunganKeluarga(int(penduduk.HubKel)),
-		"warga_neg":   config.GetWargaNegara(int(penduduk.WargaNeg)),
-		"agama":       config.GetAgama(int(penduduk.Agama)),
-		"pendidikan":  config.GetPendidikan(int(penduduk.Pendidikan)),
-		"pekerjaan":   config.GetPekerjaan(int(penduduk.Pekerjaan)),
-		"ayah":        penduduk.Ayah,
-		"ibu":         penduduk.Ibu,
-		"kepala_kel":  penduduk.Keluarga.KkNama,
-		"no_hp":       penduduk.NoHp,
-		"domisili":    penduduk.Domisili,
-		"stat":        config.GetStatus(int(penduduk.Status)),
-		"user_id":     penduduk.User.Name,
+		"id":         penduduk.Id,
+		"nomer_kk":   penduduk.Keluarga.NoKk,
+		"nik":        penduduk.Nik,
+		"nama":       penduduk.Nama,
+		"tmp_lhr":    penduduk.TmpLahir,
+		"tgl_lhr":    penduduk.TglLahir,
+		"kelamin":    config.GetKelamin(int(penduduk.Kelamin)),
+		"stat_kawin": config.GetStatusKawin(int(penduduk.StatKawin)),
+		"hub_kel":    config.GetHubunganKeluarga(int(penduduk.HubKel)),
+		"warga_neg":  config.GetWargaNegara(int(penduduk.WargaNeg)),
+		"agama":      config.GetAgama(int(penduduk.Agama)),
+		"pendidikan": config.GetPendidikan(int(penduduk.Pendidikan)),
+		"pekerjaan":  config.GetPekerjaan(int(penduduk.Pekerjaan)),
+		"ayah":       penduduk.Ayah,
+		"ibu":        penduduk.Ibu,
+		"kepala_kel": penduduk.Keluarga.KkNama,
+		"no_hp":      penduduk.NoHp,
+		"domisili":   penduduk.Domisili,
+		"stat":       config.GetStatus(int(penduduk.Status)),
+		"user_id":    penduduk.User.Name,
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": hasil})
@@ -162,7 +200,7 @@ func AddPenduduk(c *gin.Context) {
 		Ayah       string    `json:"ayah" binding:"required"`
 		Ibu        string    `json:"ibu" binding:"required"`
 		NoHp       string    `json:"no_hp" binding:"required"`
-		Domisili   string    `json:"domisili" binding:"required"`
+		Domisili   int8      `json:"domisili" binding:"required"`
 		Status     int8      `json:"stat" binding:"required"`
 		UserId     int64     `json:"user_id" binding:"required"`
 	}
@@ -213,54 +251,35 @@ func AddPenduduk(c *gin.Context) {
 func UpdatePenduduk(c *gin.Context) {
 	id := c.Param("id")
 
-	var input struct {
-		KelsId     int64     `json:"kels_id" binding:"required"`
-		Nik        int64     `json:"nik" binding:"required"`
-		Nama       string    `json:"nama" binding:"required"`
-		TmpLahir   string    `json:"tmp_lhr" binding:"required"`
-		TglLahir   time.Time `json:"tgl_lhr" binding:"required"`
-		Kelamin    int8      `json:"kelamin" binding:"required"`
-		StatKawin  int8      `json:"stat_kawin" binding:"required"`
-		HubKel     int8      `json:"hub_kel" binding:"required"`
-		WargaNeg   int8      `json:"warga_neg" binding:"required"`
-		Agama      int8      `json:"agama" binding:"required"`
-		Pendidikan int8      `json:"pendidikan" binding:"required"`
-		Pekerjaan  int8      `json:"pekerjaan" binding:"required"`
-		Ayah       string    `json:"ayah" binding:"required"`
-		Ibu        string    `json:"ibu" binding:"required"`
-		NoHp       string    `json:"no_hp" binding:"required"`
-		Domisili   string    `json:"domisili" binding:"required"`
-		Status     int8      `json:"stat" binding:"required"`
-		UserId     int64     `json:"user_id" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  false,
-			"message": "Pastikan form sudah terisi dengan benar",
-		})
-		return
-	}
-
 	var penduduk models.Penduduk
 	if err := setup.DB.First(&penduduk, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"status":  false,
+			"status": false,
 			"message": "Data tidak ditemukan",
 		})
 		return
 	}
 
-	if err := setup.DB.Model(&penduduk).Updates(input).Error; err != nil {
+	// Update field satu per satu
+	if err := c.ShouldBindJSON(&penduduk); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": false,
+			"message": "Pastikan form sudah terisi dengan benar",
+		})
+		return
+	}
+
+	// Gunakan Save() untuk memperbarui semua field
+	if err := setup.DB.Save(&penduduk).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  false,
+			"status": false,
 			"message": "Gagal mengupdate penduduk",
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"status":  true,
+		"status": true,
 		"message": "Sukses mengupdate penduduk",
 	})
 }

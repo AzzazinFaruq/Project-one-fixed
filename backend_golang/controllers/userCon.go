@@ -5,6 +5,7 @@ import (
 	"backend_golang/setup"
 	"net/http"
 	"strings"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,6 +35,7 @@ func UpdateUser(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	profilePicture := c.PostForm("profile_picture")
+	level := c.PostForm("level")
 
 	// Update data user
 	updates := map[string]interface{}{}
@@ -46,6 +48,10 @@ func UpdateUser(c *gin.Context) {
 	}
 	if profilePicture != "" {
 		updates["profile_picture"] = profilePicture
+	}
+
+	if level != "" {
+		updates["level"] = level
 	}
 
 	// Handle foto profil jika ada
@@ -101,12 +107,24 @@ func PasswordUpdate(c *gin.Context) {
 
 	// Ambil data form
 	password := c.PostForm("password")
+	confirmPassword := c.PostForm("confirm_password")
+
+	if password != confirmPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password dan konfirmasi password tidak cocok"})
+		return	
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return
+	}
 
 	// Update data user
 	updates := map[string]interface{}{}
 
 	if password != "" {
-		updates["password"] = password
+		updates["password"] = string(hashedPassword)
 	}
 
 	if err := setup.DB.Model(&user).Updates(updates).Error; err != nil {

@@ -18,9 +18,9 @@ type Penduduk struct {
 	Pekerjaan  int8      `json:"pekerjaan"`
 	Ayah       string    `json:"ayah"`
 	Ibu        string    `json:"ibu"`
-	KepalaKel  int8      `json:"kepala_kel"`
+	KepalaKel  string    `json:"kepala_kel"`
 	NoHp       string    `json:"no_hp"`
-	Domisili   string    `json:"domisili"`
+	Domisili   int8      `json:"domisili"`
 	Status     int8      `json:"status"`
 	UserId     int64     `json:"user_id"`
 	CreatedAt  time.Time `gorm:"type:timestamp;default:current_timestamp"`

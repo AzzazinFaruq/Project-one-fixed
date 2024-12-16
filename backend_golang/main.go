@@ -26,6 +26,26 @@ func main() {
 	//User
 	protected.POST("/logout", controllers.Logout)
 	protected.GET("/user", controllers.GetCurrentUser)
+	protected.GET("/user/all", controllers.GetAllUser)
+	protected.PUT("/update/:id", controllers.UpdateUser)
+	protected.PUT("/update/password/:id", controllers.PasswordUpdate)
+
+	//Keluarga
+	protected.GET("/keluarga", controllers.Index)
+	protected.GET("/latestkel", controllers.Latest)
+	protected.GET("/latestkelinput", controllers.LatestForInput)
+	protected.GET("/keluarga/:id", controllers.GetKeluargaByID)
+	protected.POST("/addkeluarga", controllers.AddKeluarga)
+	protected.PUT("/editkeluarga/:id", controllers.UpdateKeluarga)
+	protected.DELETE("/deletekeluarga/:id", controllers.DeleteKeluarga)
+
+	//Penduduk
+	protected.GET("/penduduk", controllers.GetPenduduk)
+	protected.GET("/latestpend", controllers.GetLatestPenduduk)
+	protected.GET("/penduduk/:id", controllers.GetPendudukByID)
+	protected.POST("/addpenduduk", controllers.AddPenduduk)
+	protected.PUT("/updatependuduk/:id", controllers.UpdatePenduduk)
+	protected.DELETE("/deletependuduk/:id", controllers.DeletePenduduk)
 
 	router.Run(":8080")
 }

@@ -14,32 +14,41 @@ import (
 func Register(c *gin.Context) {
 	var input struct {
 		Name            string `json:"name" binding:"required"`
-		Email           string `json:"email" binding:"required"`
+		Email           string `json:"email" binding:"required,email"`
 		Password        string `json:"password" binding:"required,min=8"`
-		ConfirmPassword string `json:"confirm_password" binding:"required|same:Password"`
+		ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
 		ProfilePicture  string `json:"profile_picture"`
 	}
+
+	// Validate the request body
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-	input.Password = string(hashedPassword)
+	// Hash the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
+		return
+	}
 
+	// Create a new user instance
 	user := models.User{
 		Name:           input.Name,
 		Email:          input.Email,
 		Password:       string(hashedPassword),
 		ProfilePicture: input.ProfilePicture,
-		Level:          "user",
+		Level:          "user", // You can modify this based on the user role
 	}
 
+	// Save the user in the database
 	if err := setup.DB.Create(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}
 
+	// Return success message
 	c.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
 }
 
