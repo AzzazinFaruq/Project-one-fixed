@@ -159,6 +159,7 @@ func GetPendudukByID(c *gin.Context) {
 
 	hasil := map[string]interface{}{
 		"id":         penduduk.Id,
+		"kels_id":   penduduk.KelsId,
 		"nomer_kk":   penduduk.Keluarga.NoKk,
 		"nik":        penduduk.Nik,
 		"nama":       penduduk.Nama,

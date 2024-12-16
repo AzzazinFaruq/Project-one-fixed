@@ -133,9 +133,9 @@ export default {
     get() {
       const route = useRoute();
       try {
-        axios.get(`/api/kel/${route.params.id}`)
+        axios.get(`/api/keluarga/${route.params.id}`)
         .then((res)=>{
-          this.form =  res.data.data[0];
+          this.form =  res.data.data;
         })
       } catch (error) {
         console.error("Error fetching data:", error);

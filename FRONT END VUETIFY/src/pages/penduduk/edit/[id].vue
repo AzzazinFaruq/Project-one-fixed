@@ -272,8 +272,8 @@ export default {
   },
   data() {
     return {
-      datakel:[],
-      domisili:useData.domisili,
+      dataKel: [],
+      domisili: useData.domisili,
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
@@ -282,8 +282,7 @@ export default {
       pendidikan: useData.pendidikan,
       pekerjaan: useData.pekerjaan,
       stat: useData.stat,
-      form: [
-        {
+      form: {
         nomer_kk: "",
         kels_id:'',
         nik: "",
@@ -305,9 +304,7 @@ export default {
         stat: "",
         user_id:'',
         valid: false,
-        },
-      ],
-
+      },
       rules: [(v) => !!v || "Wajib Diisi!"],
     };
   },
@@ -318,10 +315,10 @@ export default {
   methods: {
     getKeluarga(){
       try{
-        axios.get("/api/keluargaidx")
+        axios.get("/api/keluarga")
         .then((res)=>{
-          console.log(res.data);
           this.dataKel=res.data.data;
+          console.log(this.dataKel);
         })
 
       }
@@ -334,11 +331,11 @@ export default {
       try {
         const route = useRoute();
         axios
-          .get(`/api/byID/${route.params.id}`)
+          .get(`/api/penduduk/${route.params.id}`)
           .then((response) => {
             console.log(response.data);
-            this.form = response.data.data[0];
-            this.form.tgl_lhr = new Date(response.data.data[0].tgl_lhr);
+            this.form = response.data.data;
+            this.form.tgl_lhr = new Date(response.data.data.tgl_lhr);
             console.log(this.form);
             // this.form.value = response.data;
           });
@@ -365,11 +362,11 @@ export default {
         error;
       }
     },
-    itemProps (item) {
-        return {
-          title: item.no_kk+' ['+item.kk_nama+']'
-        }
+    itemProps(item) {
+      return {
+        title: item.no_kk + ' [' + item.kk_nama + ']'
       }
+    }
   },
 };
 </script>

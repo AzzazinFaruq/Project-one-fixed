@@ -42,17 +42,9 @@
 </template>
 <script>
 import axios from "axios";
-import { useRouter } from "vue-router";
 import Swal from 'sweetalert2'
-const router = useRouter();
 export var success=false;
 export default {
-  setup() {
-    const router = useRouter();
-    return {
-      router,
-    };
-  },
   data() {
     return {
       role:"",
@@ -71,23 +63,10 @@ export default {
     check(){
       axios.get('/api/user')
       .then((res)=>{
-        this.success=res.data.success;
-        switch (this.success) {
-            case true:
-              alert('ANDA SUDAH LOGIN!!')
-              this.$router.push('/dashboard')
-              break;
-            case false:
-              break;
-          }
+       if(res.data.name){
+        this.$router.push('/dashboard')
+       }
       })
-    },
-    getToken() {
-      axios
-        .get("/sanctum/csrf-cookie")
-        .then((response) => {
-          console.log(response);
-        });
     },
     showErrorToast(message) {
       const Toast = Swal.mixin({
@@ -130,13 +109,12 @@ export default {
       })
     },
     login() {
-      this.getToken();
       try {
-        axios.post("/api/login", this.form).then((res) => {
-          this.success = res.data.success;
+        axios.post("/login", this.form).then((res) => {
+          console.log(res.data.authenticated)
+          this.success = res.data.authenticated;
           switch (this.success) {
             case true:
-              localStorage.setItem('token', res.data.data.token);
               localStorage.setItem('auth', 'true');
               localStorage.setItem('loginAlert', 'true');
               success=true;

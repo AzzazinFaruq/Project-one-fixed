@@ -19,16 +19,16 @@
         v-for="item in dtbody"
         :key="item.id"
       >
-        <td>{{ item.kk }}</td>
+        <td>{{ item.nomer_kk }} / {{ item.kepala_kel }}</td>
         <td>{{ item.nik }}</td>
         <td>{{ item.nama }}</td>
         <td>
           <v-chip
             style="font-size: 12px;"
-            :color="item.status.toLowerCase() === 'aktif' ? 'success' : 'error'"
+            :color="item.stat.toLowerCase() === 'aktif' ? 'success' : 'error'"
             :text-color="white"
           >
-            {{ item.status }}
+            {{ item.stat }}
           </v-chip>
         </td>
         <td>{{ item.user_id }}</td>

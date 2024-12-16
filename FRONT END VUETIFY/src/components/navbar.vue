@@ -108,7 +108,7 @@
        variant="outlined"
        density="compact"
        size="small"
-       @click="logout()"
+       @click="handleLogout()"
      ></v-btn>
     </div>
     <div class="mr-2">

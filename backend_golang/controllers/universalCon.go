@@ -95,6 +95,13 @@ func MarryCount(c *gin.Context) {
 		setup.DB.Model(&models.Penduduk{}).Where("user_id = ?", user.Id).Where("stat_kawin = ?", 3).Count(&ceraimati)
 		setup.DB.Model(&models.Penduduk{}).Where("user_id = ?", user.Id).Where("stat_kawin = ?", 4).Count(&belum)
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"kawin": kawin,
+		"ceraihidup": ceraihidup,
+		"ceraimati": ceraimati,
+		"belum": belum,
+	})
 }
 
 func GenderCount(c *gin.Context) {
@@ -121,6 +128,11 @@ func GenderCount(c *gin.Context) {
 		setup.DB.Model(&models.Penduduk{}).Where("user_id = ?", user.Id).Where("kelamin = ?", 1).Count(&laki)
 		setup.DB.Model(&models.Penduduk{}).Where("user_id = ?", user.Id).Where("kelamin = ?", 2).Count(&perempuan)
 	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"laki": laki,
+		"perempuan": perempuan,
+	})
 }
 
 func RangeData(c *gin.Context) {

@@ -151,6 +151,7 @@ export default {
       ],
       name: "",
       getitem: [],
+      allData: [],
       itemDetail: {},
       userRole:"",
       page: 1,
@@ -184,23 +185,16 @@ export default {
     getPen() {
       this.load();
       try {
-        axios.get(`/api/penduduk/`, {
-          params: {
-            page: this.page,
-            item: this.totalData,
-            search: this.search
-          }
-        })
-        .then((response) => {
-          this.getitem = response.data.data.data.map(item => ({
-            ...item,
-            nama: this.toCapitalize(item.nama),
-            kelamin: this.toCapitalize(item.kelamin),
-            stat: this.toCapitalize(item.stat)
-          }));
-          this.totalPages = response.data.data.total;
-          this.last_page = response.data.data.last_page;
-        });
+        axios.get(`/api/penduduk`)
+          .then((response) => {
+            this.allData = response.data.data.map(item => ({
+              ...item,
+              nama: this.toCapitalize(item.nama),
+              kelamin: this.toCapitalize(item.kelamin),
+              stat: this.toCapitalize(item.stat)
+            }));
+            this.updateDisplayedData();
+          });
       } catch (error) {
         console.error(error);
       }
@@ -264,30 +258,42 @@ export default {
         path: this.$route.path,
         query: {}
       });
-      this.getPen();
+      this.updateDisplayedData();
     },
     handleSearch(newSearch) {
       this.search = newSearch;
       this.page = 1; // Reset ke halaman pertama saat melakukan pencarian
       this.getPen(); // Refresh data
+    },
+    updateDisplayedData() {
+      let filteredData = this.allData;
+      if (this.search) {
+        filteredData = this.allData.filter(item =>
+          Object.values(item).some(val =>
+            String(val).toLowerCase().includes(this.search.toLowerCase())
+          )
+        );
+      }
+
+      this.last_page = Math.ceil(filteredData.length / this.totalData);
+
+      const start = (this.page - 1) * this.totalData;
+      const end = start + this.totalData;
+      this.getitem = filteredData.slice(start, end);
     }
   },
   watch:{
     page(){
-      this.getPen();
+      this.updateDisplayedData();
     },
     totalData(){
       this.page=1;
-      this.getPen();
+      this.updateDisplayedData();
     },
-    '$route.query.search': {
-      immediate: true,
-      handler(newSearch) {
-        if (newSearch !== undefined) {
-          this.search = newSearch;
-          this.page = 1; // Reset ke halaman pertama saat melakukan pencarian
-          this.getPen(); // Refresh data
-        }
+    search: {
+      handler() {
+        this.page = 1;
+        this.updateDisplayedData();
       }
     }
   },
