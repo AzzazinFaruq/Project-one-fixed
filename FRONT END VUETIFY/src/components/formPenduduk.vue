@@ -1,35 +1,43 @@
 <template lang="">
   <v-container class="">
-      <v-form class="ma-2 pa-2" @submit.prevent="post" lazy-validation>
+    <v-form class="ma-2 pa-2" @submit.prevent="post(form.id)">
         <v-row class="">
-          <v-col >
-            <label for="">PILIH NO KK / KEPALA KELUARGA</label>
+          <v-col>
+            <label for="">Keluarga</label>
             <v-autocomplete
+            disabled
+              class="mt-3"
+              rounded="lg"
               :item-props="itemProps"
               :rules="rules"
               :items="dataKel"
-              item-title="nama"
               item-value="id"
               v-model="form.kels_id"
               variant="outlined"
               required
-              disabled
             ></v-autocomplete>
-            <v-btn color="black" variant="outlined" class='mb-4' href="/admin/keluarga/inputKeluarga">Tambah Keluarga</v-btn>
+
           </v-col>
-          <v-col >
+          <v-col>
             <label class="">NIK</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
-              :rules="rules"
+              :rules="rules.nik"
               variant="outlined"
               v-model="form.nik"
+              type="number"
               required
+              hint="Masukkan 16 digit NIK"
+              persistent-hint
             ></v-text-field>
           </v-col>
         </v-row>
         <label for="">Nama Lengkap</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -40,6 +48,8 @@
           <v-col>
             <label for="">Tempat Lahir</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -50,6 +60,8 @@
           <v-col>
             <label for="">Tanggal Lahir</label>
             <v-date-input
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -64,6 +76,8 @@
           <v-col>
             <label for="">Jenis Kelamin</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               :items="kelamin"
               item-title="name"
@@ -77,6 +91,8 @@
           <v-col>
             <label for="">Status Kawin</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="statusKawin"
@@ -89,6 +105,9 @@
           <v-col>
             <label for="">Hubungan Keluarga</label
             ><v-autocomplete
+            disabled
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="hubungan"
@@ -96,7 +115,6 @@
               item-value="id"
               required
               v-model="form.hub_kel"
-              disabled
             ></v-autocomplete>
           </v-col>
         </v-row>
@@ -104,6 +122,8 @@
           <v-col>
             <label for="">Warga Negara</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="warga"
@@ -116,6 +136,8 @@
           <v-col>
             <label for="">Agama</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="agama"
@@ -130,6 +152,8 @@
           <v-col>
             <label for="">Pendidikan</label>
             <v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="pendidikan"
@@ -142,6 +166,8 @@
           <v-col>
             <label for="">Pekerjaan</label
             ><v-autocomplete
+              class="mt-3"
+              rounded="lg"
               :rules="rules"
               variant="outlined"
               :items="pekerjaan"
@@ -156,6 +182,8 @@
           <v-col>
             <label class="custom-label">Ayah</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               id="input-1"
               clearable
               :rules="rules"
@@ -167,6 +195,8 @@
           <v-col>
             <label class="">Ibu</label>
             <v-text-field
+              class="mt-3"
+              rounded="lg"
               clearable
               :rules="rules"
               variant="outlined"
@@ -177,6 +207,8 @@
         </v-row>
         <label class="">Nomor HP</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -185,6 +217,8 @@
         ></v-text-field>
         <label class="">Domisili</label>
         <v-select
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -195,23 +229,43 @@
           v-model="form.domisili"
         ></v-select>
         <label>Status</label
-        ><v-autocomplete
+        ><v-select
+          class="mt-3"
+          rounded="lg"
           :rules="rules"
           variant="outlined"
           :items="stat"
           item-title="name"
           item-value="id"
           required
-          v-model="form.stat"
-        ></v-autocomplete>
-        <v-btn
-          class="mt-4"
-          location="center"
-          type="submit"
-          elevation="2"
-          color="green"
-          >Submit</v-btn
-        >
+          v-model="form.status"
+        ></v-select>
+        <div class="d-flex justify-end">
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-delete"
+            class="mt-4 mr-2"
+            type="submit"
+            elevation="2"
+            color="red"
+            text="Hapus"
+            @click="deletePenduduk(form.id)"
+            ></v-btn
+          >
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-content-save"
+            class="mt-4"
+            type="submit"
+            elevation="2"
+            color="green"
+            text="Simpan"
+            @click="post(form.id)"
+            ></v-btn
+          >
+        </div>
       </v-form>
   </v-container>
 </template>
@@ -250,8 +304,7 @@ export default {
 
 
       form: {
-        nomer_kk: "",
-        kels_id:1,
+        kels_id:"",
         nik: "",
         nama: "",
         tmp_lhr: "",
@@ -292,11 +345,12 @@ export default {
     },
     getKeluarga(){
       try{
-        axios.get("/api/latestkel")
+        axios.get("/api/latestkelinput")
         .then((res)=>{
-          console.log(res.data[0]);
-          this.dataKel=res.data;
-          this.form.kels_id=res.data[0].id;
+          this.dataKel=res.data.data;
+          this.form.kels_id=res.data.data[0].id;
+          this.form.nama=this.dataKel.kk_nama;
+          console.log(this.dataKel);
         })
 
       }
@@ -329,7 +383,7 @@ export default {
     },
     itemProps (item) {
         return {
-          title: item.kk+' ['+item.nama+']'
+          title: item.no_kk+' ['+item.kk_nama+']'
         }
       }
   },

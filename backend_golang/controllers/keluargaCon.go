@@ -65,7 +65,7 @@ func Index(c *gin.Context) {
 			"rw":         keluarga.Rw,
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
-			"user_id":    keluarga.UserId,
+			"user_id":    keluarga.User.Name,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -240,6 +240,7 @@ func AddKeluarga(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 			"valid":   false,
 			"message": "Pastikan form sudah terisi dengan benar",
 		})
@@ -289,6 +290,7 @@ func UpdateKeluarga(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 			"status":  false,
 			"message": "Pastikan form sudah terisi dengan benar",
 		})

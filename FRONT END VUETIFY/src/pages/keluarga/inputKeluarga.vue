@@ -7,65 +7,96 @@
     :items="['Input Data Keluarga', 'Input Data Kepala Keluarga']"
     >
     <template v-slot:item.1>
-      <v-form class="ma-2" @submit.prevent="post">
-        <label for="">NOMER KK</label>
+      <v-form class="ma-2" @submit.prevent="post(form.id)">
+        <v-row>
+          <v-col>
+        <label for="">No. Kartu Keluarga</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
           v-model="form.no_kk"
           required
         ></v-text-field>
-        <label for="">NIK</label>
+        </v-col>
+        <v-col>
+        <label for="">No. Induk Kependudukan (NIK)</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
           v-model="form.kk_nik"
           required
         ></v-text-field>
-        <label for="">NAMA</label>
+        </v-col>
+      </v-row>
+        <label for="">Nama Lengkap Kepala Keluarga</label>
         <v-text-field
+          class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
           v-model="form.kk_nama"
           required
         ></v-text-field>
-        <label for="">alamat</label>
+        <label for="">Alamat</label>
         <v-text-field
           clearable
+          class="mt-3"
+          rounded="lg"
           :rules="rules"
           variant="outlined"
           v-model="form.alamat"
           required
         ></v-text-field>
+        <v-row>
+        <v-col>
         <label for="">RT</label>
         <v-text-field
           clearable
           :rules="rules"
+          class="mt-3"
+          rounded="lg"
           variant="outlined"
           v-model="form.rt"
           required
         ></v-text-field>
+        </v-col>
+        <v-col>
         <label for="">RW</label>
         <v-text-field
           clearable
           :rules="rules"
+          class="mt-3"
+          rounded="lg"
           variant="outlined"
           v-model="form.rw"
           required
         ></v-text-field>
-        <label for="">KODE POS</label>
+        </v-col>
+        <v-col>
+          <label for="">Kode Pos</label>
         <v-text-field
           clearable
           :rules="rules"
+          class="mt-3"
+          rounded="lg"
           variant="outlined"
           v-model="form.kode_pos"
           required
         ></v-text-field>
-        <label for="">STATUS</label>
+        </v-col>
+      </v-row>
+
+        <label for="">Status</label>
        <v-select
+            class="mt-3"
+          rounded="lg"
           clearable
           :rules="rules"
           variant="outlined"
@@ -75,15 +106,34 @@
           required
           v-model="form.status"
        ></v-select>
-        <v-btn
-          class="mt-4"
-          location="center"
-          type="submit"
-          elevation="2"
-          color="green"
-          :rules="rules"
-          >Submit</v-btn>
       </v-form>
+      <div class="d-flex justify-end">
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-close"
+            class="mt-4 mr-2"
+            type="submit"
+            elevation="2"
+            color="red"
+            text="Batal"
+            @click="back()"
+            ></v-btn
+          >
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-content-save"
+            class="mt-4"
+            type="submit"
+            elevation="2"
+            color="green"
+            text="Simpan"
+            @click="post(form.id)"
+            ></v-btn
+          >
+        </div>
+
     </template>
 
    <template v-slot:item.2>
@@ -147,7 +197,7 @@ export default {
         axios.get("/api/user")
         .then((res)=>{
           this.user=res.data;
-          this.form.user_id=res.data.data.id
+          this.form.user_id=res.data.data.Id
           console.log(res.data.data.id)
         })
       }
@@ -155,22 +205,68 @@ export default {
         return error;
       }
     },
-    post() {
+    back(){
+      this.$router.push('/keluarga');
+    },
+    post(id) {
       try {
-        axios
-          .post("/api/addKeluarga", this.form)
+        const formData = {
+          ...this.form,
+          no_kk: Number(this.form.no_kk),
+          kk_nik: Number(this.form.kk_nik),
+          kk_nama: this.form.kk_nama,
+          alamat: this.form.alamat,
+          rt: this.form.rt,
+          rw: this.form.rw,
+          kode_pos: this.form.kode_pos,
+          status: Number(this.form.status),
+          user_id: Number(this.form.user_id)
+        };
+
+        axios.post(`/api/addkeluarga`, formData)
           .then((res) => {
             console.log(res);
             this.form.valid = res.data.valid;
             if (this.form.valid == false) {
-              alert(res.data.massage);
+              Swal.fire({
+                title: 'Error!',
+                text: res.data.massage,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+              });
             } else {
-              alert(res.data.massage);
               this.step=2;
+              Swal.fire({
+                title: 'Berhasil!',
+                text: res.data.massage,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+              }).then(() => {
+                this.$router.push('/keluarga');
+              });
             }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Gagal memperbarui data',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#3085d6',
+            });
           });
       } catch (error) {
-        error, router.push("/login");
+        Swal.fire({
+          title: 'Error!',
+          text: 'Terjadi kesalahan sistem',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+        });
+        this.$router.push("/login");
       }
     },
   },

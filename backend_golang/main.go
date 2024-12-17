@@ -55,5 +55,7 @@ func main() {
 	protected.GET("/gender", controllers.GenderCount)
 	protected.GET("/data", controllers.RangeData)
 
+	router.Static("/public", "./public")
+
 	router.Run(":8080")
 }

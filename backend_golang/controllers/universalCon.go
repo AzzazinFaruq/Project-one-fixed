@@ -171,7 +171,7 @@ func RangeData(c *gin.Context) {
 	dataPerDay := make([]int64, 0)
 
 	// Query berdasarkan role user
-	if user.Level == "enum" {
+	if user.Level == "user" {
 		for day := 1; day <= limit; day++ {
 			var count int64
 			setup.DB.Model(&models.Penduduk{}).

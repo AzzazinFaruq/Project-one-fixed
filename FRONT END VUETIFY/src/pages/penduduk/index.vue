@@ -14,17 +14,6 @@
       </v-btn>
       <v-btn href="/penduduk/inputPenduduk" elevation="0" color="#C37B58" rounded="lg" prepend-icon="mdi-plus">Penduduk</v-btn>
     </div>
-    <v-alert
-      v-model="notif"
-      class="my-5"
-      density='compact'
-      type="success"
-      variant="outlined"
-      title="Sukses"
-      closable
-    >
-    Sukses Edit Password User
-    </v-alert>
     <v-card
     rounded="lg"
     class="pa-4"
@@ -42,13 +31,13 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-chip class="px-3" color="#2184D8" variant="flat" style="font-size: 12px;" @click="edit(item.id)">Lihat Detail</v-chip>
         </template>
-        <template v-slot:[`item.stat`]="{ item }">
+        <template v-slot:[`item.status`]="{ item }">
           <v-chip
             style="font-size: 12px;"
-            :color="item.stat.toLowerCase() === 'aktif' ? 'success' : 'error'"
+            :color="item.status.toLowerCase() === 'aktif' ? 'success' : 'error'"
             :text-color="white"
           >
-            {{ item.stat }}
+            {{ item.status }}
           </v-chip>
         </template>
         <!-- <template v-slot:item.tgl_lhr="{ value }">
@@ -145,7 +134,7 @@ export default {
         { title: "NIK", value: "nik" },
         { title: "Nama", value: "nama" },
         { title: "Kelamin", value: "kelamin" },
-        { title: "Status", value: "stat" },
+        { title: "Status", value: "status" },
         { title: "User", value: "user_id" },
         { title: "Action", value: "actions" },
       ],
@@ -191,7 +180,7 @@ export default {
               ...item,
               nama: this.toCapitalize(item.nama),
               kelamin: this.toCapitalize(item.kelamin),
-              stat: this.toCapitalize(item.stat)
+              status: this.toCapitalize(item.status)
             }));
             this.updateDisplayedData();
           });

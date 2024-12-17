@@ -76,8 +76,8 @@ func GetPenduduk(c *gin.Context) {
 			"kepala_kel": penduduk.Keluarga.KkNama,
 			"no_hp":      penduduk.NoHp,
 			"domisili":   penduduk.Domisili,
-			"stat":       config.GetStatus(int(penduduk.Status)),
-			"user_id":    penduduk.User.Id,
+			"status":     config.GetStatus(int(penduduk.Status)),
+			"user_id":    penduduk.User.Name,
 		}
 	}
 
@@ -165,19 +165,19 @@ func GetPendudukByID(c *gin.Context) {
 		"nama":       penduduk.Nama,
 		"tmp_lhr":    penduduk.TmpLahir,
 		"tgl_lhr":    penduduk.TglLahir,
-		"kelamin":    config.GetKelamin(int(penduduk.Kelamin)),
-		"stat_kawin": config.GetStatusKawin(int(penduduk.StatKawin)),
-		"hub_kel":    config.GetHubunganKeluarga(int(penduduk.HubKel)),
-		"warga_neg":  config.GetWargaNegara(int(penduduk.WargaNeg)),
-		"agama":      config.GetAgama(int(penduduk.Agama)),
-		"pendidikan": config.GetPendidikan(int(penduduk.Pendidikan)),
-		"pekerjaan":  config.GetPekerjaan(int(penduduk.Pekerjaan)),
+		"kelamin":    penduduk.Kelamin,
+		"stat_kawin": penduduk.StatKawin,
+		"hub_kel":    penduduk.HubKel,
+		"warga_neg":  penduduk.WargaNeg,
+		"agama":      penduduk.Agama,
+		"pendidikan": penduduk.Pendidikan,
+		"pekerjaan":  penduduk.Pekerjaan,
 		"ayah":       penduduk.Ayah,
 		"ibu":        penduduk.Ibu,
 		"kepala_kel": penduduk.Keluarga.KkNama,
 		"no_hp":      penduduk.NoHp,
 		"domisili":   penduduk.Domisili,
-		"stat":       config.GetStatus(int(penduduk.Status)),
+		"status":     penduduk.Status,
 		"user_id":    penduduk.User.Name,
 	}
 
@@ -202,12 +202,13 @@ func AddPenduduk(c *gin.Context) {
 		Ibu        string    `json:"ibu" binding:"required"`
 		NoHp       string    `json:"no_hp" binding:"required"`
 		Domisili   int8      `json:"domisili" binding:"required"`
-		Status     int8      `json:"stat" binding:"required"`
+		Status     int8      `json:"status" binding:"required"`
 		UserId     int64     `json:"user_id" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
 			"valid":   false,
 			"message": "Pastikan form sudah terisi dengan benar",
 		})
@@ -264,6 +265,7 @@ func UpdatePenduduk(c *gin.Context) {
 	// Update field satu per satu
 	if err := c.ShouldBindJSON(&penduduk); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
 			"status": false,
 			"message": "Pastikan form sudah terisi dengan benar",
 		})

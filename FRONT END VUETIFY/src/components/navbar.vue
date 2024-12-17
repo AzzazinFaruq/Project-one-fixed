@@ -113,9 +113,16 @@
     </div>
     <div class="mr-2">
       <a href="/profile">
-      <v-img
+        <v-img
+        v-if="!data.profile_picture"
         rounded="xl"
         src="../assets/avatar.png"
+        alt=""
+        width="32"
+      ></v-img>
+      <v-img
+        rounded="xl"
+        :src="profile_picture"
         alt=""
         width="32"
       ></v-img>
@@ -159,6 +166,7 @@ export default {
     currentTitle: '',
     search: '',
     showResults: false,
+    profile_picture:"",
   }),
   mounted() {
     this.status();
@@ -189,6 +197,7 @@ export default {
           name=res.data.data.name
           this.role=res.data.data.level
           this.navlist();
+          this.profile_picture="http://localhost:8080/"+res.data.data.profile_picture;
         });
       } catch (error) {
         error;
@@ -197,7 +206,7 @@ export default {
       }
     },
     navlist(){
-      if (this.role == 'enum') {
+      if (this.role == 'user') {
         this.links=this.links1;
       }
       else if (this.role == 'admin' || this.role=='superAdmin') {
@@ -214,18 +223,31 @@ export default {
 
     searchIn(type) {
       this.showResults = false;
+      const currentPath = this.$route.path;
+
       if (type === 'penduduk') {
-        this.$router.push({
-          path: '/penduduk',
-          query: { search: this.search }  // Menggunakan query parameter
-        });
+        if (currentPath === '/penduduk') {
+          // Jika sudah di halaman penduduk, reload halaman
+          window.location.href = `/penduduk?search=${this.search}`;
+        } else {
+          // Jika di halaman lain, gunakan router.push
+          this.$router.push({
+            path: '/penduduk',
+            query: { search: this.search }
+          });
+        }
       } else if (type === 'keluarga') {
-        this.$router.push({
-          path: '/keluarga',
-          query: { search: this.search }  // Menggunakan query parameter
-        });
+        if (currentPath === '/keluarga') {
+          // Jika sudah di halaman keluarga, reload halaman
+          window.location.href = `/keluarga?search=${this.search}`;
+        } else {
+          // Jika di halaman lain, gunakan router.push
+          this.$router.push({
+            path: '/keluarga',
+            query: { search: this.search }
+          });
+        }
       }
-      this.search = ''; // Reset search setelah navigasi
     }
   },
   created() {

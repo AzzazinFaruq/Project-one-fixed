@@ -31,13 +31,13 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-chip class="px-3" color="#2184D8" variant="flat" style="font-size: 12px;" @click="edit(item.id)">Lihat Detail</v-chip>
         </template>
-        <template v-slot:[`item.stat`]="{ item }">
+        <template v-slot:[`item.status`]="{ item }">
           <v-chip
             style="font-size: 12px;"
-            :color="item.stat.toLowerCase() === 'aktif' ? 'success' : 'error'"
+            :color="item.status.toLowerCase() === 'aktif' ? 'success' : 'error'"
             :text-color="white"
           >
-            {{ item.stat }}
+            {{ item.status }}
           </v-chip>
         </template>
         <!-- <template v-slot:item.tgl_lhr="{ value }">
