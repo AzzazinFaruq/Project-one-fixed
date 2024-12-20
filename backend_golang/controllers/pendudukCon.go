@@ -188,21 +188,21 @@ func AddPenduduk(c *gin.Context) {
 		KelsId     int64     `json:"kels_id" binding:"required"`
 		Nik        int64     `json:"nik" binding:"required"`
 		Nama       string    `json:"nama" binding:"required"`
-		TmpLahir   string    `json:"tmp_lhr" binding:"required"`
-		TglLahir   time.Time `json:"tgl_lhr" binding:"required"`
-		Kelamin    int8      `json:"kelamin" binding:"required"`
-		StatKawin  int8      `json:"stat_kawin" binding:"required"`
+		TmpLahir   string    `json:"tmp_lhr"`
+		TglLahir   time.Time `json:"tgl_lhr"`
+		Kelamin    int8      `json:"kelamin"`
+		StatKawin  int8      `json:"stat_kawin"`
 		HubKel     int8      `json:"hub_kel" binding:"required"`
-		WargaNeg   int8      `json:"warga_neg" binding:"required"`
-		Agama      int8      `json:"agama" binding:"required"`
-		Pendidikan int8      `json:"pendidikan" binding:"required"`
-		Pekerjaan  int8      `json:"pekerjaan" binding:"required"`
-		Ayah       string    `json:"ayah" binding:"required"`
-		Ibu        string    `json:"ibu" binding:"required"`
-		NoHp       string    `json:"no_hp" binding:"required"`
-		Domisili   int8      `json:"domisili" binding:"required"`
-		Status     int8      `json:"stat" binding:"required"`
-		UserId     int64     `json:"user_id" binding:"required"`
+		WargaNeg   int8      `json:"warga_neg"`
+		Agama      int8      `json:"agama"`
+		Pendidikan int8      `json:"pendidikan"`
+		Pekerjaan  int8      `json:"pekerjaan"`
+		Ayah       string    `json:"ayah"`
+		Ibu        string    `json:"ibu"`
+		NoHp       string    `json:"no_hp"`
+		Domisili   int8      `json:"domisili"`
+		Status     int8      `json:"stat"`
+		UserId     int64     `json:"user_id"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {

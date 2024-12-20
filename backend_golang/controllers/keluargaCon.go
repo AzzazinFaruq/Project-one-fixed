@@ -5,6 +5,8 @@ import (
 	"backend_golang/models"
 	"backend_golang/setup"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -66,6 +68,8 @@ func Index(c *gin.Context) {
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
 			"user_id":    keluarga.UserId,
+			"foto_kk":	  keluarga.FotoKk,
+			"foto_rumah": keluarga.FotoRumah,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -127,6 +131,8 @@ func Latest(c *gin.Context) {
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
 			"user_id":    keluarga.UserId,
+			"foto_kk":    keluarga.FotoKk,
+			"foto_rumah": keluarga.FotoRumah,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -187,6 +193,8 @@ func LatestForInput(c *gin.Context) {
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
 			"user_id":    keluarga.UserId,
+			"foto_kk":    keluarga.FotoKk,
+			"foto_rumah": keluarga.FotoRumah,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -218,6 +226,8 @@ func GetKeluargaByID(c *gin.Context) {
 		"kode_pos":   keluarga.KodePos,
 		"status":     config.GetStatus(int(keluarga.Status)),
 		"user_id":    keluarga.UserId,
+		"foto_kk":    keluarga.FotoKk,
+		"foto_rumah": keluarga.FotoRumah,
 		"created_at": keluarga.CreatedAt,
 		"updated_at": keluarga.UpdatedAt,
 	}
@@ -226,95 +236,334 @@ func GetKeluargaByID(c *gin.Context) {
 }
 
 func AddKeluarga(c *gin.Context) {
-	var input struct {
-		NoKk    int64  `json:"no_kk" binding:"required"`
-		KkNik   int64  `json:"kk_nik" binding:"required"`
-		KkNama  string `json:"kk_nama" binding:"required"`
-		Alamat  string `json:"alamat" binding:"required"`
-		Rt      string `json:"rt" binding:"required"`
-		Rw      string `json:"rw" binding:"required"`
-		KodePos string `json:"kode_pos" binding:"required"`
-		Status  int8   `json:"status" binding:"required"`
-		UserId  int64  `json:"user_id" binding:"required"`
-	}
 
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"valid":   false,
-			"message": "Pastikan form sudah terisi dengan benar",
-		})
+	var keluarga models.Keluarga
+
+	noKk := c.PostForm("no_kk")
+	if noKk == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No KK wajib diisi"})
 		return
 	}
 
-	keluarga := models.Keluarga{
-		NoKk:    input.NoKk,
-		KkNik:   input.KkNik,
-		KkNama:  input.KkNama,
-		Alamat:  input.Alamat,
-		Rt:      input.Rt,
-		Rw:      input.Rw,
-		KodePos: input.KodePos,
-		Status:  input.Status,
-		UserId:  input.UserId,
-	}
-
-	if err := setup.DB.Create(&keluarga).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"valid":   false,
-			"message": "Gagal menambah keluarga",
-		})
+	kkNik := c.PostForm("kk_nik")
+	if kkNik == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "NIK wajib diisi"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"valid":   true,
-		"message": "Sukses menambah keluarga",
+	kkNama := c.PostForm("kk_nama")
+	if kkNama == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Nama Kepala Keluarga harus diisi"})
+		return
+	}
+
+	alamat := c.PostForm("alamat")
+	if alamat == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Alamat harus diisi"})
+		return
+	}
+
+	rt := c.PostForm("rt")
+	if rt == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "RT harus diisi"})
+		return
+	}
+
+	rw := c.PostForm("rw")
+	if rw == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "RW harus diisi"})
+		return
+	}
+
+	kodePos := c.PostForm("kode_pos")
+	if kodePos == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Kode Pos harus diisi"})
+		return
+	}
+
+	status := c.PostForm("status")
+	if status == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Status harus diisi"})
+		return
+	}
+
+	userId := c.PostForm("user_id")
+	if userId == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID harus diisi"})
+		return
+	}
+
+	isComplete := true
+
+	var noKkInt, kkNikInt, userIdInt int64
+	var statusInt int8
+	var err error
+
+	if noKk != "" {
+		noKkInt, err = strconv.ParseInt(noKk, 10, 64)
+		if err != nil {
+			isComplete = false
+		}
+	} else {
+		isComplete = false
+	}
+
+	if kkNik != "" {
+		kkNikInt, err = strconv.ParseInt(kkNik, 10, 64)
+		if err != nil {
+			isComplete = false
+		}
+	} else {
+		isComplete = false
+	}
+	if status != "" {
+		statusInt64, err := strconv.ParseInt(status, 10, 64)
+		if err != nil {
+			isComplete = false
+		} else {
+			statusInt = int8(statusInt64)
+		}
+	} else {
+		isComplete = false
+	}
+	if userId != "" {
+		userIdInt, err = strconv.ParseInt(userId, 10, 64)
+		if err != nil {
+			isComplete = false
+		}
+	} else {
+		isComplete = false
+	}
+
+	fotoKk, err := c.FormFile("foto_kk")
+	if err == nil {
+		if !strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".jpg") &&
+			!strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".jpeg") &&
+			!strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".png") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format file tidak didukung"})
+			return
+		}
+
+		if fotoKk.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Ukuran file terlalu besar"})
+			return
+		}
+
+		uploadPath := "public/uploads/foto-kk/" + fotoKk.Filename
+		if err := c.SaveUploadedFile(fotoKk, uploadPath); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal menyimpan foto"})
+			return
+		}
+		keluarga.FotoKk = uploadPath
+	} else {
+		isComplete = false
+	}
+
+	FotoRumah, err := c.FormFile("foto_rumah")
+	if err == nil {
+		if !strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".jpg") &&
+			!strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".jpeg") &&
+			!strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".png") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format file tidak didukung"})
+			return
+		}
+
+		if FotoRumah.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Ukuran file terlalu besar"})
+			return
+		}
+
+		uploadPath := "public/uploads/foto-rumah/" + FotoRumah.Filename
+		if err := c.SaveUploadedFile(FotoRumah, uploadPath); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal menyimpan foto"})
+			return
+		}
+		keluarga.FotoRumah = uploadPath
+	} else {
+		isComplete = false
+	}
+
+	if isComplete {
+	}
+
+	newKeluarga := models.Keluarga{
+		NoKk:      noKkInt,
+		KkNik:     kkNikInt,
+		KkNama:    kkNama,
+		Alamat:    alamat,
+		Rt:        rt,
+		Rw:        rw,
+		KodePos:   kodePos,
+		Status:    int8(statusInt),
+		UserId:    userIdInt,
+		FotoKk:    keluarga.FotoKk,
+		FotoRumah: keluarga.FotoRumah,
+	}
+
+	tx := setup.DB.Begin()
+
+	if err := tx.Create(&newKeluarga).Error; err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan program: " + err.Error()})
+		return
+	}
+
+	tx.Commit()
+	setup.DB.Preload("User").First(&newKeluarga, newKeluarga.Id)
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Data berhasil ditambahkan",
+		"data":    newKeluarga,
 	})
 }
 
 func UpdateKeluarga(c *gin.Context) {
 	id := c.Param("id")
 
-	var input struct {
-		NoKk    int64  `json:"no_kk"`
-		KkNik   int64  `json:"kk_nik"`
-		KkNama  string `json:"kk_nama"`
-		Alamat  string `json:"alamat"`
-		Rt      string `json:"rt"`
-		Rw      string `json:"rw"`
-		KodePos string `json:"kode_pos"`
-		Status  int8   `json:"status"`
-		UserId  int64  `json:"user_id"`
-	}
-
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  false,
-			"message": "Pastikan form sudah terisi dengan benar",
-		})
-		return
-	}
-
 	var keluarga models.Keluarga
+
 	if err := setup.DB.First(&keluarga, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  false,
-			"message": "Data tidak ditemukan",
-		})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Data keluarga tidak ditemukan"})
 		return
 	}
 
-	if err := setup.DB.Model(&keluarga).Updates(input).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  false,
-			"message": "Gagal mengupdate keluarga",
-		})
+	noKk := c.PostForm("no_kk")
+	kkNik := c.PostForm("kk_nik")
+	kkNama := c.PostForm("kk_nama")
+	alamat := c.PostForm("alamat")
+	rt := c.PostForm("rt")
+	rw := c.PostForm("rw")
+	kodePos := c.PostForm("kode_pos")
+	status := c.PostForm("status")
+
+	fotoKk, err := c.FormFile("foto_kk")
+	if err == nil {
+		if !strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".jpg") &&
+			!strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".jpeg") &&
+			!strings.HasSuffix(strings.ToLower(fotoKk.Filename), ".png") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format file tidak didukung"})
+			return
+		}
+
+		if fotoKk.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Ukuran file terlalu besar"})
+			return
+		}
+
+		uploadPath := "public/uploads/foto-kk/" + fotoKk.Filename
+		if err := c.SaveUploadedFile(fotoKk, uploadPath); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal menyimpan foto"})
+			return
+		}
+		keluarga.FotoKk = uploadPath
+	}
+
+	FotoRumah, err := c.FormFile("foto_rumah")
+	if err == nil {
+		if !strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".jpg") &&
+			!strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".jpeg") &&
+			!strings.HasSuffix(strings.ToLower(FotoRumah.Filename), ".png") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format file tidak didukung"})
+			return
+		}
+
+		if FotoRumah.Size > 5*1024*1024 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Ukuran file terlalu besar"})
+			return
+		}
+
+		uploadPath := "public/uploads/foto-rumah/" + FotoRumah.Filename
+		if err := c.SaveUploadedFile(FotoRumah, uploadPath); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Gagal menyimpan foto"})
+			return
+		}
+		keluarga.FotoRumah = uploadPath
+	}
+
+	if fotoKk == nil {
+		keluarga.FotoKk = ""
+	}
+	if FotoRumah == nil {
+		keluarga.FotoRumah = ""
+	}
+
+	// Konversi nilai-nilai form ke tipe data yang sesuai
+	var noKkInt, kkNikInt int64
+	var statusInt int8
+
+	if noKk != "" {
+		noKkInt, err = strconv.ParseInt(noKk, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format No KK tidak valid"})
+			return
+		}
+	}
+
+	if kkNik != "" {
+		kkNikInt, err = strconv.ParseInt(kkNik, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format NIK tidak valid"})
+			return
+		}
+	}
+
+	if status != "" {
+		statusInt64, err := strconv.ParseInt(status, 10, 8)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format Status tidak valid"})
+			return
+		}
+		statusInt = int8(statusInt64)
+	}
+
+	tx := setup.DB.Begin()
+
+	updateData := map[string]interface{}{}
+
+	// Hanya menambahkan field yang memiliki nilai
+	if noKk != "" {
+		updateData["no_kk"] = noKkInt
+	}
+	if kkNik != "" {
+		updateData["kk_nik"] = kkNikInt
+	}
+	if kkNama != "" {
+		updateData["kk_nama"] = kkNama
+	}
+	if alamat != "" {
+		updateData["alamat"] = alamat
+	}
+	if rt != "" {
+		updateData["rt"] = rt
+	}
+	if rw != "" {
+		updateData["rw"] = rw
+	}
+	if kodePos != "" {
+		updateData["kode_pos"] = kodePos
+	}
+	if status != "" {
+		updateData["status"] = statusInt
+	}
+	if keluarga.FotoKk != "" {
+		updateData["foto_kk"] = keluarga.FotoKk
+	}
+	if keluarga.FotoRumah != "" {
+		updateData["foto_rumah"] = keluarga.FotoRumah
+	}
+
+	if err := tx.Model(&keluarga).Updates(updateData).Error; err != nil {
+		tx.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengupdate data: " + err.Error()})
 		return
 	}
 
+	tx.Commit()
+
+	setup.DB.Preload("User").First(&keluarga, keluarga.Id)
 	c.JSON(http.StatusOK, gin.H{
-		"status":  true,
-		"message": "Sukses mengupdate keluarga",
+		"message": "Data keluarga berhasil diupdate",
+		"data":    keluarga,
 	})
 }
 
