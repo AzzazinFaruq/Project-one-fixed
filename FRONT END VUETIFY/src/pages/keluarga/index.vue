@@ -31,13 +31,13 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-chip class="px-3" color="#2184D8" variant="flat" style="font-size: 12px;" @click="edit(item.id)">Lihat Detail</v-chip>
         </template>
-        <template v-slot:[`item.stat`]="{ item }">
+        <template v-slot:[`item.status`]="{ item }">
           <v-chip
             style="font-size: 12px;"
-            :color="item.stat.toLowerCase() === 'aktif' ? 'success' : 'error'"
+            :color="item.status.toLowerCase() === 'aktif' ? 'success' : 'error'"
             :text-color="white"
           >
-            {{ item.stat }}
+            {{ item.status }}
           </v-chip>
         </template>
         <!-- <template v-slot:item.tgl_lhr="{ value }">
@@ -123,20 +123,16 @@ export default{
   },
   watch:{
     page(){
-      this.getKeluarga();
+      this.updateDisplayedData();
     },
     totalData(){
       this.page=1;
-      this.getKeluarga();
+      this.updateDisplayedData();
     },
-    '$route.query.search': {
-      immediate: true,
-      handler(newSearch) {
-        if (newSearch !== undefined) {
-          this.search = newSearch;
-          this.page = 1;
-          this.getKeluarga();
-        }
+    search: {
+      handler() {
+        this.page = 1;
+        this.updateDisplayedData();
       }
     }
   },
@@ -147,6 +143,7 @@ export default{
       dialog:false,
       selectedId:null,
       dataKeluarga:[],
+      allData: [],
       search: this.$route.query.search || "",
       head: [
         { title: "Nomer KK", value: "no_kk" },
@@ -182,25 +179,34 @@ export default{
     getKeluarga(){
       try{
         this.load();
-        axios.get('/api/keluarga/', {
-          params: {
-            page: this.page,
-            item: this.totalData,
-            search: this.search
-          }
-        })
-        .then((res) => {
-          this.dataKeluarga = res.data.data.map(item => ({
-            ...item,
-            kk_nama: this.toCapitalize(item.kk_nama),
-            status: this.toCapitalize(item.status)
-          }));
-          this.totalPages = res.data.total;
-          this.last_page = res.data.last_page;
-        });
+        axios.get('/api/keluarga')
+          .then((res) => {
+            this.allData = res.data.data.map(item => ({
+              ...item,
+              kk_nama: this.toCapitalize(item.kk_nama),
+              status: this.toCapitalize(item.status)
+            }));
+            this.updateDisplayedData();
+          });
       } catch(error) {
         console.error('Error:', error);
       }
+    },
+    updateDisplayedData() {
+      let filteredData = this.allData;
+      if (this.search) {
+        filteredData = this.allData.filter(item =>
+          Object.values(item).some(val =>
+            String(val).toLowerCase().includes(this.search.toLowerCase())
+          )
+        );
+      }
+
+      this.last_page = Math.ceil(filteredData.length / this.totalData);
+
+      const start = (this.page - 1) * this.totalData;
+      const end = start + this.totalData;
+      this.dataKeluarga = filteredData.slice(start, end);
     },
     confirmDelete(id) {
       this.selectedId = id;

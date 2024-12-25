@@ -67,9 +67,9 @@ func Index(c *gin.Context) {
 			"rw":         keluarga.Rw,
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
-			"user_id":    keluarga.UserId,
 			"foto_kk":	  keluarga.FotoKk,
 			"foto_rumah": keluarga.FotoRumah,
+			"user_id":    keluarga.User.Name,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -236,6 +236,7 @@ func GetKeluargaByID(c *gin.Context) {
 }
 
 func AddKeluarga(c *gin.Context) {
+
 
 	var keluarga models.Keluarga
 

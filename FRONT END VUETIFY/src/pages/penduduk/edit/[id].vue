@@ -227,7 +227,7 @@
           v-model="form.domisili"
         ></v-select>
         <label>Status</label
-        ><v-autocomplete
+        ><v-select
           class="mt-3"
           rounded="lg"
           :rules="rules"
@@ -236,17 +236,36 @@
           item-title="name"
           item-value="id"
           required
-          v-model="form.stat"
-        ></v-autocomplete>
-        <v-btn
-          class="mt-4"
-          location="center"
-          type="submit"
-          elevation="2"
-          color="green"
-          >Submit</v-btn
-        >
+          v-model="form.status"
+        ></v-select>
+
       </v-form>
+      <div class="d-flex justify-end">
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-delete"
+            class="mt-4 mr-2"
+            type="submit"
+            elevation="2"
+            color="red"
+            text="Hapus"
+            @click="deletePenduduk(form.id)"
+            ></v-btn
+          >
+          <v-btn
+            height="60"
+            width="150"
+            prepend-icon="mdi-content-save"
+            class="mt-4"
+            type="submit"
+            elevation="2"
+            color="green"
+            text="Simpan"
+            @click="post(form.id)"
+            ></v-btn
+          >
+        </div>
     </v-card>
   </v-container>
 </template>
@@ -256,6 +275,7 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { useCons } from "@/stores/constant";
 import { test } from '@/stores/restrict';
+import Swal from 'sweetalert2';
 const use = test();
 const useData = useCons();
 
@@ -272,8 +292,8 @@ export default {
   },
   data() {
     return {
-      datakel:[],
-      domisili:useData.domisili,
+      dataKel: [],
+      domisili: useData.domisili,
       kelamin: useData.kelamin,
       statusKawin: useData.statusKawin,
       hubungan: useData.hubungan,
@@ -282,9 +302,7 @@ export default {
       pendidikan: useData.pendidikan,
       pekerjaan: useData.pekerjaan,
       stat: useData.stat,
-      form: [
-        {
-        nomer_kk: "",
+      form: {
         kels_id:'',
         nik: "",
         nama: "",
@@ -299,15 +317,12 @@ export default {
         pekerjaan: "",
         ayah: "",
         ibu: "",
-        kepala_kel: "",
         no_hp: "",
-        domisili:0,
-        stat: "",
+        domisili:"",
+        status: "",
         user_id:'',
-        valid: false,
-        },
-      ],
-
+        id:''
+      },
       rules: [(v) => !!v || "Wajib Diisi!"],
     };
   },
@@ -316,12 +331,24 @@ export default {
   },
   setup() {},
   methods: {
+    deletePenduduk(id){
+      axios.delete(`/api/deletependuduk/${id}`)
+      .then((res)=>{
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Data berhasil dihapus',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        this.$router.push('/penduduk');
+      });
+    },
     getKeluarga(){
       try{
-        axios.get("/api/keluargaidx")
+        axios.get("/api/keluarga")
         .then((res)=>{
-          console.log(res.data);
           this.dataKel=res.data.data;
+          console.log(this.dataKel);
         })
 
       }
@@ -334,11 +361,11 @@ export default {
       try {
         const route = useRoute();
         axios
-          .get(`/api/byID/${route.params.id}`)
+          .get(`/api/penduduk/${route.params.id}`)
           .then((response) => {
             console.log(response.data);
-            this.form = response.data.data[0];
-            this.form.tgl_lhr = new Date(response.data.data[0].tgl_lhr);
+            this.form = response.data.data;
+            this.form.tgl_lhr = new Date(response.data.data.tgl_lhr);
             console.log(this.form);
             // this.form.value = response.data;
           });
@@ -348,32 +375,58 @@ export default {
     },
     post(id) {
       try {
-        this.form.tgl_lhr = new Date(this.form.tgl_lhr)
-          .toISOString()
-          .split("T")[0];
-        axios
-          .put(
-            `/api/updatePenduduk/${id}`,
+        // Format tanggal dengan timezone Asia/Jakarta
+        let date = new Date(this.form.tgl_lhr);
+        let tzOffset = "+07:00";
 
-            this.form
-          )
+        const formData = {
+          ...this.form,
+          // Konversi tanggal
+          tgl_lhr: date.getFullYear() + '-' +
+            String(date.getMonth() + 1).padStart(2, '0') + '-' +
+            String(date.getDate()).padStart(2, '0') + 'T' +
+            String(date.getHours()).padStart(2, '0') + ':' +
+            String(date.getMinutes()).padStart(2, '0') + ':' +
+            String(date.getSeconds()).padStart(2, '0') +
+            tzOffset,
+          // Konversi field-field ke number
+          nik: Number(this.form.nik),
+          agama: Number(this.form.agama),
+          user_id: Number(this.form.user_id),
+          kelamin: Number(this.form.kelamin),
+          stat_kawin: Number(this.form.stat_kawin),
+          hub_kel: Number(this.form.hub_kel),
+          warga_neg: Number(this.form.warga_neg),
+          pendidikan: Number(this.form.pendidikan),
+          pekerjaan: Number(this.form.pekerjaan),
+          domisili: Number(this.form.domisili),
+          status: Number(this.form.status),
+          kels_id: Number(this.form.kels_id)
+        };
+
+        axios.put(`/api/updatependuduk/${id}`, formData)
           .then((res) => {
-            console.log(res.message);
-            this.$router.go(-1);
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'Data berhasil diperbarui',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+            this.$router.push('/penduduk');
           });
       } catch (error) {
-        error;
+        console.error(error);
       }
     },
-    itemProps (item) {
-        return {
-          title: item.no_kk+' ['+item.kk_nama+']'
-        }
+    itemProps(item) {
+      return {
+        title: item.no_kk + ' [' + item.kk_nama + ']'
       }
+    }
   },
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .v-input{
   margin-top: 10px;
 }

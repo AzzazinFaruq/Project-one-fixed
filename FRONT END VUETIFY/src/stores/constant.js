@@ -162,8 +162,8 @@ export const useCons = defineStore({
       { id: 7, name: "KEPERCAYAAN TERHADAP TUHAN YME / LAINNYA" },
     ],
     stat: [
-      { id: 1, name: "Aktif" },
-      { id: 2, name: "Tidak Aktif" },
+      { id: 1, name: "AKTIF" },
+      { id: 2, name: "TIDAK AKTIF" },
     ],
   }),
 });

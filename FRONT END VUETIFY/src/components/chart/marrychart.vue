@@ -59,10 +59,10 @@ methods:{
   marry(){
         axios.get('/api/marry')
         .then((res)=>{
-          const val=res.data.data
+          const val=res.data
           this.series1=[{
             name:'Data Kawin',
-            data:[val[0],val[1],val[2],val[3]]
+            data:[val.kawin,val.ceraihidup,val.ceraimati,val.belum]
           }]
         })
     },

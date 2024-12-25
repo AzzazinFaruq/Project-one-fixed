@@ -9,7 +9,7 @@
       icon-color="#6E4D99"
       icon="mdi-account-multiple"
       title="Total Keluarga"
-      :count="datacardjumlah.keluarga"
+      :count="datacardjumlah.keluargaCount"
       />
     </v-col>
       <v-col cols="12" md="6" lg="3">
@@ -19,7 +19,7 @@
       icon-color="#2184D8"
       icon="mdi-account-multiple"
       title="Total Penduduk"
-      :count="datacardjumlah.penduduk"
+      :count="datacardjumlah.pendudukCount"
       />
     </v-col>
       <v-col cols="12" md="6" lg="3">
@@ -28,7 +28,7 @@
       icon-color="#01A65D"
       icon="mdi-check-bold"
       title="Penduduk Aktif"
-      :count="datacardstatus.aktif"
+      :count="datacardstatus.alivepend"
       />
     </v-col>
       <v-col cols="12" md="6" lg="3">
@@ -37,7 +37,7 @@
       icon-color="#F76C5E"
       icon="mdi-minus-circle"
       title="Penduduk Inaktif"
-      :count="datacardstatus.inaktif"
+      :count="datacardstatus.nopen"
       />
     </v-col>
     </v-row>
@@ -66,7 +66,6 @@
 
     </div>
     <div class="mt-10">
-
         <dtTable
         :dthead="headpen"
         :dtbody="dtpen"
@@ -135,10 +134,10 @@ export default {
         this.dataForCard();
     },
     dataForCard(){
-      axios.get('/api/allData')
+      axios.get('/api/alldata')
       .then((res)=>{
         this.datacardjumlah = res.data.jumlah;
-        this.datacardstatus = res.data.Status;
+        this.datacardstatus = res.data.status;
 
       })
     },
@@ -156,9 +155,9 @@ export default {
         });
     },
     penlast(){
-      axios.get('/api/latestpen')
+      axios.get('/api/latestpend')
         .then((res)=>{
-          this.dtpen = res.data.map(item => ({
+          this.dtpen = res.data.data.map(item => ({
             ...item,
             nama: this.toCapitalize(item.nama),
             kepala: this.toCapitalize(item.kepala),

@@ -76,8 +76,8 @@ methods:{
   gender(){
       axios.get('/api/gender')
         .then((res)=>{
-          const val=res.data.data
-          this.series2=[val[0],val[1]]
+          const val=res.data
+          this.series2=[val.laki,val.perempuan]
         })
     },
 }
