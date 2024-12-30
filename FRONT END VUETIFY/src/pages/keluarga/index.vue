@@ -30,6 +30,7 @@
       >
         <template v-slot:[`item.actions`]="{ item }">
           <v-chip class="px-3" color="#2184D8" variant="flat" style="font-size: 12px;" @click="edit(item.id)">Lihat Detail</v-chip>
+          <v-chip class="px-3 ml-2" color="brown" variant="flat" style="font-size: 12px;" @click="plusAnggota(item.id)">+ Anggota</v-chip>
         </template>
         <template v-slot:[`item.status`]="{ item }">
           <v-chip
@@ -107,11 +108,78 @@
         ></v-pagination>
       </div>
     </div>
+    <!-- Tambahkan dialog form -->
+    <v-dialog v-model="dialogAddAnggota" max-width="700px">
+      <v-card>
+        <v-card-title class="text-h6 pa-4 d-flex justify-space-between">
+          <span>Tambah Anggota Keluarga</span>
+          <v-btn
+            icon="mdi-plus"
+            size="small"
+            color="primary"
+            @click="tambahFormAnggota"
+          ></v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="submitAnggota">
+            <div v-for="(anggota, index) in formAnggota" :key="index" class="mb-4">
+              <div class="d-flex justify-space-between align-center mb-2">
+                <span class="text-subtitle-1">Anggota #{{index + 1}}</span>
+                <v-btn
+                  v-if="index > 0"
+                  icon="mdi-delete"
+                  size="small"
+                  color="error"
+                  variant="text"
+                  @click="hapusFormAnggota(index)"
+                ></v-btn>
+              </div>
+              <v-text-field
+                v-model="anggota.nik"
+                label="NIK"
+                variant="outlined"
+                density="compact"
+                class="mb-2"
+                type="number"
+                :rules="[v => !!v || 'NIK wajib diisi', v => v.length === 16 || 'NIK harus 16 digit']"
+              ></v-text-field>
+              <v-text-field
+                v-model="anggota.nama"
+                label="Nama Anggota"
+                variant="outlined"
+                density="compact"
+                class="mb-2"
+                :rules="[v => !!v || 'Nama wajib diisi']"
+              ></v-text-field>
+              <v-select
+                v-model="anggota.hub_kel"
+                :items="hubunganItems"
+                label="Hubungan Keluarga"
+                item-title="name"
+                item-value="id"
+                variant="outlined"
+                density="compact"
+                class="mb-2"
+                :rules="[v => !!v || 'Hubungan keluarga wajib diisi']"
+              ></v-select>
+              <v-divider v-if="index < formAnggota.length - 1" class="mt-4"></v-divider>
+            </div>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" variant="text" @click="tutupDialog">Batal</v-btn>
+          <v-btn color="primary" variant="text" @click="submitAnggota">Simpan</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
 import axios from 'axios';
 import { test } from '@/stores/restrict';
+import { useCons } from '@/stores/constant';
+const useData = useCons();
 const use = test();
 import { useTitle } from '@/stores/title'
 
@@ -154,14 +222,91 @@ export default{
       ],
       page: 1,
       last_page:0,
-      totalData:8
+      totalData:8,
+      dialogAddAnggota: false,
+      selectedKelsId: null,
+      formAnggota: [],
+      hubunganItems: useData.hubungan,
+      user_id:null,
     }
   },
   mounted(){
     this.getKeluarga();
+    this.inputter();
 
   },
   methods :{
+    inputter(){
+      axios.get("api/user")
+      .then((res)=>{
+        this.user_id=res.data.data.Id;
+      })
+    },
+    buatFormKosong() {
+      return {
+        nik: '',
+        nama: '',
+        hub_kel: '',
+        tgl_lhr: new Date().toISOString().split('T')[0], // Format YYYY-MM-DD
+        kels_id: this.selectedKelsId,
+        user_id: this.user_id,
+        stat: 2
+      }
+    },
+    plusAnggota(id) {
+      this.selectedKelsId = id;
+      this.formAnggota = [this.buatFormKosong()];
+      this.dialogAddAnggota = true;
+    },
+    tambahFormAnggota() {
+      this.formAnggota.push(this.buatFormKosong());
+    },
+    hapusFormAnggota(index) {
+      this.formAnggota.splice(index, 1);
+    },
+    tutupDialog() {
+      this.dialogAddAnggota = false;
+      this.formAnggota = [];
+      this.selectedKelsId = null;
+    },
+    async submitAnggota() {
+      try {
+        // Validasi form
+        const formValid = this.formAnggota.every(anggota =>
+          anggota.nik &&
+          anggota.nama &&
+          anggota.hub_kel &&
+          anggota.tgl_lhr
+        );
+
+        if (!formValid) {
+          alert('Mohon lengkapi semua data yang wajib diisi');
+          return;
+        }
+
+        // Kirim data
+        for (const anggota of this.formAnggota) {
+          const payload = {
+            nik: parseInt(anggota.nik),
+            nama: anggota.nama,
+            hub_kel: anggota.hub_kel,
+            tgl_lhr: anggota.tgl_lhr + 'T00:00:00Z',
+            kels_id: this.selectedKelsId,
+            user_id: this.user_id,
+            stat: anggota.stat
+          };
+
+          await axios.post('/api/addpenduduk', payload);
+        }
+
+        this.tutupDialog();
+        this.getKeluarga();
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menyimpan data');
+      }
+    },
     edit(item) {
       this.$router.push(`/keluarga/edit/${item}`);
     },

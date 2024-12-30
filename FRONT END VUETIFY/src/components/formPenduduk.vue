@@ -238,9 +238,10 @@
           item-title="name"
           item-value="id"
           required
-          v-model="form.status"
+          v-model="form.stat"
         ></v-select>
-        <div class="d-flex justify-end">
+      </v-form>
+      <div class="d-flex justify-end">
           <v-btn
             height="60"
             width="150"
@@ -266,7 +267,6 @@
             ></v-btn
           >
         </div>
-      </v-form>
   </v-container>
 </template>
 <script>
@@ -274,6 +274,7 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useCons } from "@/stores/constant";
 import { test } from '@/stores/restrict';
+import Swal from 'sweetalert2';
 const use = test();
 const useData = useCons();
 export var succes=false;
@@ -290,6 +291,16 @@ export default {
   },
   data() {
     return {
+      isFormValid: false,
+      anggotaKeluarga: [
+        { nik: "", nama: "", statusHubungan: "" }
+      ],
+      statusHubunganOptions: [
+        { id: 1, name: "Kepala Keluarga" },
+        { id: 2, name: "Istri" },
+        { id: 3, name: "Anak" },
+        // Tambahkan opsi lain sesuai kebutuhan
+      ],
       user:[],
       dataKel:[],
       domisili:useData.domisili,
@@ -327,7 +338,10 @@ export default {
 
       },
 
-      rules: [(v) => !!v || "Form Tidak Boleh Kosong!"],
+      rules: {
+        required: (v) => !!v || "Form Tidak Boleh Kosong!",
+        nik: (v) => (v && v.length === 16) || "NIK harus 16 digit",
+      },
     };
   },
   mounted() {
@@ -336,11 +350,19 @@ export default {
   },
 
   methods: {
+    addAnggotaField() {
+      this.anggotaKeluarga.push({ nik: '', nama: '', statusHubungan: '' });
+    },
+
+    removeAnggota(index) {
+      this.anggotaKeluarga.splice(index, 1);
+    },
+
     inputter(){
-      axios.get("api/user")
+      axios.get("/api/user")
       .then((res)=>{
-        console.log(res.data.data.id);
-        this.form.user_id=res.data.data.id;
+        console.log(res.data.data.Id);
+        this.form.user_id=res.data.data.Id;
       })
     },
     getKeluarga(){
@@ -360,25 +382,78 @@ export default {
     },
 
     post() {
-      this.form.tgl_lhr = new Date(this.form.tgl_lhr)
-        .toISOString()
-        .split("T")[0];
+      let date = new Date(this.form.tgl_lhr);
+      let tzOffset = "+07:00";
+
       try {
+        const formData = {
+          ...this.form,
+          nik: Number(this.form.nik),
+          tgl_lhr: date.getFullYear() + '-' +
+            String(date.getMonth() + 1).padStart(2, '0') + '-' +
+            String(date.getDate()).padStart(2, '0') + 'T' +
+            String(date.getHours()).padStart(2, '0') + ':' +
+            String(date.getMinutes()).padStart(2, '0') + ':' +
+            String(date.getSeconds()).padStart(2, '0') +
+            tzOffset,
+          agama: Number(this.form.agama),
+          user_id: Number(this.form.user_id),
+          kelamin: Number(this.form.kelamin),
+          stat_kawin: Number(this.form.stat_kawin),
+          hub_kel: Number(this.form.hub_kel),
+          warga_neg: Number(this.form.warga_neg),
+          pendidikan: Number(this.form.pendidikan),
+          pekerjaan: Number(this.form.pekerjaan),
+          domisili: Number(this.form.domisili),
+          stat: Number(this.form.stat),
+          kels_id: Number(this.form.kels_id)
+        };
+
+
         axios
-          .post("/api/addPenduduk", this.form)
+          .post("/api/addpenduduk", formData)
           .then((res) => {
-            console.log(res);
             this.form.valid = res.data.valid;
             if (this.form.valid == false) {
-              alert(res.data.massage);
+              Swal.fire({
+                title: 'Error!',
+                text: res.data.massage,
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#3085d6',
+              });
             } else {
-              alert(res.data.massage);
-              succes=true;
-              this.$router.push('/dashboard/keluarga');
+              Swal.fire({
+                title: 'Berhasil!',
+                text: res.data.massage,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+              }).then(() => {
+                succes = true;
+                this.$router.push('/penduduk');
+              });
             }
+          })
+          .catch((error) => {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Terjadi kesalahan saat menyimpan data',
+              icon: 'error',
+              confirmButtonText: 'OK',
+              confirmButtonColor: '#3085d6',
+            });
           });
       } catch (error) {
-        error, router.push("/login");
+        Swal.fire({
+          title: 'Error!',
+          text: 'Terjadi kesalahan sistem',
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6',
+        });
+        this.$router.push("/login");
       }
     },
     itemProps (item) {
@@ -389,4 +464,8 @@ export default {
   },
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.v-input {
+  margin-top: 10px;
+}
+</style>

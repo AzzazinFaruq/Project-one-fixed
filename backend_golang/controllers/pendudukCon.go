@@ -239,6 +239,7 @@ func AddPenduduk(c *gin.Context) {
 
 	if err := setup.DB.Create(&penduduk).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
 			"valid":   false,
 			"message": "Gagal menambah penduduk",
 		})

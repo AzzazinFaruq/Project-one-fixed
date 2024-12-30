@@ -9,6 +9,7 @@
             <v-autocomplete
               class="mt-3"
               rounded="lg"
+              :disabled="disabledKeluarga"
               :item-props="itemProps"
               :rules="rules"
               :items="dataKel"
@@ -277,6 +278,7 @@ import { useRouter } from "vue-router";
 import { useCons } from "@/stores/constant";
 import { test } from '@/stores/restrict';
 import Swal from 'sweetalert2';
+import { th } from "vuetify/locale";
 const use = test();
 const useData = useCons();
 export var succes=false;
@@ -294,6 +296,7 @@ export default {
   data() {
     return {
       user:[],
+      disabledKeluarga:true,
       dataKel:[],
       domisili:useData.domisili,
       kelamin: useData.kelamin,
@@ -308,7 +311,7 @@ export default {
 
       form: {
         nomer_kk: "",
-        kels_id:1,
+        kels_id:Number(this.$route.query.id),
         nik: "",
         nama: "",
         tmp_lhr: "",
@@ -350,23 +353,23 @@ export default {
     inputter(){
       axios.get("api/user")
       .then((res)=>{
-        console.log(res.data.data.Id);
+        console.log(this.$route.query.id);
         this.form.user_id=res.data.data.Id;
       })
     },
     getKeluarga(){
-      try{
+      var id=this.$route.query.id;
         axios.get("/api/keluarga")
         .then((res)=>{
           console.log(res.data);
           this.dataKel=res.data.data;
-          this.form.kels_id=res.data.data[0].id;
+          if(!id){
+            this.form.kels_id=res.data.data[0].id;
+            this.disabledKeluarga=false;
+          }
         })
 
-      }
-      catch(error){
-        return error;
-      }
+
     },
 
     post() {
@@ -457,10 +460,12 @@ export default {
       }
     },
     itemProps (item) {
+
         return {
           title: item.no_kk+' ['+item.kk_nama+']'
         }
-      }
+
+    }
   },
 };
 </script>
