@@ -10,6 +10,7 @@
   "dependencies": {
     "@chenfengyuan/vue-number-input": "^2.0.1",
     "@mdi/font": "7.0.96",
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
     "apexcharts": "^3.52.0",
     "axios": "^1.7.7",
     "axios-retry": "^4.5.0",
@@ -17,6 +18,7 @@
     "core-js": "^3.34.0",
     "cors": "^2.8.5",
     "javascript": "^1.0.0",
+    "leaflet": "^1.9.4",
     "pinia": "^2.1.7",
     "roboto-fontface": "*",
     "vue": "^3.4.31",

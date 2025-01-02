@@ -359,7 +359,7 @@ func AddKeluarga(c *gin.Context) {
 	}
 
 	if longtitude != "" {
-		longtitudeFloat, err = strconv.ParseFloat(userId, 64)
+		longtitudeFloat, err = strconv.ParseFloat(longtitude, 64)
 		if err != nil {
 			isComplete = false
 		}
