@@ -67,8 +67,10 @@ func Index(c *gin.Context) {
 			"rw":         keluarga.Rw,
 			"kode_pos":   keluarga.KodePos,
 			"status":     config.GetStatus(int(keluarga.Status)),
-			"foto_kk":	  keluarga.FotoKk,
+			"foto_kk":    keluarga.FotoKk,
 			"foto_rumah": keluarga.FotoRumah,
+			"latitude":   keluarga.Latitude,
+			"longtitude": keluarga.Longtitude,
 			"user_id":    keluarga.User.Name,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
@@ -133,6 +135,8 @@ func Latest(c *gin.Context) {
 			"user_id":    keluarga.UserId,
 			"foto_kk":    keluarga.FotoKk,
 			"foto_rumah": keluarga.FotoRumah,
+			"latitude":   keluarga.Latitude,
+			"longtitude": keluarga.Longtitude,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -195,6 +199,8 @@ func LatestForInput(c *gin.Context) {
 			"user_id":    keluarga.UserId,
 			"foto_kk":    keluarga.FotoKk,
 			"foto_rumah": keluarga.FotoRumah,
+			"latitude":   keluarga.Latitude,
+			"longtitude": keluarga.Longtitude,
 			"created_at": keluarga.CreatedAt,
 			"updated_at": keluarga.UpdatedAt,
 		}
@@ -228,6 +234,8 @@ func GetKeluargaByID(c *gin.Context) {
 		"user_id":    keluarga.UserId,
 		"foto_kk":    keluarga.FotoKk,
 		"foto_rumah": keluarga.FotoRumah,
+		"latitude":   keluarga.Latitude,
+		"longtitude": keluarga.Longtitude,
 		"created_at": keluarga.CreatedAt,
 		"updated_at": keluarga.UpdatedAt,
 	}
@@ -236,7 +244,6 @@ func GetKeluargaByID(c *gin.Context) {
 }
 
 func AddKeluarga(c *gin.Context) {
-
 
 	var keluarga models.Keluarga
 
@@ -294,10 +301,14 @@ func AddKeluarga(c *gin.Context) {
 		return
 	}
 
+	latitude := c.PostForm("latitude")
+	longtitude := c.PostForm("longtitude")
+
 	isComplete := true
 
 	var noKkInt, kkNikInt, userIdInt int64
 	var statusInt int8
+	var latitudeFloat, longtitudeFloat float64
 	var err error
 
 	if noKk != "" {
@@ -317,6 +328,7 @@ func AddKeluarga(c *gin.Context) {
 	} else {
 		isComplete = false
 	}
+
 	if status != "" {
 		statusInt64, err := strconv.ParseInt(status, 10, 64)
 		if err != nil {
@@ -327,8 +339,27 @@ func AddKeluarga(c *gin.Context) {
 	} else {
 		isComplete = false
 	}
+
 	if userId != "" {
 		userIdInt, err = strconv.ParseInt(userId, 10, 64)
+		if err != nil {
+			isComplete = false
+		}
+	} else {
+		isComplete = false
+	}
+
+	if latitude != "" {
+		latitudeFloat, err = strconv.ParseFloat(latitude, 64)
+		if err != nil {
+			isComplete = false
+		}
+	} else {
+		isComplete = false
+	}
+
+	if longtitude != "" {
+		longtitudeFloat, err = strconv.ParseFloat(userId, 64)
 		if err != nil {
 			isComplete = false
 		}
@@ -388,17 +419,19 @@ func AddKeluarga(c *gin.Context) {
 	}
 
 	newKeluarga := models.Keluarga{
-		NoKk:      noKkInt,
-		KkNik:     kkNikInt,
-		KkNama:    kkNama,
-		Alamat:    alamat,
-		Rt:        rt,
-		Rw:        rw,
-		KodePos:   kodePos,
-		Status:    int8(statusInt),
-		UserId:    userIdInt,
-		FotoKk:    keluarga.FotoKk,
-		FotoRumah: keluarga.FotoRumah,
+		NoKk:       noKkInt,
+		KkNik:      kkNikInt,
+		KkNama:     kkNama,
+		Alamat:     alamat,
+		Rt:         rt,
+		Rw:         rw,
+		KodePos:    kodePos,
+		Status:     int8(statusInt),
+		UserId:     userIdInt,
+		FotoKk:     keluarga.FotoKk,
+		FotoRumah:  keluarga.FotoRumah,
+		Latitude:   latitudeFloat,
+		Longtitude: longtitudeFloat,
 	}
 
 	tx := setup.DB.Begin()
@@ -436,6 +469,8 @@ func UpdateKeluarga(c *gin.Context) {
 	rw := c.PostForm("rw")
 	kodePos := c.PostForm("kode_pos")
 	status := c.PostForm("status")
+	latitude := c.PostForm("latitude")
+	longtitude := c.PostForm("longtitude")
 
 	fotoKk, err := c.FormFile("foto_kk")
 	if err == nil {
@@ -491,6 +526,7 @@ func UpdateKeluarga(c *gin.Context) {
 	// Konversi nilai-nilai form ke tipe data yang sesuai
 	var noKkInt, kkNikInt int64
 	var statusInt int8
+	var latitudeFloat, longtitudeFloat float64
 
 	if noKk != "" {
 		noKkInt, err = strconv.ParseInt(noKk, 10, 64)
@@ -515,6 +551,24 @@ func UpdateKeluarga(c *gin.Context) {
 			return
 		}
 		statusInt = int8(statusInt64)
+	}
+
+	if latitude != "" {
+		latitudeFloat, err := strconv.ParseFloat(status, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format Status tidak valid"})
+			return
+		}
+		statusInt = int8(latitudeFloat)
+	}
+
+	if longtitude != "" {
+		longtitudeFloat, err := strconv.ParseFloat(status, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Format Status tidak valid"})
+			return
+		}
+		statusInt = int8(longtitudeFloat)
 	}
 
 	tx := setup.DB.Begin()
@@ -552,6 +606,13 @@ func UpdateKeluarga(c *gin.Context) {
 	if keluarga.FotoRumah != "" {
 		updateData["foto_rumah"] = keluarga.FotoRumah
 	}
+	if latitude != "" {
+		updateData["latitude"] = latitudeFloat
+	}
+	if longtitude != "" {
+		updateData["longtitude"] = longtitudeFloat
+	}
+
 
 	if err := tx.Model(&keluarga).Updates(updateData).Error; err != nil {
 		tx.Rollback()
