@@ -162,7 +162,6 @@ func UserData(c *gin.Context) {
 		hasilKeluarga = append(hasilKeluarga, map[string]interface{}{
 			"id":         data.Id,
 			"no_kk":      data.NoKk,
-			"kk_nik":     data.KkNik,
 			"kk_nama":    data.KkNama,
 			"alamat":     data.Alamat,
 			"rt":         data.Rt,

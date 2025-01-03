@@ -5,7 +5,6 @@ import "time"
 type Keluarga struct {
 	Id         int64     `gorm:"primaryKey" json:"id"`
 	NoKk       int64     `json:"no_kk"`
-	KkNik      int64     `json:"kk_nik"`
 	KkNama     string    `json:"kk_nama"`
 	Alamat     string    `json:"alamat"`
 	Rt         string    `json:"rt"`
