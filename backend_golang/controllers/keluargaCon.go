@@ -554,7 +554,7 @@ func UpdateKeluarga(c *gin.Context) {
 	}
 
 	if latitude != "" {
-		latitudeFloat, err := strconv.ParseFloat(status, 64)
+		latitudeFloat, err := strconv.ParseFloat(latitude, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Format Status tidak valid"})
 			return
@@ -563,7 +563,7 @@ func UpdateKeluarga(c *gin.Context) {
 	}
 
 	if longtitude != "" {
-		longtitudeFloat, err := strconv.ParseFloat(status, 64)
+		longtitudeFloat, err := strconv.ParseFloat(longtitude, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Format Status tidak valid"})
 			return
