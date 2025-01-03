@@ -60,7 +60,6 @@ func Index(c *gin.Context) {
 		formattedKeluargas[i] = gin.H{
 			"id":         keluarga.Id,
 			"no_kk":      keluarga.NoKk,
-			"kk_nik":     keluarga.KkNik,
 			"kk_nama":    keluarga.KkNama,
 			"alamat":     keluarga.Alamat,
 			"rt":         keluarga.Rt,
@@ -125,7 +124,6 @@ func Latest(c *gin.Context) {
 		formattedKeluargas[i] = gin.H{
 			"id":         keluarga.Id,
 			"no_kk":      keluarga.NoKk,
-			"kk_nik":     keluarga.KkNik,
 			"kk_nama":    keluarga.KkNama,
 			"alamat":     keluarga.Alamat,
 			"rt":         keluarga.Rt,
@@ -189,7 +187,6 @@ func LatestForInput(c *gin.Context) {
 		formattedKeluargas[i] = gin.H{
 			"id":         keluarga.Id,
 			"no_kk":      keluarga.NoKk,
-			"kk_nik":     keluarga.KkNik,
 			"kk_nama":    keluarga.KkNama,
 			"alamat":     keluarga.Alamat,
 			"rt":         keluarga.Rt,
@@ -224,7 +221,6 @@ func GetKeluargaByID(c *gin.Context) {
 	response := gin.H{
 		"id":         keluarga.Id,
 		"no_kk":      keluarga.NoKk,
-		"kk_nik":     keluarga.KkNik,
 		"kk_nama":    keluarga.KkNama,
 		"alamat":     keluarga.Alamat,
 		"rt":         keluarga.Rt,
@@ -250,12 +246,6 @@ func AddKeluarga(c *gin.Context) {
 	noKk := c.PostForm("no_kk")
 	if noKk == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "No KK wajib diisi"})
-		return
-	}
-
-	kkNik := c.PostForm("kk_nik")
-	if kkNik == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "NIK wajib diisi"})
 		return
 	}
 
@@ -306,22 +296,13 @@ func AddKeluarga(c *gin.Context) {
 
 	isComplete := true
 
-	var noKkInt, kkNikInt, userIdInt int64
+	var noKkInt, userIdInt int64
 	var statusInt int8
 	var latitudeFloat, longtitudeFloat float64
 	var err error
 
 	if noKk != "" {
 		noKkInt, err = strconv.ParseInt(noKk, 10, 64)
-		if err != nil {
-			isComplete = false
-		}
-	} else {
-		isComplete = false
-	}
-
-	if kkNik != "" {
-		kkNikInt, err = strconv.ParseInt(kkNik, 10, 64)
 		if err != nil {
 			isComplete = false
 		}
@@ -420,7 +401,6 @@ func AddKeluarga(c *gin.Context) {
 
 	newKeluarga := models.Keluarga{
 		NoKk:       noKkInt,
-		KkNik:      kkNikInt,
 		KkNama:     kkNama,
 		Alamat:     alamat,
 		Rt:         rt,
@@ -462,7 +442,6 @@ func UpdateKeluarga(c *gin.Context) {
 	}
 
 	noKk := c.PostForm("no_kk")
-	kkNik := c.PostForm("kk_nik")
 	kkNama := c.PostForm("kk_nama")
 	alamat := c.PostForm("alamat")
 	rt := c.PostForm("rt")
@@ -524,7 +503,7 @@ func UpdateKeluarga(c *gin.Context) {
 	}
 
 	// Konversi nilai-nilai form ke tipe data yang sesuai
-	var noKkInt, kkNikInt int64
+	var noKkInt int64
 	var statusInt int8
 	var latitudeFloat, longtitudeFloat float64
 
@@ -532,14 +511,6 @@ func UpdateKeluarga(c *gin.Context) {
 		noKkInt, err = strconv.ParseInt(noKk, 10, 64)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Format No KK tidak valid"})
-			return
-		}
-	}
-
-	if kkNik != "" {
-		kkNikInt, err = strconv.ParseInt(kkNik, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Format NIK tidak valid"})
 			return
 		}
 	}
@@ -578,9 +549,6 @@ func UpdateKeluarga(c *gin.Context) {
 	// Hanya menambahkan field yang memiliki nilai
 	if noKk != "" {
 		updateData["no_kk"] = noKkInt
-	}
-	if kkNik != "" {
-		updateData["kk_nik"] = kkNikInt
 	}
 	if kkNama != "" {
 		updateData["kk_nama"] = kkNama
