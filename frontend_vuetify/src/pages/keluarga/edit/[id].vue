@@ -1,139 +1,155 @@
-<template lang="">
-  <v-container class="">
-    <v-card rounded="lg" class="pa-4" elevation="0" max-width=""
-      >
-      <v-form class="ma-2" @submit.prevent="post(form.id)">
-        <v-row>
-          <v-col>
-        <label for="">No. Kartu Keluarga</label>
-        <v-text-field
-          class="mt-3"
-          rounded="lg"
-          clearable
-          :rules="rules"
-          variant="outlined"
-          v-model="form.no_kk"
-          required
-        ></v-text-field>
-        </v-col>
-        <v-col>
-        <label for="">No. Induk Kependudukan (NIK)</label>
-        <v-text-field
-          class="mt-3"
-          rounded="lg"
-          clearable
-          :rules="rules"
-          variant="outlined"
-          v-model="form.kk_nik"
-          required
-        ></v-text-field>
-        </v-col>
-      </v-row>
-        <label for="">Nama Lengkap Kepala Keluarga</label>
-        <v-text-field
-          class="mt-3"
-          rounded="lg"
-          clearable
-          :rules="rules"
-          variant="outlined"
-          v-model="form.kk_nama"
-          required
-        ></v-text-field>
-        <label for="">Alamat</label>
-        <v-text-field
-          clearable
-          class="mt-3"
-          rounded="lg"
-          :rules="rules"
-          variant="outlined"
-          v-model="form.alamat"
-          required
-        ></v-text-field>
-        <v-row>
-        <v-col>
-        <label for="">RT</label>
-        <v-text-field
-          clearable
-          :rules="rules"
-          class="mt-3"
-          rounded="lg"
-          variant="outlined"
-          v-model="form.rt"
-          required
-        ></v-text-field>
-        </v-col>
-        <v-col>
-        <label for="">RW</label>
-        <v-text-field
-          clearable
-          :rules="rules"
-          class="mt-3"
-          rounded="lg"
-          variant="outlined"
-          v-model="form.rw"
-          required
-        ></v-text-field>
-        </v-col>
-        <v-col>
-          <label for="">Kode Pos</label>
-        <v-text-field
-          clearable
-          :rules="rules"
-          class="mt-3"
-          rounded="lg"
-          variant="outlined"
-          v-model="form.kode_pos"
-          required
-        ></v-text-field>
-        </v-col>
-      </v-row>
+<template>
+  <v-container class="pa-0 pa-sm-3">
+    <v-card rounded="lg" class="pa-4" elevation="0" max-width="1200">
+      <v-form class="ma-2 pa-2 pa-sm-4" @submit.prevent="post(form.id)">
+        <!-- KK and NIK -->
+        <v-row class="form-row">
+          <v-col cols="12" sm="6" class="form-col">
+            <label>No. Kartu Keluarga</label>
+            <v-text-field
+              class="mt-3"
+              rounded="lg"
+              clearable
+              :rules="rules"
+              variant="outlined"
+              v-model="form.no_kk"
+              required
+            />
+          </v-col>
+          <v-col cols="12" sm="6" class="form-col">
+            <label>No. Induk Kependudukan (NIK)</label>
+            <v-text-field
+              class="mt-3"
+              rounded="lg"
+              clearable
+              :rules="rules"
+              variant="outlined"
+              v-model="form.kk_nik"
+              required
+            />
+          </v-col>
+        </v-row>
 
-        <label for="">Status</label>
-       <v-select
+        <!-- Nama and Alamat -->
+        <v-col cols="12" class="form-col">
+          <label>Nama Lengkap Kepala Keluarga</label>
+          <v-text-field
             class="mt-3"
-          rounded="lg"
-          clearable
-          :rules="rules"
-          variant="outlined"
-          :items="stat"
-          item-title="name"
-          item-value="id"
-          required
-          v-model="form.status"
-       ></v-select>
+            rounded="lg"
+            clearable
+            :rules="rules"
+            variant="outlined"
+            v-model="form.kk_nama"
+            required
+          />
+        </v-col>
 
-        <label>Lokasi</label>
-        <div style="height: 400px; position: relative;" class="mt-3 mb-4">
-          <l-map
-            ref="map"
-            v-model:zoom="zoom"
-            :center="center"
-            :use-global-leaflet="false"
-            @click="handleMapClick"
-          >
-            <l-tile-layer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <l-marker
-              v-if="form.latitude && form.longtitude"
-              :lat-lng="[form.latitude, form.longtitude]"
-              draggable
-              @dragend="handleMarkerDrag"
-            />
-          </l-map>
-          <v-btn
-            color="primary"
-            size="small"
-            class="get-location-btn"
-            @click="getCurrentLocation"
-          >
-            <v-icon>mdi-crosshairs-gps</v-icon>
-            Lokasi Saat Ini
-          </v-btn>
-        </div>
+        <v-col cols="12" class="form-col">
+          <label>Alamat</label>
+          <v-text-field
+            class="mt-3"
+            rounded="lg"
+            clearable
+            :rules="rules"
+            variant="outlined"
+            v-model="form.alamat"
+            required
+          />
+        </v-col>
 
-        <v-row>
-          <v-col cols="6">
+        <!-- RT/RW and Kode Pos -->
+        <v-row class="form-row">
+          <v-col cols="12" sm="4" class="form-col">
+            <label>RT</label>
+            <v-text-field
+              class="mt-3"
+              rounded="lg"
+              clearable
+              :rules="rules"
+              variant="outlined"
+              v-model="form.rt"
+              required
+            />
+          </v-col>
+          <v-col cols="12" sm="4" class="form-col">
+            <label>RW</label>
+            <v-text-field
+              class="mt-3"
+              rounded="lg"
+              clearable
+              :rules="rules"
+              variant="outlined"
+              v-model="form.rw"
+              required
+            />
+          </v-col>
+          <v-col cols="12" sm="4" class="form-col">
+            <label>Kode Pos</label>
+            <v-text-field
+              class="mt-3"
+              rounded="lg"
+              clearable
+              :rules="rules"
+              variant="outlined"
+              v-model="form.kode_pos"
+              required
+            />
+          </v-col>
+        </v-row>
+
+        <!-- Status -->
+        <v-col cols="12" class="form-col">
+          <label>Status</label>
+          <v-select
+            class="mt-3"
+            rounded="lg"
+            clearable
+            :rules="rules"
+            variant="outlined"
+            :items="stat"
+            item-title="name"
+            item-value="id"
+            required
+            v-model="form.status"
+          />
+        </v-col>
+
+        <!-- Map -->
+        <v-col cols="12" class="form-col">
+          <label>Lokasi</label>
+          <div style="height: 400px; position: relative;" class="mt-3 mb-4">
+            <l-map
+              ref="map"
+              v-model:zoom="zoom"
+              :center="center"
+              :use-global-leaflet="false"
+              @click="handleMapClick"
+            >
+              <l-tile-layer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <l-marker
+                v-if="form.latitude && form.longtitude"
+                :lat-lng="[form.latitude, form.longtitude]"
+                draggable
+                @dragend="handleMarkerDrag"
+              />
+            </l-map>
+            <v-btn
+              color="primary"
+              size="small"
+              class="get-location-btn"
+              @click="getCurrentLocation"
+            >
+              <v-icon>mdi-crosshairs-gps</v-icon>
+              Lokasi Saat Ini
+            </v-btn>
+          </div>
+        </v-col>
+
+        <!-- Latitude/Longitude -->
+        <v-row class="form-row">
+          <v-col cols="12" sm="6" class="form-col">
             <v-text-field
               v-model="form.latitude"
               label="Latitude"
@@ -144,7 +160,7 @@
               required
             />
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12" sm="6" class="form-col">
             <v-text-field
               v-model="form.longtitude"
               label="Longitude"
@@ -157,9 +173,9 @@
           </v-col>
         </v-row>
 
-        <!-- Upload Files -->
-        <v-row>
-          <v-col>
+        <!-- File Uploads -->
+        <v-row class="form-row">
+          <v-col cols="12" sm="6" class="form-col">
             <label>Foto KK</label>
             <v-file-input
               v-model="form.foto_kk"
@@ -173,7 +189,6 @@
               @update:model-value="previewFile($event, 'previewKK')"
               required
             />
-            <!-- Tampilkan gambar dari database jika ada -->
             <v-img
               v-if="form.foto_kk && typeof form.foto_kk === 'string'"
               :src="`${baseURL}/${form.foto_kk}`"
@@ -181,7 +196,6 @@
               contain
               class="mt-2 bg-grey-lighten-2"
             />
-            <!-- Tampilkan preview untuk file baru -->
             <v-img
               v-else-if="previewKK"
               :src="previewKK"
@@ -190,7 +204,7 @@
               class="mt-2 bg-grey-lighten-2"
             />
           </v-col>
-          <v-col>
+          <v-col cols="12" sm="6" class="form-col">
             <label>Foto Rumah</label>
             <v-file-input
               v-model="form.foto_rumah"
@@ -204,7 +218,6 @@
               @update:model-value="previewFile($event, 'previewRumah')"
               required
             />
-            <!-- Tampilkan gambar dari database jika ada -->
             <v-img
               v-if="form.foto_rumah && typeof form.foto_rumah === 'string'"
               :src="`${baseURL}/${form.foto_rumah}`"
@@ -212,7 +225,6 @@
               contain
               class="mt-2 bg-grey-lighten-2"
             />
-            <!-- Tampilkan preview untuk file baru -->
             <v-img
               v-else-if="previewRumah"
               :src="previewRumah"
@@ -222,36 +234,39 @@
             />
           </v-col>
         </v-row>
-      </v-form>
-      <div class="d-flex justify-end">
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-end button-group">
           <v-btn
             height="60"
             width="150"
             prepend-icon="mdi-delete"
-            class="mt-4 mr-2"
+            class="mt-4 mr-2 action-button"
             type="submit"
             elevation="2"
             color="red"
-            text="Hapus"
             @click="deletePenduduk(form.id)"
-            ></v-btn
           >
+            Hapus
+          </v-btn>
           <v-btn
             height="60"
             width="150"
             prepend-icon="mdi-content-save"
-            class="mt-4"
+            class="mt-4 action-button"
             type="submit"
             elevation="2"
             color="green"
-            text="Simpan"
             @click="post(form.id)"
-            ></v-btn
           >
+            Simpan
+          </v-btn>
         </div>
+      </v-form>
     </v-card>
   </v-container>
 </template>
+
 <script>
 import axios from "axios";
 import { useRoute } from "vue-router";
@@ -321,7 +336,6 @@ export default {
         .then((res)=>{
           this.form =  res.data.data;
 
-          // Simpan path file yang ada
           if (this.form.foto_kk && typeof this.form.foto_kk === 'string') {
             this.existingFotoKK = this.form.foto_kk;
           }
@@ -329,7 +343,6 @@ export default {
             this.existingFotoRumah = this.form.foto_rumah;
           }
 
-          // Set center map ke lokasi yang tersimpan jika ada
           if (this.form.latitude && this.form.longtitude) {
             this.center = [this.form.latitude, this.form.longtitude];
           }
@@ -384,7 +397,6 @@ export default {
         this[previewType] = null;
         return;
       }
-      // Jika file adalah objek File (file baru), buat preview
       if (file instanceof File) {
         this[previewType] = URL.createObjectURL(file);
       }
@@ -398,7 +410,6 @@ export default {
             this.form.longtitude = longitude;
             this.center = [latitude, longitude];
 
-            // Sesuaikan zoom berdasarkan akurasi
             if (accuracy < 100) {
               this.zoom = 18;
             } else if (accuracy < 500) {
@@ -407,7 +418,6 @@ export default {
               this.zoom = 14;
             }
 
-            // Perbarui marker dan peta
             if (this.$refs.map) {
               this.$refs.map.leafletObject.setView([latitude, longitude], this.zoom);
             }
@@ -464,14 +474,12 @@ export default {
         formData.append('status', this.form.status.toString());
         formData.append('user_id', this.form.user_id.toString());
 
-        // Tambahkan semua field non-file
         Object.keys(this.form).forEach(key => {
           if (key !== 'foto_kk' && key !== 'foto_rumah') {
             formData.append(key, this.form[key]);
           }
         });
 
-        // Tambahkan file hanya jika ada file baru
         if (this.form.foto_kk instanceof File) {
           formData.append('foto_kk', this.form.foto_kk);
         }
@@ -479,11 +487,9 @@ export default {
           formData.append('foto_rumah', this.form.foto_rumah);
         }
 
-        // Konversi explicit untuk latitude dan longtitude
         formData.append('latitude', Number(this.form.latitude).toString());
         formData.append('longtitude', Number(this.form.longtitude).toString());
 
-        // Log untuk debugging
         console.log('Longtitude being sent:', Number(this.form.longtitude));
         for (let [key, value] of formData.entries()) {
           console.log(`${key}: ${value}`);
@@ -495,32 +501,86 @@ export default {
           }
         });
 
-        // ... kode response handling ...
+        Swal.fire({
+          title: 'Berhasil!',
+          text: 'Data berhasil diperbarui',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          this.$router.push('/keluarga');
+        });
       } catch (error) {
-        // ... kode error handling ...
+        console.error(error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Terjadi kesalahan saat menyimpan data',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
     },
   },
   beforeUnmount() {
-    // Bersihkan URL objek untuk mencegah memory leak
     if (this.previewKK) URL.revokeObjectURL(this.previewKK);
     if (this.previewRumah) URL.revokeObjectURL(this.previewRumah);
   },
 };
 </script>
+
 <style scoped lang="scss">
-.v-input{
-  margin-top: 10px;
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -8px;
 }
-label{
+
+.form-col {
+  padding: 8px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    display: block;
+    margin: 0;
+  }
+
+  .form-col {
+    padding: 4px 0;
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .v-col-sm-6, .v-col-md-4 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  .action-button {
+    height: 48px !important;
+    width: 104px !important;
+    font-size: 0.825rem !important;
+  }
+}
+
+.v-input {
+  margin-top: 6px !important;
+}
+
+label {
   font-size: 14px;
   font-weight: 600;
 }
+
 .get-location-btn {
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 1000;
 }
-</style>
 
+.v-img {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+</style>
