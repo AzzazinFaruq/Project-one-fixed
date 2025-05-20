@@ -29,9 +29,27 @@
         hide-default-footer
       >
         <template v-slot:[`item.actions`]="{ item }">
-          <v-chip class="px-3" color="#2184D8" variant="flat" style="font-size: 12px;" @click="edit(item.id)">Lihat Detail</v-chip>
-          <v-chip class="px-3 ml-2" color="brown" variant="flat" style="font-size: 12px;" @click="plusAnggota(item.id)">+ Anggota</v-chip>
-        </template>
+  <div class="d-flex flex-nowrap"> <!-- Tambahkan wrapper div dengan flex -->
+    <v-chip 
+      class="px-3" 
+      color="#2184D8" 
+      variant="flat" 
+      style="font-size: 12px; white-space: nowrap;" 
+      @click="edit(item.id)"
+    >
+      Lihat Detail
+    </v-chip>
+    <v-chip 
+      class="px-3 ml-2" 
+      color="brown" 
+      variant="flat" 
+      style="font-size: 12px; white-space: nowrap;" 
+      @click="plusAnggota(item.id)"
+    >
+      + Anggota
+    </v-chip>
+  </div>
+</template>
         <template v-slot:[`item.status`]="{ item }">
           <v-chip
             style="font-size: 12px;"
@@ -175,6 +193,7 @@
     </v-dialog>
   </div>
 </template>
+
 <script>
 import axios from 'axios';
 import { test } from '@/stores/restrict';
@@ -402,3 +421,19 @@ export default{
   }
 }
 </script>
+
+<style scoped>
+/* Pastikan tombol tidak wrap dan tetap inline */
+.d-flex.flex-nowrap {
+  flex-wrap: nowrap !important;
+  overflow-x: auto; /* Untuk scroll horizontal jika sangat sempit */
+}
+
+/* Hilangkan margin-right di mobile jika perlu */
+@media (max-width: 600px) {
+  .v-chip {
+    min-width: max-content; /* Lebar sesuai teks */
+    margin-right: 4px !important; /* Jarak lebih ketat */
+  }
+}
+</style>
